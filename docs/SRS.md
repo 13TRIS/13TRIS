@@ -1,8 +1,11 @@
+![13TRIS! Welcome to the SRS](./Logo/Logo_full.png)
+
 # Common Playground - Software Requirements Specification
 
 ## Table of contents
 - [Table of contents](#table-of-contents)
 - [Introduction](#1-introduction)
+    - [Preliminary](#10-preliminary)
     - [Purpose](#11-purpose)
     - [Scope](#12-scope)
     - [Definitions, Acronyms and Abbreviations](#13-definitions-acronyms-and-abbreviations)
@@ -29,28 +32,34 @@
 
 ## 1. Introduction
 
+### 1.0 Preliminary
+The folowing Software Requirements Specification (SRS) is based on a [template](https://github.com/nilskre/CommonPlayground/blob/pm/docs/SoftwareRequirementsSpecification.md) given from Ms Berkling.
+
 ### 1.1 Purpose
 This Software Requirements Specification (SRS) describes all specifications for the application "Common Playground". It includes an overview about this project and its vision, detailed information about the planned features and boundary conditions of the development process.
 
 
 ### 1.2 Scope
-The project is going to be realized as an Android App.
+The project is going to be realized as a web based Application.
 
-Actors of this App can be users or moderators.
+Actors of this App can be users or administrators.
 
 Planned Subsystems are:
-* Notice Board:  
-  The notice board is the essential part of the user interface. Game sessions should be visualized as postings including relevant information about the session. Those should be partly standardized by a form with a free text option for specifics. The data must be stored accordingly.
+* Game lobbies:  
+  Lobbies are game session with players, users _(not logged in)_ and / or bots. The main purpose is to host a game session to be able to play rounds between many parties. They can be create by any User. The lobby should delete itself once no more human players are in the lobby.
 * Account System:  
-  Users can create accounts so sessions can be connected to a person as well as to join requests. User data must be stored alongside the posting data.
-* Friend List and User Rating:  
-  Once the account system is created there will be the option to mark users as favorites. Also users or game sessions should get a rating to counter abuse.
-* Connecting People:  
-  The host of a game session has to be notified when someone wants to join their game. Both must then be able to get in touch to organize the details, so messages between the host and the guest have to be enabled. This could be done via automated emails or a custom in-app system. For this an account system is needed.
-* Storing Data:  
-  User data for accounts and possibly profiles has to be stored. Also the game sessions have to be stored as datasets containing the form contents and possibly contact data. The data storage will form the foundation for the visualization, account system and the search feature.
+  Users can create / edit / delete their personal accounts and login / authenticate with them. They have to store data entries such as: Total wins - Friend list - and so on...
 * Finding your Game:  
-  We need a tag system so everyone looking to join a game can search for the kind of games they are interested in. Possibly other aspects can be searchable, such as place or date. Tags must be stored and a search function developed.
+  To be able to quickly join a play
+* Inviting others to a game:  
+  Any player can create invite link to other people while waiting for the game to start. Other members can join via an invite, to which they don't necessary need an account. They can only join if the game hasnt started yet (or they were already in the lobby).
+* Leaderboard:  
+  The leaderboard shows a sorted accumulation of the top players, ranked from highest win-count down:
+  * [1] Player43 (45 wins)
+  * [2] UserWithaHat (39 wins)
+  * [3] BotMaverick (38 wins)
+* Storing Data:  
+  User data for accounts has to be stored. The leaderboard, although also stored, will have to be recalculated each time.
 
 ### 1.3 Definitions, Acronyms and Abbreviations
 | Abbrevation | Explanation                            |
@@ -80,7 +89,7 @@ Inspired by carpool coordination services like ‘BlaBlaCar’ or ‘Mitfahrzent
 
 ### 2.2 Use Case Diagram
 
-![OUCD](./UseCaseDiagramCP.png)
+![OUCD](./Logo/Logo_full.png)
 
 - Green: Planned till end of december
 - Yellow: Planned till end of june
