@@ -1,6 +1,6 @@
 ![13TRIS! Welcome to the SRS](./Logo/Logo_full.png)
 
-# Common Playground - Software Requirements Specification
+# 13TRIS - Software Requirements Specification
 
 ## Table of contents
 - [Table of contents](#table-of-contents)
@@ -36,7 +36,7 @@
 The folowing Software Requirements Specification (SRS) is based on a [template](https://github.com/nilskre/CommonPlayground/blob/pm/docs/SoftwareRequirementsSpecification.md) given from Ms Berkling.
 
 ### 1.1 Purpose
-This Software Requirements Specification (SRS) describes all specifications for the application "Common Playground". It includes an overview about this project and its vision, detailed information about the planned features and boundary conditions of the development process.
+This Software Requirements Specification (SRS) describes all specifications for the application "13TRIS". It includes an overview about this project and its vision, detailed information about the planned features and boundary conditions of the development process.
 
 
 ### 1.2 Scope
@@ -89,10 +89,11 @@ Inspired by carpool coordination services like ‘BlaBlaCar’ or ‘Mitfahrzent
 
 ### 2.2 Use Case Diagram
 
-![OUCD](./Logo/Logo_full.png)
+![13TRIS! Welcome to the SRS](.\diagrams\UML-use-case-diagram.drawio.svg)
 
 - Green: Planned till end of december
-- Yellow: Planned till end of june
+- Blue: Planned till end of june
+- Orange: Optional features
 
 ### 2.3 Technology Stack
 The technology we use is:
@@ -113,8 +114,7 @@ Project Management:
 -Microsoft Teams
 
 Deployment:
--Travis CI
--Docker and Heroku
+- PythonAnywhere (host) (not yet)
 
 Testing:
 -Cucumber
@@ -128,78 +128,72 @@ Testing:
 
 ### 3.1 Functionality
 This section will explain the different use cases, you could see in the Use Case Diagram, and their functionality.  
-Until December we plan to implement:
-- 3.1.1 Posting a session
-- 3.1.2 Getting an overview
-- 3.1.3 Creating an account
-- 3.1.4 Logging in
-- 3.1.5 Logging out
+Until December, we plan to implement:
+- 3.1.1 Creating an account
+- 3.1.2 Logging in and out
+- 3.1.3 Searching a match
+- 3.1.4 Basic functionality of playing Tetris
+- 3.1.5 Playing 1 vs 1 against another player
+- 3.1.6 Creating or deleting a user 
 
 Until June, we want to implement:
-- 3.1.6 Joining a session
-- 3.1.7 Keeping track of your sessions
-- 3.1.8 Leaving a session
-- 3.1.9 Finding a session
-- 3.1.10 Getting in touch
+- 3.1.7 Choosing an opponent
+- 3.1.8 Playing a bot game
+- 3.1.9 Viewing the leader board
 
-#### 3.1.1 Posting a session
-This feature is the essential one of our project. The user gets the possibility to post a session. Therefore, they have to select a game and also set the time when they want to play.For offline games, they have to set a location, too. For online games the location can be a server for example or simply be tagged as 'online'.
+Optional features are:
+- 3.1.10 Edit and view profile
+- 3.1.11 Choosing the difficulty 
+- 3.1.12 Creating a lobby and inviting friends
 
-[Posting a session](./use_cases/UC1_Post_Session.md)
+#### Until December, we want to implement:
+#### 3.1.1 Creating an account
+The users of our application will be able to create an account with a username and password. This will create a new unique user with a UUID, which will be used later to identify a player, store data about him and show his rank in the leader board. It is also important for keeping track of sessions.
 
-#### 3.1.2 Getting an overview
-This feature provides a basic overview over all current sessions. All posted sessions are added here. From this overview you can select a session and from there join this session.
+#### 3.1.2 Logging in and out
+For a player to identify himself and keep a record his various informations (wins, status, etc.), they can log in to their account. Once [x] for checkbox checked
+After creating an account the user will be able to sign in and play the game. If he finished playing he is able to log out manually in case he shares his device, has multiple accounts or just want to be cautious about his privacy. 
+This will also make it easier for us to create a leaderboard later on which displays the best player of all time or the best recent player.
 
-[Session overview](./use_cases/UC3_Session_Overview.md)
+[x] keep me loged in -> login
 
-#### 3.1.3 Creating an account
-To identify all useres we need an account system. This account system enables us to build important functions such as joining a session, leaving a session or a personalized overview over all sessions (Keeping track of your sessions).
+#### 3.1.3 Searching a match
+In the application the user will be able to search for a match. If the user decides to search for a match he will be marked as "searching". All users who have this status come into question for being matched against one another.
 
-[Create an account](./use_cases/UC4_Create_Account.md)
+####3.1.4 Basic functionality of playing Tetris
+As we are making a tertis game the most important functionality is playing tetris. At first we implement it for one player alone aka infinity mode. 
 
-#### 3.1.4 Logging in
-The app will provide the possibility to register and log in. This will also make the usability easier when a user wants to manage his sessions, post or join a session because they don't have to enter their mail address every time.
+#### 3.1.5 Playing 1 vs 1 against another player
+Than we implement the 1 vs 1 mode.
 
-[Login](./use_cases/UC5_Login.md)
+####3.1.6 Creating or deleting a user 
+If the user wants to he will be able to delete his account.
 
-#### 3.1.5 Logging out
-In case you share your phone, have multiple accounts or just want to be cautius about your privacy you should be able to manually log out.
 
-[Logout](./use_cases/UC6_Logout.md)
+###Until June, we want to implement:
 
-#### 3.1.6 Joining a session
-There is also the possibility to join an existing game session. Therefore, the user can select a specific session.
+####3.1.7 Choosing an opponent
+The player will be able to choose wether he wants to play against a human or the computer.
 
-[Join a session](./use_cases/UC2_Join_Session.md)
+####3.1.8 Playing a bot game
+We re planning on implementing the function 
 
-#### 3.1.7 Keeping track of your sessions
-The app provides the user with a seperate page view where they get an overview of all sessions they posted or joined. When the user clicks on a session, he can also see who joined his posted sessions.
+####3.1.9 Viewing the leader board
+The user will be able to see the all time or recent leaderboard.
 
-[Keeping track of your sessions](./use_cases/UC7_Keeping_Track.md)
 
-#### 3.1.8 Leaving a session
-The user gets also the possibility to delete a session he posted or to leave a session he joined.
+###Optional features are:
 
-[Leaving a session](./use_cases/UC8_Leave_Session.md)
+####3.1.9 Edit and view profile
+A possible feature in the future would be to expand the accounting system in a way that allows the user to view other profiles and edit his own profile. 
+A profile should consist of not only the username and ID but also an optional profile picture, status message, description...
+Sending text messages between users or in a game session is also imaginable.
 
-#### 3.1.9 Finding a session
-Based on the overview over all sessions this features enables the user to find sessions by specific parameters. Therefore, the user can find a session by tags or other parameters like date. Later on, finding a session will be provided by geolocalization that the users can search for a session in a specific area.
+####3.1.10 Choosing the difficulty
+If the user wants to play against a bot he should have the oppertunity to choose between different levels of difficulty e.g. _hard_,_medium_,_easy_. 
 
-[Finding a session](./use_cases/UC9_Find_Session.md)
-
-#### 3.1.10 Getting in touch
-There must be the possibility that two people who want to play together can communicate with each other. The player who joins the session gets the possibility to contact the owner and vice versa. Later on, when we will have implemented profiles, then they will form another way to communicate with each other.
-
-[Getting in Touch](./use_cases/UC10_Getting_In_Touch.md)
-
-#### 3.1.11 Presenting yourself and checking out others
-With the possibility to log in there comes another functionality, the profile. Every user will have their own profile where they can write some informations about themselves. Because of the privacy policy in Europe, the user has the possibility to only write the information they want other people to see. Using the profile, users can also check out other players and learn e.g. their favorite games.
-
-#### 3.1.12 Reporting users and managing friends
-After a session, the app provides the users with the possibility to report the other participants. This is helpful because we want a community with fair players. Additionally, when they found an interesting person they can also add them to their friend list which also has a seperate page view.
-
-#### 3.1.13 Banning users and deleting posts
-There are also some functionalities for the admins. They will get the possibility to ban users and to delete any posts.
+####3.1.11 Creating a lobby and inviting friends
+Another optional use case is the creation of custom lobbies. It would be nice to give the user the ability to create custom lobbies and invite friends into the lobby to make playing with friends possible.
 
 ### 3.2 Usability
 We plan on designing the user interface as intuitive and self-explanatory as possible to make the user feel as comfortable as possible using the app. Though an FAQ document will be available, it should not be necessary to use it.
@@ -256,28 +250,34 @@ We don't have any purchased components yet. If there will be purchased component
 
 #### 3.9.1 User Interfaces
 The User interfaces that will be implented are:
-- Dashboard - lists all session and makes it possible to filter sessions
-- Session Page - shows detailed information about the session and makes it possible to connect session attendants for example via messaging system
 - Login - this page is used to log in
 - Register - provides a registration form
-- Overwiew of personal sessions - shows all the sessions a user participates in
+- Home page - here the user can search for a game and see important information about himself or others (leader board)
+- Game view - here the player can play the game and the inputs of the users get processed
+- Imprint - contact data and general information about the team/application
+- Privacy policy - information for the user about how the application collects data
+- Leader board - a detailed view of the leaderboard 
+- Admin site - admins can create or delete user accounts and manage the application
+
+Optional user interfaces that may be implemented:
 - Friend List - friends can be added
 - Profile - makes it possible to post information about yourself, might provide messaging feature, also shows additional information about users (for example: Language, country, favorite games, etc.)
-- Settings - shows the settings
+- Edit profile - a user can edit his/her own profile
+- Create lobby - a site where the user can create a lobby and adjust its settings
 
 #### 3.9.2 Hardware Interfaces
 (n/a)
 
 #### 3.9.3 Software Interfaces
-The app will be runnable on Android 4.4 and higher. iOS won't be featured at the moment.
+The app will run in all modern browsers like Edge, Chrome or Firefox.
 
 #### 3.9.4 Communication Interfaces
-The server and hardware will communicate using the http protocol.
+The backend/frontend communication during a game will be handled with websockets. To request information about users the HTTP protocol can be used.  
 
 ### 3.10 Licensing Requirements
 
 ### 3.11 Legal, Copyright, and Other Notices
-The logo is licensed to the Common Playground Team and is only allowed to use for the application. We do not take responsibilty for any incorrect data or errors in the application.
+The logo is licensed to the 13TRIS Team and is only allowed to use for the application. We do not take responsibilty for any incorrect data or errors in the application.
 
 ### 3.12 Applicable Standards
 The development will follow the common clean code standards and naming conventions. Also we will create a definition of d which will be added here as soon as its complete.
