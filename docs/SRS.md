@@ -40,33 +40,34 @@ This Software Requirements Specification (SRS) describes all specifications for 
 
 
 ### 1.2 Scope
-The project is going to be realized as a web based Application.
+The project is going to be realized as a web based application.
 
-Actors of this App can be users or administrators.
+Actors of this app can be users or administrators.
 
-Planned Subsystems are:
+Planned subsystems are:
 * Game lobbies:  
-  Lobbies are game session with players, users _(not logged in)_ and / or bots. The main purpose is to host a game session to be able to play rounds between many parties. They can be create by any User. The lobby should delete itself once no more human players are in the lobby.
-* Account System:  
-  Users can create / edit / delete their personal accounts and login / authenticate with them. They have to store data entries such as: Total wins - Friend list - and so on...
-* Finding your Game:  
-  To be able to quickly join and play, users join a global queue through the click of a button and get flagged as 'searching'. Optional features would be invite links to be able to create private matches.
+  Lobbies are game sessions with players, users _(not logged in)_ and / or bots. The main purpose is to host a game session to be able to play rounds between many parties. They can be created by any user. The lobby should delete itself once no more human players are in the lobby.
+* Account system:  
+  Users can create / edit / delete their personal accounts and login / authenticate with them. Accounts have to store data entries such as: total wins - friend list - and so on...
+* Finding your game:  
+  To be able to quickly join and play, users join a global queue through the click of a button and get flagged as 'searching'. An optional feature would be invite links to be able to create private matches.
 * (optional) Inviting others to a game:  
-  Any player can create invite link to other people while waiting for the game to start. Other members can join via an invite, to which they don't necessary need an account. They can only join if the game hasnt started yet (or they were already in the lobby).
-* Leaderboard:  
-  The leaderboard shows a sorted accumulation of the top players, ranked from highest win-count down:
+  Any player can create an invite link to other people while waiting for the game to start. Other members can join via an invite, to which they don't necessarily need an account. They can only join if the game has not started yet (or they were already in the lobby).
+* Leader board:  
+  The leader board shows a sorted accumulation of the top players, ranked from highest win-count down to the lowest win-count:
   * [1] Player43 (45 wins)
   * [2] UserWithaHat (39 wins)
   * [3] BotMaverick (38 wins)
-* Storing Data:  
+* Storing data:  
   User data for accounts has to be stored. The leaderboard, although also stored, will have to be recalculated each time.
 
 ### 1.3 Definitions, Acronyms and Abbreviations
 | Abbrevation | Explanation                            |
 | ----------- | -------------------------------------- |
 | SRS         | Software Requirements Specification    |
-| UML         | Use Case Diagram / Model               |
-
+| UML         | Unified Modeling Language              |
+| UCD         | Use Case Diagram                       |
+ 
 ### 1.4 References
 
 | Title                                                              | Date       | Publishing organization   |
@@ -78,7 +79,7 @@ Planned Subsystems are:
 
 ### 1.5 Overview
 The following chapter provides an overview of this project with vision and Overall Use Case Diagram. 
-The third chapter (Requirements Specification) delivers more details about the specific requirements in terms of functionality, usability and design parameters. Finally there is a chapter with supporting information.
+The third chapter (Specific Requirements) delivers more details about the specific requirements in terms of functionality, usability and design parameters. Finally there is a chapter with supporting information.
 
 ## 2. Overall Description
 
@@ -94,7 +95,7 @@ The vision of the 13TRIS team is to implement our own version of Tetris as a mul
 - Orange: Optional features
 
 ### 2.3 Technology Stack
-The technology we use is:
+The technologies we use are:
 
 Backend:
 - Django (Python)
@@ -111,13 +112,13 @@ Project Management:
 - GitHub
 - Signal + Discord
 
-Deployment:
-- PythonAnywhere (host) (not yet)
+Deployment: (not yet decided)
+- PythonAnywhere (host) 
 
-Testing: (Not yet decided)
+Testing: (not yet decided)
 - JEST
 - Selenium / Cypress
-- PyTest / unittest
+- PyTest / unit testing
 
 ## 3. Specific Requirements
 
@@ -146,38 +147,36 @@ Optional features are:
 The users of our application will be able to create an account with a username and password. This will create a new unique user with a UUID, which will be used later to identify a player, store data about him and show his rank in the leader board. It is also important for keeping track of sessions.
 
 #### 3.1.2 Logging in and out
-For a player to identify himself and keep a record his various informations (wins, status, etc.), they can log in to their account. Once [x] for checkbox checked
+For a player to identify himself and keep a record of his various informations (wins, status, etc.), it is possible to log in to an account.
 After creating an account the user will be able to sign in and play the game. If he finished playing he is able to log out manually in case he shares his device, has multiple accounts or just want to be cautious about his privacy. 
-This will also make it easier for us to create a leaderboard later on which displays the best player of all time or the best recent player.
-
-[x] keep me loged in -> login
+This will also make it easier for us to create a leaderboard later which displays the best player of all time or the best recent player.
 
 #### 3.1.3 Searching a match
 In the application the user will be able to search for a match. If the user decides to search for a match he will be marked as "searching". All users who have this status come into question for being matched against one another.
 
 ####3.1.4 Basic functionality of playing Tetris
-As we are making a tertis game the most important functionality is playing tetris. At first we implement it for one player alone aka infinity mode. 
+As we are making a tertis game the most important functionality is playing tetris. At first we implement it for one player alone (also known as infinity mode). 
 
 #### 3.1.5 Playing 1 vs 1 against another player
-Than we implement the 1 vs 1 mode.
+After implementing the basic functionaliyt of Tetris we plan on making the 1 vs 1 mode work.
 
 ####3.1.6 Creating or deleting a user 
-If the user wants to he will be able to delete his account.
+If the user wants to he will be able to delete his account. However, this is more of an administrative feature.
 
 
-###Until June, we want to implement:
+####Until June, we want to implement:
 
 ####3.1.7 Choosing an opponent
-The player will be able to choose wether he wants to play against a human or the computer.
+The player will be able to choose whether he wants to play against a human or the computer.
 
 ####3.1.8 Playing a bot game
-We re planning on implementing the function 
+We are planning on implementing the functionality of playing bot games. 
 
 ####3.1.9 Viewing the leader board
-The user will be able to see the all time or recent leaderboard.
+The user will be able to see the best players on a leaderboard.
 
 
-###Optional features are:
+####Optional features are:
 
 ####3.1.9 Edit and view profile
 A possible feature in the future would be to expand the accounting system in a way that allows the user to view other profiles and edit his own profile. 
@@ -185,7 +184,7 @@ A profile should consist of not only the username and ID but also an optional pr
 Sending text messages between users or in a game session is also imaginable.
 
 ####3.1.10 Choosing the difficulty
-If the user wants to play against a bot he should have the oppertunity to choose between different levels of difficulty e.g. _hard_,_medium_,_easy_. 
+If the user wants to play against a bot he should have the oppertunity to choose between different levels of difficulty e.g. _hard_, _medium_, _easy_. 
 
 ####3.1.11 Creating a lobby and inviting friends
 Another optional use case is the creation of custom lobbies. It would be nice to give the user the ability to create custom lobbies and invite friends into the lobby to make playing with friends possible.
@@ -194,7 +193,8 @@ Another optional use case is the creation of custom lobbies. It would be nice to
 We plan on designing the user interface as intuitive and self-explanatory as possible to make the user feel as comfortable as possible using the application. Though an FAQ document will be available, it should not be necessary to use it.
 
 #### 3.2.1 No training time needed
-Our goal is that a user installs the android application, opens it and is able to use all features without any explanation or help.
+The user should be able to start playing as soon as he registered an account. Otherwise it will be too frustrating to use the application. There should be no training required except learning to play the game itself of course.
+We will have a section on the page which will help newcomers to learn the game.
 
 #### 3.2.2 Familiar Feeling
 We want to implement the game in a way so designs and functions feels familiar. This way the user is able to interact in familiar ways with the application without having to get to know new interfaces.
@@ -203,6 +203,7 @@ We want to implement the game in a way so designs and functions feels familiar. 
 
 #### 3.3.1 Availability
 The server shall be available 95% of the time. This also means we have to figure out the "rush hours" of our app because the downtime of the server is only tolerable when as few as possible players want to use the app.
+Availablity is very important especially in a game where server downtime or "lags" can be very frustrating to the player.
 
 #### 3.3.2 Defect Rate
 Our goal is that we have no loss of any data. This is important so that the game sessions can carry on, even after a downtime of the server.
@@ -216,7 +217,7 @@ The system should be able to manage the requests. Also it should be possible to 
 We are aiming to keep the needed storaged data e.g. cookies as small as possible.
 
 #### 3.4.3 App perfomance / Response time
-To provide the best App perfomance we aim to keep the response time as low as possible. This will make the user experience much better.
+To provide the best app perfomance we aim to keep the response time as low as possible. This will make the user experience much better.
 
 ### 3.5 Supportability
 
@@ -229,8 +230,8 @@ The application will have a high test coverage and all important functionalities
 ### 3.6 Design Constraints
 We are trying to provide a modern and easy to handle design for the UI aswell as for the architecture of our application. To achieve that the functionalities will be kept as modular as possible.
 
-Because we are progamming an web application we chose python, JS and reactJS as our tech stack. Also we are using a common architecture to keep the front end and back end seperated.
-To make the communication between the two parts easy, we will implement websockets between them which will provide the data in JSON-Format.
+Because we are progamming an web application and wanted to learn something new we chose Python, JavaScript and React as our tech stack. Also we are using a common architecture to keep the front end and back end seperated.
+To make the communication between the two parts easy, we will implement websockets between them which will provide the exchange of data.
 
 ### 3.7 On-line User Documentation and Help System Requirements
 The usage of the application should be as intuitive as possible so it won't need any further documentation. If the user needs some help we will implement a "Help"-Button in the App which includes a FAQ and a formular to contact the developement team.
@@ -252,8 +253,8 @@ The User interfaces that will be implented are:
 - Admin site - admins can create or delete user accounts and manage the application
 
 Optional user interfaces that may be implemented:
-- Friend List - friends can be added
-- Profile - makes it possible to post information about yourself, might provide messaging feature, also shows additional information about users (for example: Language, country, favorite games, etc.)
+- Friend list - friends can be added
+- Profile - makes it possible to post information about yourself, might provide messaging feature, also shows additional information about users (for example: language, country, favorite games, etc.)
 - Edit profile - a user can edit his/her own profile
 - Create lobby - a site where the user can create a lobby and adjust its settings
 
