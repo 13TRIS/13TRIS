@@ -50,8 +50,8 @@ Planned Subsystems are:
 * Account System:  
   Users can create / edit / delete their personal accounts and login / authenticate with them. They have to store data entries such as: Total wins - Friend list - and so on...
 * Finding your Game:  
-  To be able to quickly join a play
-* Inviting others to a game:  
+  To be able to quickly join and play, users join a global queue through the click of a button and get flagged as 'searching'. Optional features would be invite links to be able to create private matches.
+* (optional) Inviting others to a game:  
   Any player can create invite link to other people while waiting for the game to start. Other members can join via an invite, to which they don't necessary need an account. They can only join if the game hasnt started yet (or they were already in the lobby).
 * Leaderboard:  
   The leaderboard shows a sorted accumulation of the top players, ranked from highest win-count down:
@@ -65,18 +65,15 @@ Planned Subsystems are:
 | Abbrevation | Explanation                            |
 | ----------- | -------------------------------------- |
 | SRS         | Software Requirements Specification    |
-| UC          | Use Case                               |
-| n/a         | not applicable                         |
-| tbd         | to be determined                       |
-| UCD         | overall Use Case Diagram               |
-| FAQ         | Frequently asked Questions             |
+| UML         | Use Case Diagram / Model               |
 
 ### 1.4 References
 
 | Title                                                              | Date       | Publishing organization   |
 | -------------------------------------------------------------------|:----------:| ------------------------- |
-| [Common Playground Blog](http://commonplayground.wordpress.com)    | 18.10.2018 | Common Playground Team    |
-| [GitHub](https://github.com/nilskre/CommonPlayground)              | 18.10.2018 | Common Playground Team    |
+| [Play 13TRIS](http://13tris.dkoeck.de/)                            | 23.10.2021 | 13TRIS Team               |
+| [Our Blog 13TRIS](http://13tris.dkoeck.de/)                        | 23.10.2021 | 13TRIS Team               |
+| [GitHub](hthttps://github.com/MKrabs/13TRIS)                       | 23.10.2021 | 13TRIS Team               |
 
 
 ### 1.5 Overview
@@ -100,30 +97,27 @@ The vision of the 13TRIS team is to implement our own version of Tetris as a mul
 The technology we use is:
 
 Backend:
--Gradle and Springboot
--H2 Database
+- Django (Python)
+- Database (SQLite)
 
 Frontend:
--Android with Java and XML
+-  React (JavaScript)
 
 IDE:
--IntelliJ and Android Studio
+- PyCharm
 
 Project Management:
--YouTrack
--GitHub
--Microsoft Teams
+- YouTrack
+- GitHub
+- Signal + Discord
 
 Deployment:
 - PythonAnywhere (host) (not yet)
 
-Testing:
--Cucumber
--Espresso
--JUnit
--Codacy
--CodeMR
--RestAssured
+Testing: (Not yet decided)
+- JEST
+- Selenium / Cypress
+- PyTest / unittest
 
 ## 3. Specific Requirements
 
