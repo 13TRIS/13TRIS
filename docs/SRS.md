@@ -33,7 +33,7 @@
 ## 1. Introduction
 
 ### 1.0 Preliminary
-The folowing Software Requirements Specification (SRS) is based on a [template](https://github.com/nilskre/CommonPlayground/blob/pm/docs/SoftwareRequirementsSpecification.md) given from Ms Berkling.
+The following Software Requirements Specification (SRS) is based on a [template](https://github.com/nilskre/CommonPlayground/blob/pm/docs/SoftwareRequirementsSpecification.md) given from Ms Berkling.
 
 ### 1.1 Purpose
 This Software Requirements Specification (SRS) describes all specifications for the application "13TRIS". It includes an overview about this project and its vision, detailed information about the planned features and boundary conditions of the development process.
@@ -52,21 +52,22 @@ Planned subsystems are:
 * Finding your game:  
   To be able to quickly join and play, users join a global queue through the click of a button and get flagged as 'searching'. An optional feature would be invite links to be able to create private matches.
 * (optional) Inviting others to a game:  
-  Any player can create an invite link to other people while waiting for the game to start. Other members can join via an invite, to which they don't necessarily need an account. They can only join if the game has not started yet (or they were already in the lobby).
+  Any player can create an invitation link to other people while waiting for the game to start. Other members can join via an invitation, to which they don't necessarily need an account. They can only join if the game has not started yet (or they were already in the lobby).
 * Leader board:  
   The leader board shows a sorted accumulation of the top players, ranked from highest win-count down to the lowest win-count:
   * [1] Player43 (45 wins)
-  * [2] UserWithaHat (39 wins)
+  * [2] UserWithAHat (39 wins)
   * [3] BotMaverick (38 wins)
 * Storing data:  
   User data for accounts has to be stored. The leaderboard, although also stored, will have to be recalculated each time.
 
 ### 1.3 Definitions, Acronyms and Abbreviations
-| Abbrevation | Explanation                            |
-| ----------- | -------------------------------------- |
-| SRS         | Software Requirements Specification    |
-| UML         | Unified Modeling Language              |
-| UCD         | Use Case Diagram                       |
+| Abbreviation | Explanation                            |
+| ------------ | -------------------------------------- |
+| SRS          | Software Requirements Specification    |
+| UML          | Unified Modeling Language              |
+| UCD          | Use Case Diagram                       |
+| auth         | Authentication                         |
  
 ### 1.4 References
 
@@ -79,7 +80,7 @@ Planned subsystems are:
 
 ### 1.5 Overview
 The following chapter provides an overview of this project with vision and Overall Use Case Diagram. 
-The third chapter (Specific Requirements) delivers more details about the specific requirements in terms of functionality, usability and design parameters. Finally there is a chapter with supporting information.
+The third chapter (Specific Requirements) delivers more details about the specific requirements in terms of functionality, usability and design parameters. Finally, there is a chapter with supporting information.
 
 ## 2. Overall Description
 
@@ -88,7 +89,7 @@ The vision of the 13TRIS team is to implement our own version of Tetris as a mul
 
 ### 2.2 Use Case Diagram
 
-![13TRIS! Welcome to the SRS](.\diagrams\UML-use-case-diagram.drawio.svg)
+![13TRIS! Welcome to the SRS](./diagrams/UML-use-case-diagram.drawio.svg)
 
 - Green: Planned till end of december
 - Blue: Planned till end of june
@@ -142,29 +143,37 @@ Optional features are:
 - 3.1.11 Choosing the difficulty 
 - 3.1.12 Creating a lobby and inviting friends
 
-#### Until December, we want to implement:
+### Until December, we want to implement:
 #### 3.1.1 Creating an account
-The users of our application will be able to create an account with a username and password. This will create a new unique user with a UUID, which will be used later to identify a player, store data about him and show his rank in the leader board. It is also important for keeping track of sessions.
+The users of our application will be able to create an account with a username and password. This will create a new unique user with a UUID, which will be used later to identify a player, store data about him and show his rank in the leader board. This will make it easier for us to create a leaderboard to displays the top player of all time or the top recent player.
 
 #### 3.1.2 Logging in and out
-For a player to identify himself and keep a record of his various informations (wins, status, etc.), it is possible to log in to an account.
-After creating an account the user will be able to sign in and play the game. If he finished playing he is able to log out manually in case he shares his device, has multiple accounts or just want to be cautious about his privacy. 
-This will also make it easier for us to create a leaderboard later which displays the best player of all time or the best recent player.
+
+![This is a rough sketch how to login procedure goes](./diagrams/Login-Flowchart.drawio.svg)
+
+For a player to identify himself and keep a record of various information (wins, status, etc.), they have to be logged in.
+If the player doesn't have an account, they will be asked to create an account.
+After creating an account the user will be able to authenticate themselves and login. The option "remember me" will set an authentication cookie if the user chooses to. If an authentication cookie has been set, the user will be automatically logged back in.
+If they finish playing, they are able to log out manually via the logout button, _which will also destroy the auth-cookie_.
 
 #### 3.1.3 Searching a match
-In the application the user will be able to search for a match. If the user decides to search for a match he will be marked as "searching". All users who have this status come into question for being matched against one another.
+In the application the user will be able to search for a match via the "search match" function. If the user decides to search for a match he will be tagged as "searching". All users who have this status will be picked up by the engine and be matched against one another.
 
 ####3.1.4 Basic functionality of playing Tetris
-As we are making a tertis game the most important functionality is playing tetris. At first we implement it for one player alone (also known as infinity mode). 
+As we are making a Tetris game the most important functionality is playing tetris. At first, we will implement a single player mode (also known as infinity mode). 
+The classic game where permutations of four 1x1 blocks fall from the ceiling and have to get placed in complete rows in order to keep from hitting the top.
+In this mode, getting full rows destroys the blocks in that row, drops every block from above by as many rows that have been destroyed and grants the player a various amount of points.
+These points are the end-result for the player and will be used as statistics for the leaderboard.
 
 #### 3.1.5 Playing 1 vs 1 against another player
-After implementing the basic functionaliyt of Tetris we plan on making the 1 vs 1 mode work.
+After implementing the basic functionality of Tetris we plan on making the 1 vs 1 mode work, where two players play until either board overflows (loses the match).
+To make the games more interesting, we thought of creating special modes: new power-ups, faster drop rate, death-match, etc...
 
-####3.1.6 Creating or deleting a user 
-If the user wants to he will be able to delete his account. However, this is more of an administrative feature.
+####3.1.6 Deleting an account 
+If the user wants decides to delete they account, they in the right to do so. However, this is more of an administrative feature.
 
-
-####Until June, we want to implement:
+---
+###Until June, we want to implement:
 
 ####3.1.7 Choosing an opponent
 The player will be able to choose whether he wants to play against a human or the computer.
@@ -184,7 +193,7 @@ A profile should consist of not only the username and ID but also an optional pr
 Sending text messages between users or in a game session is also imaginable.
 
 ####3.1.10 Choosing the difficulty
-If the user wants to play against a bot he should have the oppertunity to choose between different levels of difficulty e.g. _hard_, _medium_, _easy_. 
+If the user wants to play against a bot he should have the opportunity to choose between different levels of difficulty e.g. _hard_, _medium_, _easy_. 
 
 ####3.1.11 Creating a lobby and inviting friends
 Another optional use case is the creation of custom lobbies. It would be nice to give the user the ability to create custom lobbies and invite friends into the lobby to make playing with friends possible.
@@ -193,7 +202,7 @@ Another optional use case is the creation of custom lobbies. It would be nice to
 We plan on designing the user interface as intuitive and self-explanatory as possible to make the user feel as comfortable as possible using the application. Though an FAQ document will be available, it should not be necessary to use it.
 
 #### 3.2.1 No training time needed
-The user should be able to start playing as soon as he registered an account. Otherwise it will be too frustrating to use the application. There should be no training required except learning to play the game itself of course.
+The user should be able to start playing as soon as he registered an account. Otherwise, it will be too frustrating to use the application. There should be no training required except learning to play the game itself of course.
 We will have a section on the page which will help newcomers to learn the game.
 
 #### 3.2.2 Familiar Feeling
@@ -203,38 +212,38 @@ We want to implement the game in a way so designs and functions feels familiar. 
 
 #### 3.3.1 Availability
 The server shall be available 95% of the time. This also means we have to figure out the "rush hours" of our app because the downtime of the server is only tolerable when as few as possible players want to use the app.
-Availablity is very important especially in a game where server downtime or "lags" can be very frustrating to the player.
+Availability is very important especially in a game where server downtime or "lags" can be very frustrating to the player.
 
 #### 3.3.2 Defect Rate
 Our goal is that we have no loss of any data. This is important so that the game sessions can carry on, even after a downtime of the server.
 
-### 3.4 Perfomance
+### 3.4 Performance
 
 #### 3.4.1 Capacity
-The system should be able to manage the requests. Also it should be possible to register as many users as necessary.
+The system should be able to manage the requests. Also, it should be possible to register as many users as necessary.
 
 #### 3.4.2 Storage
-We are aiming to keep the needed storaged data e.g. cookies as small as possible.
+We are aiming to keep the needed storage data e.g. cookies as small as possible.
 
-#### 3.4.3 App perfomance / Response time
-To provide the best app perfomance we aim to keep the response time as low as possible. This will make the user experience much better.
+#### 3.4.3 App performance / Response time
+To provide the best app performance we aim to keep the response time as low as possible. This will make the user experience much better.
 
 ### 3.5 Supportability
 
 #### 3.5.1 Coding Standards
-We are going to write the code by using all of the most common clean code standards. For example we will name our variables and methods by their functionalities. This will keep the code easy to read by everyone and make further developement much easier.
+We are going to write the code by using the most common clean code standards. For example, we will name our variables and methods by their functionalities. This will keep the code easy to read by everyone and make further development much easier.
 
 #### 3.5.2 Testing Strategy
-The application will have a high test coverage and all important functionalities and edge cases should be tested. Further mistakes in the implementation will be discovered instantly and it will be easy to locate the error.
+The application will have a high test coverage and all important functionalities and edge cases should be tested. Future mistakes in the implementation will be discovered instantly, and it will be easy to locate the error.
 
 ### 3.6 Design Constraints
-We are trying to provide a modern and easy to handle design for the UI aswell as for the architecture of our application. To achieve that the functionalities will be kept as modular as possible.
+We are trying to provide a modern and easy to handle design for the UI as well as for the architecture of our application. To achieve that the functionalities will be kept as modular as possible.
 
-Because we are progamming an web application and wanted to learn something new we chose Python, JavaScript and React as our tech stack. Also we are using a common architecture to keep the front end and back end seperated.
+Because we are programming a web application and wanted to learn something new we chose Python, JavaScript and React as our tech stack. We are using a common architecture to keep the front end and back end seperated.
 To make the communication between the two parts easy, we will implement websockets between them which will provide the exchange of data.
 
 ### 3.7 On-line User Documentation and Help System Requirements
-The usage of the application should be as intuitive as possible so it won't need any further documentation. If the user needs some help we will implement a "Help"-Button in the App which includes a FAQ and a formular to contact the developement team.
+The usage of the application should be as intuitive as possible, so it won't need any further documentation. If the user needs some help we will implement a "Help"-Button in the App which includes a FAQ and a form to contact the development team.
 
 ### 3.8 Purchased Components
 We don't have any purchased components yet. If there will be purchased components in the future we will list them here.
@@ -242,7 +251,7 @@ We don't have any purchased components yet. If there will be purchased component
 ### 3.9 Interfaces
 
 #### 3.9.1 User Interfaces
-The User interfaces that will be implented are:
+The User interfaces that will be implemented are:
 - Login - this page is used to log in
 - Register - provides a registration form
 - Home page - here the user can search for a game and see important information about himself or others (leader board)
@@ -270,10 +279,10 @@ The backend/frontend communication during a game will be handled with websockets
 ### 3.10 Licensing Requirements
 
 ### 3.11 Legal, Copyright, and Other Notices
-The logo is licensed to the 13TRIS Team and is only allowed to use for the application. We do not take responsibilty for any incorrect data or errors in the application.
+The logo is licensed to the 13TRIS Team and is only allowed to use for the application. We do not take responsibility for any incorrect data or errors in the application.
 
 ### 3.12 Applicable Standards
-The development will follow the common clean code standards and naming conventions. Also we want to follow standards concerning the usage of Git e.g. consistent commit messages (see https://www.conventionalcommits.org/en/v1.0.0/). 
+The development will follow the common clean code standards and naming conventions. Also, we want to follow standards concerning the usage of Git e.g. consistent commit messages (see https://www.conventionalcommits.org/en/v1.0.0/). 
 
 
 ## 4. Supporting Information
@@ -283,4 +292,4 @@ The Team Members are:
 - Daniel Koeck
 - Ishan Signh
 - Felix Gervasi
-- Marc Goetsche
+- Marc Goekce
