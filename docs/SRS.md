@@ -80,12 +80,13 @@ Planned Subsystems are:
 
 
 ### 1.5 Overview
-The following chapter provides an overview of this project with vision and Overall Use Case Diagram. The third chapter (Requirements Specification) delivers more details about the specific requirements in terms of functionality, usability and design parameters. Finally there is a chapter with supporting information.
+The following chapter provides an overview of this project with vision and Overall Use Case Diagram. 
+The third chapter (Requirements Specification) delivers more details about the specific requirements in terms of functionality, usability and design parameters. Finally there is a chapter with supporting information.
 
 ## 2. Overall Description
 
 ### 2.1 Vision
-Inspired by carpool coordination services like ‘BlaBlaCar’ or ‘Mitfahrzentrale’ we want to build an application to coordinate game sessions. We plan to create a platform for people who are looking for other people to play games with. Covering online multiplayer games, tabletop, pen and paper or regular board games we want to provide a kind of bulletin board where people can state what they want to play, when and where they want to do it and how many people they are looking for. Others can then react to the postings and virtually join the play session to be connected by us so everyone can coordinate the actual play session together on a Common Playground.
+The vision of the 13TRIS team is to implement our own version of Tetris as a multiplayer web application.
 
 ### 2.2 Use Case Diagram
 
@@ -196,13 +197,13 @@ If the user wants to play against a bot he should have the oppertunity to choose
 Another optional use case is the creation of custom lobbies. It would be nice to give the user the ability to create custom lobbies and invite friends into the lobby to make playing with friends possible.
 
 ### 3.2 Usability
-We plan on designing the user interface as intuitive and self-explanatory as possible to make the user feel as comfortable as possible using the app. Though an FAQ document will be available, it should not be necessary to use it.
+We plan on designing the user interface as intuitive and self-explanatory as possible to make the user feel as comfortable as possible using the application. Though an FAQ document will be available, it should not be necessary to use it.
 
 #### 3.2.1 No training time needed
 Our goal is that a user installs the android application, opens it and is able to use all features without any explanation or help.
 
 #### 3.2.2 Familiar Feeling
-We want to implement an app with familiar designs and functions. This way the user is able to interact in familiar ways with the app without having to get to know new interfaces.
+We want to implement the game in a way so designs and functions feels familiar. This way the user is able to interact in familiar ways with the application without having to get to know new interfaces.
 
 ### 3.3 Reliability
 
@@ -215,10 +216,10 @@ Our goal is that we have no loss of any data. This is important so that the game
 ### 3.4 Perfomance
 
 #### 3.4.1 Capacity
-The system should be able to manage thousands of requests. Also it should be possible to register as many users as necessary.
+The system should be able to manage the requests. Also it should be possible to register as many users as necessary.
 
 #### 3.4.2 Storage
-Smartphones don't provide much storage. Therefore we are aiming to keep the needed storage as small as possible.
+We are aiming to keep the needed storaged data e.g. cookies as small as possible.
 
 #### 3.4.3 App perfomance / Response time
 To provide the best App perfomance we aim to keep the response time as low as possible. This will make the user experience much better.
@@ -234,14 +235,11 @@ The application will have a high test coverage and all important functionalities
 ### 3.6 Design Constraints
 We are trying to provide a modern and easy to handle design for the UI aswell as for the architecture of our application. To achieve that the functionalities will be kept as modular as possible.
 
-Because we are progamming an Android App we chose Java as our programming language. Also we are using the common MVC-architecture to keep the front end and back end seperated. For a clean front end structure we use MVVM.
-To make the communication between the two parts easy, we will implement a RESTful-API between them which will provide the data in JSON-Format.
-The supported Platforms will be:
-- Android 4.4 and higher
-- Java 8 and higher
+Because we are progamming an web application we chose python, JS and reactJS as our tech stack. Also we are using a common architecture to keep the front end and back end seperated.
+To make the communication between the two parts easy, we will implement websockets between them which will provide the data in JSON-Format.
 
 ### 3.7 On-line User Documentation and Help System Requirements
-The usage of the app should be as intuitive as possible so it won't need any further documentation. If the user needs some help we will implement a "Help"-Button in the App which includes a FAQ and a formular to contact the developement team.
+The usage of the application should be as intuitive as possible so it won't need any further documentation. If the user needs some help we will implement a "Help"-Button in the App which includes a FAQ and a formular to contact the developement team.
 
 ### 3.8 Purchased Components
 We don't have any purchased components yet. If there will be purchased components in the future we will list them here.
@@ -280,15 +278,14 @@ The backend/frontend communication during a game will be handled with websockets
 The logo is licensed to the 13TRIS Team and is only allowed to use for the application. We do not take responsibilty for any incorrect data or errors in the application.
 
 ### 3.12 Applicable Standards
-The development will follow the common clean code standards and naming conventions. Also we will create a definition of d which will be added here as soon as its complete.
+The development will follow the common clean code standards and naming conventions. Also we want to follow standards concerning the usage of Git e.g. consistent commit messages (see https://www.conventionalcommits.org/en/v1.0.0/). 
+
 
 ## 4. Supporting Information
-For any further information you can contact the Common Playground Team or check our [Common Playground Blog](http://commonplayground.wordpress.com).
+For any further information you can contact the 13TRIS Team or check our [13Tris Blog](http://13tris.dkoeck.de/).
 The Team Members are:
-- Celina Adam
-- Inga Batton
-- Nils Krehl
-- Denis Reibel
-
-<!-- Picture-Link definitions: -->
-[OUCD]: https://github.com/IB-KA/CommonPlayground/blob/master/UseCaseDiagramCP.png "Overall Use Case Diagram"
+- Daniel Majer
+- Daniel Koeck
+- Ishan Signh
+- Felix Gervasi
+- Marc Goetsche
