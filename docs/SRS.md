@@ -359,7 +359,8 @@ We don't have any purchased components yet. If there will be purchased component
 
 #### 3.9.1 User Interfaces
 
-The User interfaces that will be implemented are:
+The User interfaces that will be implemented are (in case you want to see our whole design mock see our
+[google docs](https://docs.google.com/presentation/d/11fCSXcrRS9Hs0bF2iSAMe0Yru356kjvBuJfEx68xsrU/edit?usp=sharing)):
 
 - Login - this page is used to log in ![Login page](./design/login.svg)
 - Register - provides a registration form ![Registration form](./design/register.svg)
