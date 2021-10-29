@@ -29,13 +29,14 @@ n/a
 
 # 4. Preconditions
 The main preconditions for this use case are:
-1. The user has to enter a valid password (e.g. with a minimal length)
-2. The backend has to be running to save the new user and check if the password is valid
+1. The user has an account
+2. The user is not currently in another lobby
+3. The connection between front- and backend is uninterrupted 
+
 
 # 5. Postconditions
-
-### 5.1 Save account
-The new account has to be saved in the backend together with all its information.
+1. Save information about the match for the player in the database (e.g. score, date, lobby).
+2. Remove the current player from the lobby
 
 # 6. Extension Points
 n/a
