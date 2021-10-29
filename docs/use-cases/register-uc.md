@@ -5,8 +5,8 @@ This use case allows users to add products/items to a shopping list.
 A product has a title and may contain information like the number of items and who the product shall be bought for.
 
 ## 1.2 Mockup
-### Page to log in to an existing account
-![Mockup login](../design/register.svg)
+### Page to register a new account
+![Mockup register](../design/register.svg)
 
 ## 1.3 Screenshot
 ### Add Item functionality "blank"

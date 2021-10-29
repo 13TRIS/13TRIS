@@ -1,4 +1,4 @@
-# 1. Use Case Specification: Create Account
+# 1. Use Case Specification: Login
 
 ## 1.1 Brief Description
 This use case allows users to add products/items to a shopping list.
