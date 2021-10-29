@@ -20,7 +20,7 @@ The user can view different leaderboards based on the game modes.
 ## 2.1 Basic Flow
 
 Here is the activity diagram for viewing the leaderboard.  
-![Activity Diagram]()
+![Activity Diagram](./activity-diagrams/leaderboard-activity.svg)
 
 ## 2.2 Alternative Flows
 
