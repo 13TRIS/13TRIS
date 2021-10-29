@@ -9,10 +9,10 @@ The game ends if the blocks stack up to the top of the board.
 ![Mockup solo game](../design/solo-game-mode.svg)
 
 ## 1.3 Screenshot
-### Register functionality "game end"
+### Solo game Functionality "Game over"
 ![Solo game functionality "game end"](../design/solo-mode-end.svg)
 
-### Register functionality "new highscore"
+### Functionality "new highscore"
 ![Solo game functionality "highscore"](../design/solo-mode-highscore.svg)
 
 # 2. Flow of Events
