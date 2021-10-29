@@ -1,34 +1,25 @@
 # 1. Use Case Specification: Login
 
 ## 1.1 Brief Description
-This use case allows users to add products/items to a shopping list.
-A product has a title and may contain information like the number of items and who the product shall be bought for.
+This use case allows users to login to an existing account.
+The user has to identify himself with a unique username and a password.
 
 ## 1.2 Mockup
 ### Page to log in to an existing account
 ![Mockup login](../design/login.svg)
 
 ## 1.3 Screenshot
-### Add Item functionality "blank"
-![Add Item functionality "blank"](../Screenshots/add_item_screenshot_blank.png)
+### Login functionality "input"
+![Login functionality "input"](../design/loginwithcredentials.svg)
 
-### Add Item functionality "input"
-![Add Item functionality "input"](../Screenshots/add_item_screenshot_input.png)
-
-### Add Item functionality "select users"
-![Add Item functionality "select users"](../Screenshots/add_item_screenshot_select.png)
-
-### Updated Shopping List
-![Updated Shopping List](../Screenshots/shopping_list_screenshot_items.png)
+### Login functionality "wrong credentials" 
+![Login functionality "wrong credentials"](../design/loginerror.svg)
 
 # 2. Flow of Events
 
 ## 2.1 Basic Flow
-Here is the activity diagram for adding a new item/product.  
+Here is the activity diagram for logging in to an existing account.  
 ![Activity Diagram](./activity-diagrams/login-activity.svg)
-
-And here is a screenshot of the `.feature` file for this use case:
-![.feature file](./FeatureFiles/feature_file_add_shopping_list_item.png)
 
 ## 2.2 Alternative Flows
 n/a
@@ -39,18 +30,15 @@ n/a
 # 4. Preconditions
 The main preconditions for this use case are:
 
- 1. The users app instance is registered.
- 2. The user is member of a group/shared flat.
- 3. The user has started the app and has navigated to "Shopping List".
+ 1. The user has a registered account.
+ 2. The user needs no valid cookie (otherwise he will be logged in automatically)
+ 3. The user needs to enter correct credentials
+ 4. The backend must be running
 
 # 5. Postconditions
 
-### 5.1 Save changes / Sync with server
-If a product has been added it must be synced with the server.
+### 5.1 Update backend
+The backend should mark the user as logged in.
 
-# 6. Function Points
-To calculate function points, we used the tool on [http://groups.umd.umich.edu](http://groups.umd.umich.edu/cis/course.des/cis375/projects/fp99/main.html).
-
-For this use case we got a score of *54* function points. It took 720min to implement this use case.
-
-![Function Points](../FunctionPoints/Add_Item.png)
+# 6. Extension Points
+n/a

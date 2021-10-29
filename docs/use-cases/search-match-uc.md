@@ -1,34 +1,18 @@
 # 1. Use Case Specification: Search a Match
 
 ## 1.1 Brief Description
-This use case allows users to add products/items to a shopping list.
-A product has a title and may contain information like the number of items and who the product shall be bought for.
+This use case allows users to search for a match.
+The user can play alone, against a bot or against another player.
 
 ## 1.2 Mockup
-### Page to log in to an existing account
+### Home page after clicking on card to search match (1vs1)
 ![Mockup searching](../design/searching.svg)
-
-## 1.3 Screenshot
-### Add Item functionality "blank"
-![Add Item functionality "blank"](../Screenshots/add_item_screenshot_blank.png)
-
-### Add Item functionality "input"
-![Add Item functionality "input"](../Screenshots/add_item_screenshot_input.png)
-
-### Add Item functionality "select users"
-![Add Item functionality "select users"](../Screenshots/add_item_screenshot_select.png)
-
-### Updated Shopping List
-![Updated Shopping List](../Screenshots/shopping_list_screenshot_items.png)
 
 # 2. Flow of Events
 
 ## 2.1 Basic Flow
-Here is the activity diagram for adding a new item/product.  
+Here is the activity diagram for searching a round of Tetris.  
 ![Activity Diagram](./activity-diagrams/search-activity.svg)
-
-And here is a screenshot of the `.feature` file for this use case:
-![.feature file](./FeatureFiles/feature_file_add_shopping_list_item.png)
 
 ## 2.2 Alternative Flows
 n/a
@@ -38,19 +22,18 @@ n/a
 
 # 4. Preconditions
 The main preconditions for this use case are:
-
- 1. The users app instance is registered.
- 2. The user is member of a group/shared flat.
- 3. The user has started the app and has navigated to "Shopping List".
+1. The user needs an account
+2. Other players need to be searching for a game if playing 1 vs 1
+3. The connection should not be interrupted while searching
+4. The backend must be functional
 
 # 5. Postconditions
 
-### 5.1 Save changes / Sync with server
-If a product has been added it must be synced with the server.
+### 5.1 Mark playing
+Players in a lobby have to be marked as playing and have their searching tag removed.
 
-# 6. Function Points
-To calculate function points, we used the tool on [http://groups.umd.umich.edu](http://groups.umd.umich.edu/cis/course.des/cis375/projects/fp99/main.html).
+### 5.2 Same lobby / same match
+Players are put into the same lobby / same match. One player should not be match against another player form another lobby.
 
-For this use case we got a score of *54* function points. It took 720min to implement this use case.
-
-![Function Points](../FunctionPoints/Add_Item.png)
+# 6. Extension Points
+n/a
