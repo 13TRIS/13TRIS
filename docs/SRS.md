@@ -205,7 +205,8 @@ Optional features are:
 The users of our application will be able to create an account with a username and password. This will create a new
 unique user with a UUID, which will be used later to identify a player, store data about him and show his rank in the
 leader board. This will make it easier for us to create a leaderboard to displays the top player of all time or the top
-recent player.
+recent player.  
+[**Register use case**](./use-cases/register-uc.md)
 
 #### 3.1.2 Logging in and out
 
@@ -215,13 +216,15 @@ For a player to identify himself and keep a record of various information (wins,
 in. If the player doesn't have an account, they will be asked to create an account. After creating an account the user
 will be able to authenticate themselves and login. The option "remember me" will set an authentication cookie if the
 user chooses to. If an authentication cookie has been set, the user will be automatically logged back in. If they finish
-playing, they are able to log out manually via the logout button, _which will also destroy the auth-cookie_.
+playing, they are able to log out manually via the logout button, _which will also destroy the auth-cookie_.  
+[**Login use case**](./use-cases/login-uc.md)
 
 #### 3.1.3 Searching a match
 
 In the application the user will be able to search for a match via the "search match" function. If the user decides to
 search for a match he will be tagged as "searching". All users who have this status will be picked up by the engine and
-be matched against one another.
+be matched against one another.  
+[**Searching use case**](./use-cases/search-match-uc.md)
 
 #### 3.1.4 Basic functionality of playing Tetris
 
@@ -231,12 +234,14 @@ and have to get placed in complete rows in order to keep from hitting the top. I
 the blocks in that row, drops every block from above by as many rows that have been destroyed and grants the player a
 various amount of points. These points are the end-result for the player and will be used as statistics for the
 leaderboard.
+[**Play solo use case**](./use-cases/play-solo-uc.md)
 
 #### 3.1.5 Playing 1 vs 1 against another player
 
 After implementing the basic functionality of Tetris we plan on making the 1 vs 1 mode work, where two players play
 until either board overflows (loses the match). To make the games more interesting, we thought of creating special
-modes: new power-ups, faster drop rate, death-match, etc...
+modes: new power-ups, faster drop rate, death-match, etc...  
+[**Play 1vs1 use case**](./use-cases/play-1v1-uc.md)
 
 #### 3.1.6 Deleting an account
 
@@ -257,7 +262,8 @@ We are planning on implementing the functionality of playing bot games.
 
 #### 3.1.9 Viewing the leader board
 
-The user will be able to see the best players on a leaderboard.
+The user will be able to see the best players on a leaderboard.  
+[**Leaderboard use case**](./use-cases/view-leaderboard.md)
 
 #### Optional features are:
 
