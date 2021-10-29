@@ -33,12 +33,13 @@ n/a
 # 4. Preconditions
 
 The main preconditions for this use case are:
-1. Teh leaderboard has been initialized / updated once
+1. Matched have been played / saved into the database.
 
 
 # 5. Postconditions
 
-##5.1
+The main preconditions for this use case are:
+1. The leaderboard will get updated.
 
 # 6. Extension Points
 
