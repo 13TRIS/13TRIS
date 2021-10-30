@@ -377,7 +377,7 @@ The User interfaces that will be implemented are (in case you want to see our wh
 - Imprint - contact data and general information about the team/application
 - Privacy policy - information for the user about how the application collects data
 - Leader board - a detailed view of the leaderboard
-- Admin site - admins can create or delete user accounts and manage the application
+- Admin site - admins can edit or delete user accounts and manage the application
 
 Optional user interfaces that may be implemented:
 
