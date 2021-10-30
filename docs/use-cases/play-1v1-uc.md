@@ -11,15 +11,23 @@ This player will lose while the other player will win the game.
 
 ## 1.3 Screenshot
 ### Versus game Functionality "match lost"
+When one of the players has lost the game we need to show game over screen to this player. The other player will see that he 
+won the game. Other information like the score need to be shown as well.
 ![Solo game functionality "game end"](../design/1v1lose.svg)
 
 ### Versus game Functionality "match won"
+When one of the players has lost the game we need to show a victory message to the other player. 
+Other information like the score need to be shown as well.
 ![Solo game functionality "highscore"](../design/1v1win.svg)
 
 # 2. Flow of Events
 
 ## 2.1 Basic Flow
-Here is the activity diagram for playing a solo game.  
+Here is the activity diagram for playing a 1vs1 game. First the game board will be initialized for both players and a new random block is generated.
+Afterwards the game will constantly be updated while the users have the ability to perform different actions like moving or rotating
+the block. All the inputs will be sent to the backend which checks for each player if the block is actually still movable. If not the game might
+be finished or a new block has to be generated for this player. At the end the game has to be saved to the history of both players.
+Based on the results of the game one player will be prompted that he won and the other one will be prompted that he lost.
 ![Activity Diagram](./activity-diagrams/1v1-game-activity.svg)
 
 ## 2.2 Alternative Flows

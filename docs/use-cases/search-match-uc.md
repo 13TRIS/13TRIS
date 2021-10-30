@@ -7,14 +7,17 @@ This use case allows users to search for a match. The user can play alone, again
 ## 1.2 Mockup
 
 ### Home page after clicking on card to search match (1vs1)
-
+After clicking one of the cards on the home page an indicator that the game is loading or the user is searching will show.
 ![Mockup searching](../design/searching.svg)
 
 # 2. Flow of Events
 
 ## 2.1 Basic Flow
 
-Here is the activity diagram for searching a round of Tetris.  
+Here is the activity diagram for searching a round of Tetris. After the user has visited the home page and clicked on a
+"playing card" he must be marked as "playing". If he clicked the playing card for the 1vs1 mode he must be marked
+as searching first. Searching players are matched against each other. Lastly a lobby for the game has to be created by
+the backend and the game must be loaded.  
 ![Activity Diagram](./activity-diagrams/search-activity.svg)
 
 ## 2.2 Alternative Flows
