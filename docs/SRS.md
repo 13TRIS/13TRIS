@@ -179,12 +179,12 @@ Testing: (not yet decided)
 This section will explain the different use cases, you could see in the Use Case Diagram, and their functionality.  
 Until December, we plan to implement:
 
-- 3.1.1 Creating an account
+- 3.1.1 Creating and deleting an account
 - 3.1.2 Logging in and out
 - 3.1.3 Searching a match
 - 3.1.4 Basic functionality of playing Tetris
 - 3.1.5 Playing 1 vs 1 against another player
-- 3.1.6 Creating or deleting a user
+- 3.1.6 Creating or editing a user
 
 Until June, we want to implement:
 
@@ -205,7 +205,7 @@ Optional features are:
 The users of our application will be able to create an account with a username and password. This will create a new
 unique user with a UUID, which will be used later to identify a player, store data about him and show his rank in the
 leader board. This will make it easier for us to create a leaderboard to displays the top player of all time or the top
-recent player.  
+recent player. The user can also choose to delete their account.   
 [**Register use case**](./use-cases/register-uc.md)
 
 #### 3.1.2 Logging in and out
