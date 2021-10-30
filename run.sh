@@ -1,4 +1,4 @@
-cd /home/daniel/PycharmProjects/13TRIS/frontend/
+cd ./frontend/
 npm run build
-cd /home/daniel/PycharmProjects/13TRIS/djangoproject/
+cd ../djangoproject/
 python manage.py runserver
