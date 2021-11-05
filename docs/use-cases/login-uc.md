@@ -30,6 +30,9 @@ If not an error is shown to the user otherwise the user will be forwarded to the
 ## 2.2 Alternative Flows
 n/a
 
+## 2.3 Narrative
+<!-- add-file: test/feature/Login.feature -->
+
 # 3. Special Requirements
 n/a
 
