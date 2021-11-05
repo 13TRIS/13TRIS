@@ -33,7 +33,26 @@ tab to view a differetn kind of leaderboard the view will be updated as well.
 n/a
 
 ## 2.3 Narrative
-<!-- add-file: test/feature/ViewLeaderboard.feature -->
+```gherkin
+Feature: View Leaderboard
+  As a USER
+  I want to view the best players on the leaderboard and filter by various criteria.
+
+  Background:
+    Given The user is logged in
+    And The user is visiting the home page
+
+  Scenario Outline: Change view
+    When I click the tab <tab> above the leaderboard
+    Then I should see the user <name>
+
+    Examples:
+      | tab  | name      |
+      | solo | UserSolo  |
+      | mmr  | UserMMR   |
+      | 1vs1 | UserOther |
+      | bot  | UserOther |
+```
 
 # 3. Special Requirements
 
