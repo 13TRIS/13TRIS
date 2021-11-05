@@ -21,4 +21,4 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Run Tests
       run: |
-        python ../../djangoproject/manage.py behave
+        python djangoproject/manage.py behave
