@@ -19,6 +19,9 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    steps:
+    - uses: actions/checkout@v2
     - name: Run Tests
       run: |
+        ls -la
         python manage.py behave
