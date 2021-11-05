@@ -25,5 +25,4 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        cd djangoproject/
-        python manage.py behave
+        python djangoproject/manage.py behave djangoproject/features
