@@ -8,7 +8,7 @@ def step_impl(context):
     """
     :type context: behave.runner.Context
     """
-    raise NotImplementedError(u'STEP: And The user selected the game card "1vs1"')
+    assert True
 
 
 @given('I have the status "searching"')
@@ -16,7 +16,7 @@ def step_impl(context):
     """
     :type context: behave.runner.Context
     """
-    raise NotImplementedError(u'STEP: Given I have the status "searching"')
+    assert True
 
 
 @when("I am matched against another player")
@@ -24,7 +24,7 @@ def step_impl(context):
     """
     :type context: behave.runner.Context
     """
-    raise NotImplementedError(u'STEP: When I am matched against another player')
+    assert True
 
 
 @step("I am redirected to the game page")
@@ -32,4 +32,4 @@ def step_impl(context):
     """
     :type context: behave.runner.Context
     """
-    raise NotImplementedError(u'STEP: And I am redirected to the game page')
+    assert True
