@@ -32,6 +32,24 @@ be prompted to the user.
 ## 2.2 Alternative Flows
 n/a
 
+## 2.3 Narrative
+```gherkin
+Feature: Play solo game
+  As a USER I
+  want to play Tetris in endless mode.
+
+  Background:
+    Given The user is logged in
+    And The user selected game card "solo game"
+
+  Scenario: Player joins solo game
+    Given The lobby was created
+    When I am redirected to the game page
+    Then My status should be updated to "playing"
+    And I should see the game board
+    And I should be able to make inputs
+```
+
 # 3. Special Requirements
 n/a
 

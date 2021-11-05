@@ -32,6 +32,9 @@ tab to view a differetn kind of leaderboard the view will be updated as well.
 
 n/a
 
+## 2.3 Narrative
+<!-- add-file: test/feature/ViewLeaderboard.feature -->
+
 # 3. Special Requirements
 
 n/a
