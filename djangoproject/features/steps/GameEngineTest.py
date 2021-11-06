@@ -8,7 +8,7 @@ def step_impl(context):
     """
     :type context: behave.runner.Context
     """
-    assert True
+    assert False
 
 
 @then("It should render properly with the correct resolution")
