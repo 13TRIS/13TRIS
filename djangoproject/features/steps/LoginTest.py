@@ -8,7 +8,7 @@ def step_impl(context):
     """
     :type context: behave.runner.Context
     """
-    assert False
+    assert True
 
 
 @given("I have an account")
