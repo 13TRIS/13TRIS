@@ -10,6 +10,9 @@ jobs:
       max-parallel: 4
       matrix:
         python-version: [3.9]
+    defaults:
+      run:
+        working-directory: djangoproject 
 
     steps:
     - uses: actions/checkout@v2
@@ -23,4 +26,4 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        python djangoproject/manage.py behave djangoproject/features
+        python manage.py behave
