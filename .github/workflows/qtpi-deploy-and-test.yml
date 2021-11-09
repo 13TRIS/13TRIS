@@ -1,6 +1,7 @@
 name: Django CI
 
-on: push
+on:
+  workflow_dispatch:
 
 jobs:
 
