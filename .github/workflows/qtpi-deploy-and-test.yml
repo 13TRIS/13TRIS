@@ -24,4 +24,5 @@ jobs:
     - name: Build App
       run: |
         cd frontend
+        npm i
         npm run build
