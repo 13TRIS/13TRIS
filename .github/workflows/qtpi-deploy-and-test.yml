@@ -23,6 +23,6 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build App
       run: |
-        cd ../frontend
+        cd frontend
         npm i
         npm run build
