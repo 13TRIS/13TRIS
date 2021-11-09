@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: send message
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_APP_ID }}
+          webhook_token: ${{ secrets.DISCORD_PUB_KEY }}
+          color: "#48f442"
+          username: "GitHub Bot"
+          message: "A new commit has been pushed with custom color."
