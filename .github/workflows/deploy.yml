@@ -1,7 +1,9 @@
-name: Django CI
+name: Deploy to QTPI
 
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows: [ "Install Dependencies" ]
+    types: [completed]
 
 jobs:
 
@@ -19,17 +21,3 @@ jobs:
       run: |
         cd djangoproject
         python3 manage.py behave
-    
-  build:
-    runs-on: self-hosted
-    steps:
-    - uses: actions/checkout@v2
-    - uses: c-hive/gha-npm-cache@v1
-      with:
-        directory: frontend
-    - name: Build App
-      run: |
-        cd frontend
-        npm i
-        npm run build
-        

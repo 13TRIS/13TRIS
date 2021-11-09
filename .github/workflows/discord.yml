@@ -1,7 +1,9 @@
 name: discord
 
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows: [ "Deploy to QTPI" ]
+    types: [completed]
 
 jobs:
 
