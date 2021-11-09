@@ -20,6 +20,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies
+        working-directory: frontend
         if: steps.cache-npm-deps.outputs.cache-hit != 'true'
         run: npm install
 
