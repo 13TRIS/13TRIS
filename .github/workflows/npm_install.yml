@@ -1,6 +1,9 @@
 name: Install Dependencies
 
-on: push
+on:
+  workflow_run:
+    workflows: [ "build markdown" ]
+    types: [completed]
 
 jobs:
 
@@ -13,7 +16,8 @@ jobs:
 
     steps:
       - name: Cache npm dependencies
-        uses: actions/cache@v2
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
         with:
           working-directory: frontend
           path: './'
