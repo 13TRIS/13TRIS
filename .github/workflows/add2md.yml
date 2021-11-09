@@ -1,6 +1,7 @@
 name: build markdown
 
-on: push
+on:
+  workflow_dispatch:
 
 jobs:
   build:

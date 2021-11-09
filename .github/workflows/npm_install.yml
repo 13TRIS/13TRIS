@@ -15,7 +15,7 @@ jobs:
         id: cache-npm-deps
         with:
           path: '~/.npm'
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
 
@@ -25,4 +25,5 @@ jobs:
         run: npm install
 
       - name: Test
+        working-directory: frontend
         run: npm run build
