@@ -3,10 +3,9 @@ name: Django CI
 on: push
 
 jobs:
-  build:
 
+  test:
     runs-on: self-hosted
-
     steps:
     - uses: actions/checkout@v2
     - name: Install Dependencies
@@ -20,9 +19,29 @@ jobs:
         cd djangoproject
         python3 manage.py behave
     
+  build:
+    runs-on: self-hosted
+    steps:
     - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: npm-${{ hashFiles('package-lock.json') }}
+        restore-keys: npm-
     - name: Build App
       run: |
         cd frontend
         npm i
         npm run build
+
+  discord:
+    runs-on: self-hosted
+    steps:
+      - name: send message
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_APP_ID }}
+          webhook_token: ${{ secrets.DISCORD_PUB_KEY }}
+          color: "#48f442"
+          username: "GitHub Bot"
+          message: "A new commit has been pushed with custom color."
