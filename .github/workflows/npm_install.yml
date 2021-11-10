@@ -8,18 +8,17 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
-      - name: Cache npm dependencies
-        id: cache-npm-deps
-        uses: actions/cache@v2
-        with:
-          path: frontend/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
 
-      - name: Install dependencies
-        working-directory: frontend
-        if: steps.cache-npm-deps.outputs.cache-hit != 'true'
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: /home/pi/npm_cache/
+          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('frontend/package_lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-npm-cache-
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           ls -la
           npm install
