@@ -13,7 +13,7 @@ jobs:
         id: cache
         with:
           path: /home/pi/npm_cache/
-          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('frontend/package_lock.json') }}
+          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('frontend/package-lock.json') }}
           restore-keys: |
             ${{ runner.OS }}-npm-cache-
 
