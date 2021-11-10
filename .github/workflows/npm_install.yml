@@ -22,8 +22,7 @@ jobs:
             ${{ runner.OS }}-npm-cache-
 
       - name: Install Dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install
+        run: npm i
 
       - name: Build frontend
-        run: npm run build --cache /home/pi/npm_cache/ --prefer-offline --only=production --silent
+        run: npm run build
