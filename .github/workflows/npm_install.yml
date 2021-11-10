@@ -7,25 +7,20 @@ jobs:
     name: Build
     runs-on: self-hosted
     steps:
-      - name: check folder
-        run: ls -la
-        working-directory: frontend
-
-      - name: Checkout
-        uses: actions/checkout@v2
-
+      - uses: actions/checkout@v2
       - uses: actions/cache@v2
-        id: cache-npm-deps
+      - uses: actions/setup-node@v2
         with:
-          path: npm
-          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
+          node-version: '16'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
         working-directory: frontend
         if: steps.cache-npm-deps.outputs.cache-hit != 'true'
         run: |
           ls -la
-          npm ci --no-audit --prefer-offline
+          npm install
 
       - name: Build frontend
         working-directory: frontend
