@@ -26,4 +26,4 @@ jobs:
         run: npm install
 
       - name: Build frontend
-        run: npm ci --cache /home/pi/npm_cache/ --prefer-offline --only=production --silent
+        run: npm install --cache /home/pi/npm_cache/ --prefer-offline --only=production --silent
