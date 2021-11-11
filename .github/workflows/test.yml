@@ -15,8 +15,6 @@ jobs:
           pip3 install --upgrade pip
           pip3 install -r requirements.txt
 
-      - uses: actions/checkout@v2
-
       - name: Run Tests
         run: |
           cd djangoproject
@@ -50,5 +48,4 @@ jobs:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       run: |
         echo "$(date +'%Y-%m-%d %T')" ${{ github.ref_name }} ${{ runner.name }} ${{ github.actor }}
-        pip3 install -r requirements.txt
         python3 .github/discord_python/discord_bot.py -t "$(date +'%Y-%m-%d %T')" -b ${{ github.ref_name }} -s fail -p ${{ runner.name }} -a ${{ github.actor }}
