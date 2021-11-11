@@ -18,6 +18,6 @@ jobs:
           echo ${{ steps.date.outputs.date }} > "src/build_time.txt"
 
       - name: Discord Notification
-        run:
+        run: |
           pip3 install -r ../requirements.txt
           python ../discord_bot.py -t ${{ steps.date.outputs.date }} -b ${{github.ref_name}} -s ${{ github.event.workflow_run.conclusion == 'success' }} -p ${{ github.job }}
