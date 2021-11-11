@@ -27,7 +27,7 @@ jobs:
 
       - name: Discord Notification
         run:
-          python discord.py
+          python ../discord.py
           -t ${{ steps.date.outputs.date }}
           -b ${{github.ref_name}}
           -s ${{ github.event.workflow_run.conclusion == 'success' }}
