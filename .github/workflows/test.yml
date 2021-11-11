@@ -22,4 +22,4 @@ jobs:
     - name: Discord Notification
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-      run: python3 ../discord_bot.py -t ${{ steps.date.outputs.date }} -b ${{github.ref_name}} -s ${{ github.event.workflow_run.conclusion == 'success' }} -p ${{ github.job }}
+      run: python3 discord_bot.py -t ${{ steps.date.outputs.date }} -b ${{github.ref_name}} -s ${{ github.event.workflow_run.conclusion == 'success' }} -p ${{ github.job }}
