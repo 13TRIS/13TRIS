@@ -33,7 +33,7 @@ async def on_ready():
                  (('16618812301557740370-32.png', '6549974331557740369-32.png')[args['Success'] == 'success']))
     embed.add_field(
         name='Branch',
-        value='[{0}}](https://github.com/13TRIS/13TRIS/tree/{0}'.format(args["Branch"]),
+        value='[{0}](https://github.com/13TRIS/13TRIS/tree/{0})'.format(args["Branch"]),
         inline=True)
     embed.add_field(
         name='Actor',
@@ -41,7 +41,7 @@ async def on_ready():
         inline=True)
     embed.add_field(
         name='Pipeline',
-        value='[{0}](https://github.com/13TRIS/13TRIS/actions/runs/{0}'.format(args["Pipeline"]),
+        value='[{0}](https://github.com/13TRIS/13TRIS/actions/runs/{0})'.format(args["Pipeline"]),
         inline=True)
     embed.add_field(
         name='Time',
@@ -49,7 +49,7 @@ async def on_ready():
         inline=False)
     embed.add_field(
         name='Commit',
-        value='[{0}](https://github.com/13TRIS/13TRIS/commit/{0}'.format(args['Commit']),
+        value='[{0}](https://github.com/13TRIS/13TRIS/commit/{0})'.format(args['Commit']),
         inline=False)
     embed.set_footer(text='[https://mkrabs.duckdns.org](https://mkrabs.duckdns.org)')
     await channel.send(embed=embed)
