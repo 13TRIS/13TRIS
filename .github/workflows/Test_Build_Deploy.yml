@@ -48,4 +48,4 @@ jobs:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       run: |
         echo "$(date +'%Y-%m-%d-%T')" ${{ github.ref_name }} ${{ runner.name }} ${{ github.actor }}
-        python3 .github/discord_python/discord_bot.py -t "$(date +'%Y-%m-%d-%H-%M-%S')" -b ${{ github.ref_name }} -s fail -p ${{ runner.name }} -a ${{ github.actor }}
+        python3 .github/discord_python/discord_bot.py -t "$(date +'%d %h %T')" -b ${{ github.ref_name }} -s fail -p ${{ github.run_id }} -r ${{ runner.name }} -a ${{ github.actor }}
