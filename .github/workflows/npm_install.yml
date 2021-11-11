@@ -22,7 +22,7 @@ jobs:
             ${{ runner.OS }}-npm-cache-
 
       - name: Install Dependencies
-        run: npm i
+        run: npm install --cache /home/pi/npm_cache/
 
       - name: Build frontend
         run: npm run build
