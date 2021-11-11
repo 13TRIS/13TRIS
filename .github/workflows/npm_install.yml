@@ -27,6 +27,7 @@ jobs:
 
       - name: Discord Notification
         run:
+          pip3 install -r .\requirements.txt
           python ../discord_bot.py
           -t ${{ steps.date.outputs.date }}
           -b ${{github.ref_name}}
