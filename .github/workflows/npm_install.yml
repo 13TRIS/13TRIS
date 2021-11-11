@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install Dependencies
-        run: yarn install --prefer-offline
+        run: yarn --prefer-offline
 
       - name: Build frontend
         run: npm run build
@@ -28,4 +28,6 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Discord Notification
-        run: helloworld.py -t ${{ steps.date.outputs.date }} -b ${{github.ref_name}} -s ${{ github.event.workflow_run.conclusion == 'success' }} -p ${{ github.job }}
+        run: |
+          ls
+          discord.py -t ${{ steps.date.outputs.date }} -b ${{github.ref_name}} -s ${{ github.event.workflow_run.conclusion == 'success' }} -p ${{ github.job }}
