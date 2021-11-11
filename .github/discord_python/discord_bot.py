@@ -44,13 +44,17 @@ async def on_ready():
         value='[{0}](https://github.com/13TRIS/13TRIS/actions/runs/{0})'.format(args["Pipeline"]),
         inline=True)
     embed.add_field(
+        name='Commit',
+        value='[{0:7.7}](https://github.com/13TRIS/13TRIS/commit/{0})'.format(args['Commit']),
+        inline=True)
+    embed.add_field(
+        name='Runner',
+        value=args['Runner'],
+        inline=True)
+    embed.add_field(
         name='Time',
         value=args['Time'],
-        inline=False)
-    embed.add_field(
-        name='Commit',
-        value='[{0}](https://github.com/13TRIS/13TRIS/commit/{0})'.format(args['Commit']),
-        inline=False)
+        inline=True)
     embed.set_footer(text='[https://mkrabs.duckdns.org](https://mkrabs.duckdns.org)')
     await channel.send(embed=embed)
     await client.close()

@@ -2,6 +2,9 @@ name: Test and Build Phase
 
 on: [ push, pull_request ]
 
+# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#jobsjob_idstepscontinue-on-error
+# https://docs.github.com/en/actions/learn-github-actions/contexts
+
 jobs:
 
   test:
