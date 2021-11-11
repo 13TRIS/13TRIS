@@ -32,10 +32,15 @@ jobs:
     defaults:
       run:
         working-directory: frontend
+    outputs:
+      starttime: ${{ steps.Get_current_date.outputs.start }}
 
     name: Build
     runs-on: self-hosted
     steps:
+      - name: Get_current_date
+        id: date
+        run: echo "::set-output name=start::${{ needs.test.outputs.starttime }}"
 
       - uses: actions/checkout@v2
 
@@ -51,16 +56,8 @@ jobs:
     runs-on: self-hosted
     steps:
     - name: Discord Notification
-      if: ${{ success() }}
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       run: |
         pip3 install -r requirements.txt
-        python3 .github/discord_python/discord_bot.py -t ${{ needs.test.outputs.starttime }} -b ${{ github.ref_name }} -s 'success' -p ${{ github.job }} -a ${{ github.actor }}
-    - name: Discord Notification
-      if: ${{ failure() }}
-      env:
-        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-      run: |
-        pip3 install -r requirements.txt
-        python3 .github/discord_python/discord_bot.py -t ${{ needs.test.outputs.starttime }} -b ${{ github.ref_name }} -s 'fail' -p ${{ runner.name }} -a ${{ github.actor }}
+        python3 .github/discord_python/discord_bot.py -t ${{ needs.build.outputs.starttime }} -b ${{ github.ref_name }} -s 'fail' -p ${{ runner.name }} -a ${{ github.actor }}
