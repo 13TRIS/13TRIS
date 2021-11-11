@@ -20,7 +20,9 @@ jobs:
           key: ${{ runner.OS }}-npm-cache-${{ hashFiles('frontend/package-lock.json') }}
           restore-keys: |
             ${{ runner.OS }}-npm-cache-
-        run: npm i --prefer-offline -cache /home/pi/npm_cache/
+
+      - name: Install Dependencies
+        run: npm install --no-registry --prefer-offline -cache /home/pi/npm_cache/ --cache-min 999999999
 
       - name: Build frontend
         run: npm run build  # just work please
