@@ -1,5 +1,6 @@
 import os
 import discord
+import asyncio
 import argparse
 
 # Construct an argument parser
