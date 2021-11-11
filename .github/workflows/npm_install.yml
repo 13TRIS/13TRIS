@@ -15,7 +15,7 @@ jobs:
         id: date
         run: |
           echo "::set-output name=date::$(date +'%Y-%m-%d')"
-          echo ${{ steps.date.outputs.date }} > "scr/build_time.txt"
+          echo ${{ steps.date.outputs.date }} > "src/build_time.txt"
 
       - uses: actions/checkout@v2
 
