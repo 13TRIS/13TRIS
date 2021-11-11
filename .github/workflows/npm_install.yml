@@ -24,7 +24,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm i
 
-      - name: Build frontend #test
+      - name: Build frontend
         run: |
           node -v
           npm -v
