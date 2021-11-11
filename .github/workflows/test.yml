@@ -1,9 +1,6 @@
-name: Deploy to QTPI
+name: Test Phase
 
-on:
-  workflow_run:
-    workflows: [ "Install Dependencies" ]
-    types: [completed]
+on: [ push, pull_request ]
 
 jobs:
 
@@ -21,3 +18,8 @@ jobs:
       run: |
         cd djangoproject
         python3 manage.py behave
+
+    - name: Discord Notification
+      env:
+        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+      run: python3 ../discord_bot.py -t ${{ steps.date.outputs.date }} -b ${{github.ref_name}} -s ${{ github.event.workflow_run.conclusion == 'success' }} -p ${{ github.job }}

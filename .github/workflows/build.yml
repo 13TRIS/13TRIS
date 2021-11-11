@@ -1,6 +1,9 @@
 name: Build app
 
-on: [ push, pull_request ]
+on:
+  workflow_run:
+    workflows: [ "Test Phase" ]
+    types: [completed]
 
 jobs:
   build:
@@ -14,8 +17,16 @@ jobs:
       - name: Get current date
         id: date
         run: |
-          echo "::set-output name=date::$(date +'%Y-%m-%d')"
+          echo "::set-output name=date::$(date +'%Y-%m-%d-%s %T')"
           echo ${{ steps.date.outputs.date }} > "src/build_time.txt"
+
+      - uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: yarn --prefer-offline
+
+      - name: Build frontend
+        run: npm run build
 
       - name: Discord Notification
         env:
