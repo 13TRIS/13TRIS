@@ -23,5 +23,9 @@ jobs:
       - name: Build frontend
         run: npm run build
 
+  notify:
+    needs: build
+    runs-on: self-hosted
+    steps:
       - name: Discord Notification
         run: helloworld.py -t ${{ steps.date.outputs.date }} -b ${{github.ref_name}} -s ${{ github.event.workflow_run.conclusion == 'success' }} -p ${{ github.job }}
