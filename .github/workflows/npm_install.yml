@@ -12,16 +12,10 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        id: cache
-        with:
-          path: /home/pi/npm_cache/
-          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('frontend/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-npm-cache-
 
-      - name: Install Dependencies
-        run: npm ci --prefer-offline -cache /home/pi/npm_cache/
+      - uses: bahmutov/npm-install@v1
+        with:
+          working-directory: frontend
 
       - name: Build frontend
         run: npm run build  # just work please
