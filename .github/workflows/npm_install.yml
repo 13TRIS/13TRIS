@@ -22,7 +22,7 @@ jobs:
             ${{ runner.OS }}-npm-cache-
 
       - name: Install Dependencies
-        run: npm install --no-registry --prefer-offline -cache /home/pi/npm_cache/ --cache-min 999999999
+        run: npm install --no-registry --offline --prefer-offline -cache /home/pi/npm_cache/ --cache-min 999999999
 
       - name: Build frontend
         run: npm run build  # just work please
