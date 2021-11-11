@@ -20,7 +20,7 @@ jobs:
       - name: Run Tests
         run: |
           cd djangoproject
-          python3 manage.py behave
+          echo hello # python3 manage.py behave
 
   build:
     needs: test
@@ -49,5 +49,6 @@ jobs:
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       run: |
+        echo "$(date +'%Y-%m-%d %T')" ${{ github.ref_name }} ${{ runner.name }} ${{ github.actor }}
         pip3 install -r requirements.txt
         python3 .github/discord_python/discord_bot.py -t "$(date +'%Y-%m-%d %T')" -b ${{ github.ref_name }} -s fail -p ${{ runner.name }} -a ${{ github.actor }}
