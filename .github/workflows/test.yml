@@ -6,12 +6,7 @@ jobs:
 
   test:
     runs-on: self-hosted
-    outputs:
-      starttime: ${{ steps.Get_current_date.outputs.start }}
     steps:
-      - name: Get_current_date
-        id: date
-        run: echo "::set-output name=start::$(date +'%Y-%m-%d-%s %T')"
 
       - uses: actions/checkout@v2
 
@@ -32,15 +27,10 @@ jobs:
     defaults:
       run:
         working-directory: frontend
-    outputs:
-      starttime: ${{ steps.Get_current_date.outputs.start }}
 
     name: Build
     runs-on: self-hosted
     steps:
-      - name: Get_current_date
-        id: date
-        run: echo "::set-output name=start::${{ needs.test.outputs.starttime }}"
 
       - uses: actions/checkout@v2
 
@@ -60,4 +50,4 @@ jobs:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       run: |
         pip3 install -r requirements.txt
-        python3 .github/discord_python/discord_bot.py -t ${{ needs.build.outputs.starttime }} -b ${{ github.ref_name }} -s 'fail' -p ${{ runner.name }} -a ${{ github.actor }}
+        python3 .github/discord_python/discord_bot.py -t "$(date +'%Y-%m-%d-%s %T')" -b ${{ github.ref_name }} -s 'fail' -p ${{ runner.name }} -a ${{ github.actor }}
