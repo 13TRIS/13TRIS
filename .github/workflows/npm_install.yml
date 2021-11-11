@@ -21,8 +21,7 @@ jobs:
             ${{ runner.OS }}-npm-cache-
 
       - name: Install Dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci --prefer-offline
+        run: npm ci --prefer-offline -cache /home/pi/npm_cache/
 
       - name: Build frontend
         run: npm run build  # just work please
