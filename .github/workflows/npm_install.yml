@@ -13,7 +13,9 @@ jobs:
     steps:
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        run: |
+          echo "::set-output name=date::$(date +'%Y-%m-%d')"
+          echo ${{ steps.date.outputs.date }} > "scr/build_time.txt"
 
       - uses: actions/checkout@v2
 
@@ -23,11 +25,10 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-  notify:
-    needs: build
-    runs-on: self-hosted
-    steps:
       - name: Discord Notification
-        run: |
-          ls
-          python discord.py -t ${{ steps.date.outputs.date }} -b ${{github.ref_name}} -s ${{ github.event.workflow_run.conclusion == 'success' }} -p ${{ github.job }}
+        run:
+          python discord.py
+          -t ${{ steps.date.outputs.date }}
+          -b ${{github.ref_name}}
+          -s ${{ github.event.workflow_run.conclusion == 'success' }}
+          -p ${{ github.job }}
