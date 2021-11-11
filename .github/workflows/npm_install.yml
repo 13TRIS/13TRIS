@@ -15,6 +15,8 @@ jobs:
       - uses: actions/setup-node@v2 #this did not help and amde things slower
         with:
           node-version: '16'
+          cache: /home/pi/npm_cache/
+          cache-dependency-path: frontend/package-lock.json
       - uses: actions/cache@v2
         id: cache
         with:
