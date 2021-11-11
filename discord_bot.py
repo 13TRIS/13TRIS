@@ -1,5 +1,4 @@
 import os
-
 import discord
 import argparse
 
@@ -7,14 +6,10 @@ import argparse
 all_args = argparse.ArgumentParser()
 
 # Add arguments to the parser
-all_args.add_argument("-s", "--Success", required=True,
-                      help="success Value")
-all_args.add_argument("-b", "--Branch", required=True,
-                      help="branch Value")
-all_args.add_argument("-t", "--Time", required=True,
-                      help="time Value")
-all_args.add_argument("-p", "--Pipeline", required=True,
-                      help="pipeline Value")
+all_args.add_argument("-s", "--Success", required=True, help="success Value")
+all_args.add_argument("-b", "--Branch", required=True, help="branch Value")
+all_args.add_argument("-t", "--Time", required=True, help="time Value")
+all_args.add_argument("-p", "--Pipeline", required=True, help="pipeline Value")
 args = vars(all_args.parse_args())
 
 client = discord.Client()

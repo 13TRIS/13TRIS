@@ -20,4 +20,4 @@ jobs:
       - name: Discord Notification
         run: |
           pip3 install -r ../requirements.txt
-          python ../discord_bot.py -t ${{ steps.date.outputs.date }} -b ${{github.ref_name}} -s ${{ github.event.workflow_run.conclusion == 'success' }} -p ${{ github.job }}
+          python3 ../discord_bot.py -t ${{ steps.date.outputs.date }} -b ${{github.ref_name}} -s ${{ github.event.workflow_run.conclusion == 'success' }} -p ${{ github.job }}
