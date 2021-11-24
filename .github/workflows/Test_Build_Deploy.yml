@@ -1,6 +1,14 @@
 name: Test and Build Phase
 
-on: [ push, pull_request ]
+on:
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - '.github/**'
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '.github/**'
 
 # https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#jobsjob_idstepscontinue-on-error
 # https://docs.github.com/en/actions/learn-github-actions/contexts
@@ -8,6 +16,7 @@ on: [ push, pull_request ]
 jobs:
 
   test:
+    name: Test
     runs-on: self-hosted
     steps:
 
@@ -37,6 +46,26 @@ jobs:
     steps:
 
       - uses: actions/checkout@v2
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+
+      - name: Cache yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v2
+        with:
+          path: '~/.npm'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install Dependencies
         run: yarn --prefer-offline
