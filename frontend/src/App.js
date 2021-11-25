@@ -1,5 +1,5 @@
 import './App.css';
-import tetris from './tetris_base_game';
+import './tetris_base_game';
 import React, {useEffect, useRef, useState} from "react";
 
 function App() {
