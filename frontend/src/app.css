@@ -1,7 +1,7 @@
 body{
-  background-color: #282c34;
+  background-color: #282c34; /* #282c34 */
+  color: bisque; /* cornflowerblue */
 }
-
 
 .center-column{
     width:600px;
