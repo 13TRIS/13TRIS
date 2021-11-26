@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<div style="border-style: solid">
+    <canvas id="my_canvas" style="width: 500px; height: 500px;" width="1200" height="1000"></canvas>
+</div>
+<body>
+<script type="text/javascript">
+
+    const canvas = document.getElementById("my_canvas");
+    const ctx = canvas.getContext('2d');
+
+    let game = {
+        // TODO: change this
+        currentBlock: {
+            x: 0,
+            y: 3,
+            pattern: null
+        },
+        board: [
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]
+        ],
+        level: 1,
+        score: 0,
+        rotationAngle: true,
+        highscore: 0,
+        name: null
+    }
+
+
+    const blockSize = 30;
+    const blocks =
+        [
+            // L
+            [
+                [
+                    [0, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 1, 1, 1],
+                    [0, 0, 0, 0]
+                ],
+                [
+                    [0, 0, 0, 0],
+                    [0, 1, 1, 0],
+                    [0, 1, 0, 0],
+                    [0, 1, 0, 0]
+                ],
+                [
+                    [0, 0, 0, 0],
+                    [1, 1, 1, 0],
+                    [0, 0, 1, 0],
+                    [0, 0, 0, 0]
+                ],
+                [
+                    [0, 0, 1, 0],
+                    [0, 0, 1, 0],
+                    [0, 1, 1, 0],
+                    [0, 0, 0, 0]
+                ],
+            ],
+            [
+                [
+                    [0, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 1, 1, 1],
+                    [0, 0, 0, 0]
+                ],
+                [
+                    [0, 0, 0, 0],
+                    [0, 1, 1, 0],
+                    [0, 1, 0, 0],
+                    [0, 1, 0, 0]
+                ],
+                [
+                    [0, 0, 0, 0],
+                    [1, 1, 1, 0],
+                    [0, 0, 1, 0],
+                    [0, 0, 0, 0]
+                ],
+                [
+                    [0, 0, 1, 0],
+                    [0, 0, 1, 0],
+                    [0, 1, 1, 0],
+                    [0, 0, 0, 0]
+                ],
+            ]
+        ]
+
+    function getColour(tile) {
+        let colour;
+
+        switch (tile) {
+            case 0:
+                colour = '#000000';
+                break;
+            case 1:
+                colour = '#129314';
+                break; // l
+            case 2:
+                colour = '#ff9111';
+                break; // j
+            case 3:
+                colour = '#cb1820';
+                break; // t
+            case 4:
+                colour = '#3cc0dc';
+                break; // s
+            case 5:
+                colour = '#e136e8';
+                break; // z
+            case 6:
+                colour = '#ffdb43';
+                break; // o
+            case 7:
+                colour = '#97fc43';
+                break; // i
+            case 9:
+                colour = '#918f8f';
+                break;
+
+            default:
+                colour = '#ffffff';
+                break;
+        }
+
+        return colour;
+    }
+
+    function renderBoard() {
+        for (let i = 0; i < game.board.length; i++) {
+            for (let j = 0; j < game.board[i].length; j++) {
+                ctx.fillStyle = getColour(game.board[i][j]);
+                ctx.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
+            }
+        }
+
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+                const tile = game.currentBlock.pattern[i][j];
+                if (tile !== 0) {
+                    ctx.fillStyle = getColour(tile);
+                    ctx.fillRect((game.currentBlock.x + j) * blockSize, (game.currentBlock.y + i) * blockSize, blockSize, blockSize);
+                }
+            }
+        }
+    }
+
+    function rotateBlock() {
+
+    }
+
+    function moveBlock(number) {
+        console.log('Moved ' + number)
+    }
+
+    function moveDown() {
+
+    }
+
+    function checkLegailty() {
+        if (game.currentBlock.y + game.currentBlock.height > 600) {
+            game.currentBlock.y = game.currentBlock.height;
+        }
+
+        /* for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+                if(
+                    game.board[game.currentBlock.x + 1][game.currentBlock.y]
+                ) {
+
+                }
+            }
+        } */
+
+        game.currentBlock.y += 1;
+    }
+
+    function blockdetection() {
+
+
+    }
+
+    function generateBlock() {
+        game.currentBlock.pattern = blocks[Math.floor(Math.random() * 2)][Math.floor(Math.random() * 2)];
+        console.log(game.currentBlock.pattern)
+    }
+
+    function destroyLines() {
+
+    }
+
+    function addScore(points) {
+        if (points > 0)
+            game.score += points;
+    }
+
+    function playSound(number) {
+
+    }
+
+    window.addEventListener('keydown', (e) => {
+        switch (e.code) {
+            case 'ArrowLeft':
+                moveBlock(-1);
+                break;
+            case 'ArrowRight':
+                moveBlock(1);
+                break;
+            case 'ArrowUp':
+                rotateBlock(game.rotationAngle);
+                break;
+            case 'ArrowDown':
+                moveDown();
+                break;
+
+            default:
+                playSound(423);
+                break;
+        }
+    }, false);
+
+    let last = 0;
+
+
+    // setInterval(() => { generateBlock(); game.currentBlock.y = 0; }, 3000);
+
+    function fun(now) {
+        if (!last || now - last >= (300)) {
+            last = now;
+            checkLegailty();
+        }
+        if (!last || now - last >= (2000)) {
+            generateBlock()
+        }
+        renderBoard();
+        requestAnimationFrame(fun);
+    }
+
+    generateBlock();
+    requestAnimationFrame(fun);
+
+</script>
+</body>
+</html>
