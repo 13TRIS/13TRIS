@@ -198,11 +198,6 @@
         game.currentBlock.y += 1;
     }
 
-    function blockdetection() {
-
-
-    }
-
     function generateBlock() {
         game.currentBlock.pattern = blocks[Math.floor(Math.random() * 2)][Math.floor(Math.random() * 2)];
         console.log(game.currentBlock.pattern)
@@ -221,6 +216,7 @@
 
     }
 
+    // CONTROLS
     window.addEventListener('keydown', (e) => {
         switch (e.code) {
             case 'ArrowLeft':
@@ -242,18 +238,14 @@
         }
     }, false);
 
-    let last = 0;
-
-
     // setInterval(() => { generateBlock(); game.currentBlock.y = 0; }, 3000);
 
+    let last = 0;
+
     function fun(now) {
-        if (!last || now - last >= (300)) {
+        if (!last || now - last >= (1000 - game.level * 35)) {
             last = now;
             checkLegailty();
-        }
-        if (!last || now - last >= (2000)) {
-            generateBlock()
         }
         renderBoard();
         requestAnimationFrame(fun);
