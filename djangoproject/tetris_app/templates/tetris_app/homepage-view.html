@@ -1,59 +1,145 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>13TRIS</title>
-	<!-- Bootstrap CSS -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="shortcut icon" type="image/png" href="{% static 'tetris_app/Logo_small.png' %}">
     <link rel="stylesheet" href="{% static 'tetris_app/app.css' %}">
     <link rel="stylesheet" href="{% static 'tetris_app/homepage-view.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 </head>
-
 <body>
 <!-- <h2>homepage</h2> -->
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-8">
-            <img class="img-responsive center-block" src="tetris_app/static/tetris_app/block.png" alt="Solo" %}>
-            <img class="img-responsive center-block" src="tetris_app/static/tetris_app/block.png" alt="1vs1">
-            <img class="img-responsive center-block" src="tetris_app/static/tetris_app/block.png" alt="1vsAI">
-            <!-- alternativ als cards statt img-responsive-->
-
-            <table class="table table-striped"> <!-- class="table table-striped table-hover", class="table-responsive" -->
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Player</th>
-                        <th>Score</th>
-                        <th>Date
-                    </th>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>ben</td>
-                        <td>200</td>
-                        <td>1.10.21</td>
-                    </tr>
-
-                    <tr>
-                        <td>2</td>
-                        <td>mike</td>
-                        <td>100</td>
-                        <td>1.9.21</td>
-                    </tr>
-                </tbody>
-
-            </table>
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <!-- <img class="img-responsive center-block" src="{% static 'tetris_app/block.png' %}" alt="Solo" %}>
+                     <img class="img-responsive center-block" src="{% static 'tetris_app/block.png' %}" alt="1vs1">
+                     <img class="img-responsive center-block" src="{% static 'tetris_app/block.png' %}" alt="1vsAI">-->
+                    <!-- alternativ als cards statt img-responsive-->
+                    <div class="card" style="height: 580px">
+                        <img src="{% static 'tetris_app/solo_without_text.png' %}">
+                        <div class="card-body">
+                            <h5 class="card-title">Singleplayer</h5>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aut
+                                consectetur
+                                cum
+                                cumque dolore dolorum, ducimus eum itaque laboriosam nisi numquam optio qui, quis
+                                reprehenderit,
+                                saepe sed voluptatem voluptates voluptatum!</p>
+                            <a href="" class="btn btn-primary">Play now!</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card" style="height: 580px">
+                        <img src="{% static 'tetris_app/1vs1_without_text.png' %}">
+                        <div class="card-body">
+                            <h5 class="card-title">Player versus Player</h5>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aut
+                                consectetur
+                                cum
+                                cumque dolore dolorum, ducimus eum itaque laboriosam nisi numquam optio qui, quis
+                                reprehenderit,
+                                saepe sed voluptatem voluptates voluptatum!</p>
+                            <a href="" class="btn btn-primary">Play now!</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card" style="height: 580px">
+                        <img src="{% static 'tetris_app/1vsAI_without_text.png' %}">
+                        <div class="card-body">
+                            <h5 class="card-title">Player versus AI</h5>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aut
+                                consectetur
+                                cum
+                                cumque dolore dolorum, ducimus eum itaque laboriosam nisi numquam optio qui, quis
+                                reprehenderit,
+                                saepe sed voluptatem voluptates voluptatum!</p>
+                            <a href="" class="btn btn-primary">Play now!</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <table class="table table-striped">
+                        <!-- class="table table-striped table-hover", class="table-responsive" -->
+                        <!-- Now we need actual data to fill these tables :) -->
+                        <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Player</th>
+                            <th>Score</th>
+                            <th>Date
+                            </th>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>ben</td>
+                            <td>200</td>
+                            <td>1.10.21</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>mike</td>
+                            <td>100</td>
+                            <td>1.9.21</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-
         <div class="col-4">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    <img src="/docs/Logo/Logo_full.png" class="img-fluid" alt="Logo">
-                    <div class="card" style="width: 8rem;">
+                    <img src="{% static 'tetris_app/Logo_full.png' %}" class="img-fluid" alt="Logo">
+                    <div class="card">
+                        <img src="..." class="card-img-top" alt="usericon">
+                        <div class="card-body">
+                            <h5 class="username">Username</h5>
+                            <p class="card-text">status</p>
+                        </div>
+                    </div>
+                </li>
+                <!-- Limit the width of the cards or does it look better when they are a little wider?
+                     width="8rem" was before -->
+                <li class="list-group-item">
+                    <h3>Friends</h3>
+                    <div class="card mb-2">
+                        <img src="..." class="card-img-top" alt="usericon">
+                        <div class="card-body">
+                            <h5 class="username">Username</h5>
+                            <p class="card-text">status</p>
+                        </div>
+                    </div>
+
+                    <div class="card mb-2">
+                        <img src="..." class="card-img-top" alt="usericon">
+                        <div class="card-body">
+                            <h5 class="username">Username</h5>
+                            <p class="card-text">status</p>
+                        </div>
+                    </div>
+
+                    <div class="card mb-2">
+                        <img src="..." class="card-img-top" alt="usericon">
+                        <div class="card-body">
+                            <h5 class="username">Username</h5>
+                            <p class="card-text">status</p>
+                        </div>
+                    </div>
+
+                    <div class="card mb-2">
                         <img src="..." class="card-img-top" alt="usericon">
                         <div class="card-body">
                             <h5 class="username">Username</h5>
@@ -62,44 +148,7 @@
                     </div>
                 </li>
                 <li class="list-group-item">
-                    <h3>friends</h3>
-
-                    <div class="card" style="width: 8rem;">
-                        <img src="..." class="card-img-top" alt="usericon">
-                        <div class="card-body">
-                            <h5 class="username">Username</h5>
-                            <p class="card-text">status</p>
-                        </div>
-                    </div>
-
-                    <div class="card" style="width: 8rem;">
-                        <img src="..." class="card-img-top" alt="usericon">
-                        <div class="card-body">
-                            <h5 class="username">Username</h5>
-                            <p class="card-text">status</p>
-                        </div>
-                    </div>
-
-                    <div class="card" style="width: 8rem;">
-                        <img src="..." class="card-img-top" alt="usericon">
-                        <div class="card-body">
-                            <h5 class="username">Username</h5>
-                            <p class="card-text">status</p>
-                        </div>
-                    </div>
-
-                    <div class="card" style="width: 8rem;">
-                        <img src="..." class="card-img-top" alt="usericon">
-                        <div class="card-body">
-                            <h5 class="username">Username</h5>
-                            <p class="card-text">status</p>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-
-
-                    <ul class="list-group borderless">
+                    <ul class="list-group borderless" style="list-style: none">
                         <li>
                             <a href="http://13tris.dkoeck.de/" class="link-primary"> Blog </a> <br>
                         </li>
@@ -115,12 +164,8 @@
                     </ul>
                 </li>
             </ul>
-
         </div>
-
     </div>
 </div>
-
-
 </body>
 </html>

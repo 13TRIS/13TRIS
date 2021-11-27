@@ -8,3 +8,8 @@ def login_view(request):
 
 def register_view(request):
     return render(request, 'tetris_app/register-view.html')
+
+
+# This has to be removed eventually
+def homepage_view(request):
+    return render(request, 'tetris_app/homepage-view.html')
