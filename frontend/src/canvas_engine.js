@@ -30,15 +30,17 @@ let game = {
         [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
         [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
         [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-        [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]
+        [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+        [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
     ],
     level: 1,
     score: 0,
     highScore: 0,
-    name: null
+    name: 'Guest',
+    status: null
 }
 
-const blockSize = 30;
+const blockSize = 40;
 let blocks;
 
 blocks = [
@@ -56,9 +58,9 @@ blocks = [
     ],
     // t
     [
+        [0, 0, 0],
         [3, 3, 3],
-        [0, 3, 0],
-        [0, 0, 0]
+        [0, 3, 0]
     ],
     // s
     [
@@ -89,6 +91,17 @@ blocks = [
         [4]
     ]
 ];
+
+const status = {
+    start: 'Start',
+    playing: 'Playing',
+    over: 'Game over'
+}
+
+const offset = {
+    x: 100,
+    y: 100
+};
 
 function getColour(tile) {
     // Get the hex color of a given number
@@ -128,6 +141,12 @@ function getColour(tile) {
         case 10:
             colour = (window.matchMedia("(prefers-color-scheme: dark)").matches) ? '#32323f' : '#e8dec3';
             break;
+        case 11:
+            colour = (window.matchMedia("(prefers-color-scheme: dark)").matches) ? '#f6f6f6' : '#042f3d';
+            break;
+        case 99:
+            colour = (window.matchMedia("(prefers-color-scheme: dark)").matches) ? '#7e0000' : '#be6262';
+            break;
 
         default:
             colour = '#ffffff';
@@ -140,51 +159,55 @@ function getColour(tile) {
 // DRAW BOARD
 function renderBoard() {
     // Draws the board to the canvas
-    ctx.fillStyle = getColour(10);
-    ctx.fillRect(0, 0, 2000, 2000);
-    const offset = {
-        x: 100,
-        y: 100
-    };
+    if (game.status === status.playing) {
+        ctx.fillStyle = getColour(10);
+        ctx.fillRect(0, 0, 2000, 2000);
 
-    ctx.fillStyle = getColour(9);
-    ctx.font = '48px serif';
-    ctx.fillText(
-        'Score: ' + game.score,
-        offset.x,
-        offset.y
-    );
-    ctx.font = '10px sans-serif';
+        ctx.fillStyle = getColour(11);
+        ctx.font = '48px serif';
+        ctx.fillText(
+            'Score: ' + game.score,
+            offset.x,
+            offset.y - 4
+        );
+        ctx.fillText(
+            game.name,
+            offset.x + game.board[0].length * blockSize,
+            offset.y
+        );
+        ctx.font = '10px sans-serif';
 
-    for (let i = 0; i < game.board.length; i++) {
-        for (let j = 0; j < game.board[i].length; j++) {
-            ctx.fillStyle = getColour(game.board[i][j]);
-            ctx.fillRect(
-                j * blockSize + offset.x,
-                i * blockSize + offset.y,
-                blockSize,
-                blockSize);
-            ctx.fillStyle = getColour();
-            ctx.fillText(
-                i + "'" + j,
-                j * blockSize + offset.x + 5,
-                i * blockSize + offset.y + 20
-            );
-        }
-    }
-
-    for (let i = 0; i < game.currentBlock.pattern.length; i++) {
-        for (let j = 0; j < game.currentBlock.pattern[i].length; j++) {
-            const tile = game.currentBlock.pattern[i][j];
-            if (tile !== 0) {
-                ctx.fillStyle = getColour(tile);
+        for (let i = 0; i < game.board.length; i++) {
+            for (let j = 0; j < game.board[i].length; j++) {
+                ctx.fillStyle = getColour(game.board[i][j]);
                 ctx.fillRect(
-                    ((game.currentBlock.y + j) * blockSize) + offset.x,
-                    ((game.currentBlock.x + i) * blockSize) + offset.y,
+                    j * blockSize + offset.x,
+                    i * blockSize + offset.y,
                     blockSize,
                     blockSize);
+                ctx.fillStyle = getColour(11);
+                ctx.fillText(
+                    i + "'" + j,
+                    j * blockSize + offset.x + 5,
+                    i * blockSize + offset.y + 20
+                );
             }
         }
+
+        if (game.currentBlock.pattern)
+            for (let i = 0; i < game.currentBlock.pattern.length; i++) {
+                for (let j = 0; j < game.currentBlock.pattern[i].length; j++) {
+                    const tile = game.currentBlock.pattern[i][j];
+                    if (tile !== 0) {
+                        ctx.fillStyle = getColour(tile);
+                        ctx.fillRect(
+                            ((game.currentBlock.y + j) * blockSize) + offset.x,
+                            ((game.currentBlock.x + i) * blockSize) + offset.y,
+                            blockSize,
+                            blockSize);
+                    }
+                }
+            }
     }
 }
 
@@ -207,13 +230,9 @@ function rotate(matrix) {
 }
 
 function rotateBlock() {
-
     // Rotate the block
-    if (checkLegality(2)) {
-        console.log("rotated")
+    if (checkLegality(2))
         game.currentBlock.pattern = rotate(game.currentBlock.pattern);
-    } else
-        console.log('no rotat')
 }
 
 function addToBoard(currentBlock) {
@@ -225,6 +244,27 @@ function addToBoard(currentBlock) {
     }
 }
 
+function endSequence() {
+
+    for (let i = 0; i < game.board.length; i++) {
+        for (let j = 0; j < game.board[i].length; j++) {
+            ctx.fillStyle = getColour(99);
+            ctx.fillRect(
+                j * blockSize + offset.x,
+                i * blockSize + offset.y,
+                blockSize,
+                blockSize);
+            ctx.fillStyle = getColour(11);
+            ctx.fillText(
+                i + "'" + j,
+                j * blockSize + offset.x + 5,
+                i * blockSize + offset.y + 20
+            );
+        }
+    }
+
+}
+
 function moveDown() {
     // Move the block one down
     if (checkLegality(1))
@@ -232,24 +272,30 @@ function moveDown() {
     else {
         addToBoard(game.currentBlock);
         destroyLines();
-        generateBlock();
+        if (!generateBlock()) {
+            console.log(game.status);
+            generateBlock();
+            renderBoard();
+            last = Number.MAX_SAFE_INTEGER;
+            game.status = 'end'
+            console.log('END')
+            endSequence();
+        }
+
     }
 }
 
 function moveSideways(number) {
-    // Move the block sideways, either left or right
-    if (checkLegality(number)) {
-        console.log('moved ' + number)
-        game.currentBlock.y += number === 4 ? 1 : -1; // move RIGHT if 4, else move LEFT
-    } else {
-        console.log("nope")
-    }
+    // Move the block sideways, either left or
+    // move RIGHT if 4, else move LEFT
+    if (checkLegality(number))
+        game.currentBlock.y += number === 4 ? 1 : -1;
 }
 
 function checkLegality(pos) {
     // Check the legality of a move, either:
     //
-    // nothing : 0 / one down : 1 / rotation : 2 / left : 3 / right : 4
+    // inplace : 0 / down : 1 / rotation : 2 / left : 3 / right : 4
     //
     // returns: boolean (legal ? true : false)
     let newPattern = game.currentBlock.pattern.map((a) => a.slice());
@@ -257,24 +303,24 @@ function checkLegality(pos) {
 
     switch (pos) {
         case 0:
-            mov = [0, 0]
+            mov = [0, 0];
             break;  // dont move
         case 1:
-            mov = [1, 0]
+            mov = [1, 0];
             break;  // down
         case 2:
-            mov = [0, 0]
-            newPattern = rotate(newPattern)
+            mov = [0, 0];
+            newPattern = rotate(newPattern);
             break;  // TODO rotate
         case 3:
-            mov = [0, -1]
+            mov = [0, -1];
             break;  // left
         case 4:
-            mov = [0, 1]
+            mov = [0, 1];
             break;  // right
 
         default:
-            mov = [0, 0]
+            mov = [0, 0];
             break;
     }
 
@@ -299,9 +345,9 @@ function checkLegality(pos) {
         [9, _, _, _, _, _, _, _, _, _, _, 9]
         [9, _, _, _, _, _, _, _, _, _, _, 9]
         [9, _, _, _, _, _, _, _, _, _, _, 9]
-        [9, _, _, _, _, 0, y, 0, _, _, _, 9]
-        [9, _, _, _, _, 0, y, 0, _, _, _, 9]
-        [9, _, _, _, _, 0, y, y, _, _, _, 9]
+        [9, _, _, _, _, _, _, _, 0, y, 0, 9]
+        [9, _, _, _, _, _, _, _, 0, y, 0, 9]
+        [9, _, _, _, _, _, _, _, y, y, 0, 9]
         [9, _, _, _, _, _, _, _, _, _, _, 9]
         [9, _, _, _, _, _, _, _, _, _, _, 9]
         [9, _, _, _, _, _, _, _, _, _, _, 9]
@@ -314,36 +360,31 @@ function checkLegality(pos) {
     
     */
 
-    let returnValue = true;
-
-    for (let i = 0; i < newPattern.length; i++) {
-        for (let j = 0; j < newPattern[i].length; j++) {
-            if (game.board[game.currentBlock.x + i + mov[0]][game.currentBlock.y + j + mov[1]] !== 0 &&
-                game.currentBlock.pattern[i][j] !== 0)
-                returnValue = false;
-            /*console.log(
-                (game.currentBlock.x + i) + "'" + (game.currentBlock.y + j) + '|' + (game.board[game.currentBlock.x + i][game.currentBlock.y + j]) + ' ' +
-                (game.currentBlock.x + i + mov[0]) + "'" + (game.currentBlock.y + mov[1] + j) + '|' + (game.board[game.currentBlock.x + i + mov[0]][game.currentBlock.y + j + mov[1]]) + ' ' +
-                (game.currentBlock.pattern[i][j])
-            )*/
-        }
-    }
-    return returnValue;
+    for (let i = 0; i < newPattern.length; i++)
+        for (let j = 0; j < newPattern[i].length; j++)
+            if (
+                game.board[game.currentBlock.x + i + mov[0]][game.currentBlock.y + j + mov[1]] !== 0 &&
+                newPattern[i][j] !== 0)
+                return false;
+    return true;
 }
 
 function generateBlock() {
-    game.currentBlock = {
-        x: 2,
-        y: 4,
-        pattern: blocks[Math.floor(Math.random() * blocks.length)]
-    };
+    if (game.status === status.playing) {
+        game.currentBlock = {
+            x: 2,
+            y: 4,
+            pattern: blocks[Math.floor(Math.random() * blocks.length)]
+        };
 
-    return checkLegality(0);
+        return checkLegality(0);
+    }
+    return false;
 }
 
 function destroyLines() {
     let linesBroken = 0;
-    for (let i = 0; i < game.board.length - 1; i++) {               // i < i-1 < i-2
+    for (let i = 0; i < game.board.length - 2; i++) {               // i < i-1 < i-2
         if (game.board[i].indexOf(0) === -1) {                      // 5 < 4   < 3   < 2 < 1 < 0 < [9, _, _, _, _, _, _, _, _, _, _, 9]
             for (let j = 0; j < i - 1; j++) {
                 game.board[i - j] = JSON.parse(JSON.stringify(game.board[i - j - 1]));
@@ -351,8 +392,6 @@ function destroyLines() {
             game.board[0] = [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9];
             linesBroken++;
         }
-        else
-            console.log('line ' + i + 'not breakbale')
     }
     addScore(linesBroken);
 }
@@ -394,12 +433,19 @@ let last = 0;
 
 function gameUpdate() {
     // console.log(game.board[game.currentBlock.x + game.currentBlock.pattern.length + 1])
-    if (checkLegality(0)) {
+    if (game.status === status.playing) {
         moveDown();
-    } else {
+    } else if (game.status === status.over) {
         console.log('Game over')
         last = Number.MAX_SAFE_INTEGER;
+    } else {
+        console.log('nothing to do')
     }
+}
+
+function startGame() {
+    game.status = status.playing;
+    generateBlock();
 }
 
 // UPDATE
@@ -408,7 +454,8 @@ function fun(now) {
         last = now;
         gameUpdate();
     }
-    renderBoard();
+    if (game.status !== status.over)
+        renderBoard();
     requestAnimationFrame(fun);
 }
 
