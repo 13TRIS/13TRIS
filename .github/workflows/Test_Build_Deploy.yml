@@ -68,7 +68,7 @@ jobs:
         run: yarn --prefer-offline
 
       - name: Build frontend
-        run: npm run build
+        run: yarn run build
 
   notify:
     needs: build
