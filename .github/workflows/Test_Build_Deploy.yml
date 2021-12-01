@@ -21,9 +21,6 @@ jobs:
     steps:
 
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.ref_name }}
-          path: ${{ github.ref_name }}
 
       - name: Install Dependencies
         run: |

@@ -81,6 +81,10 @@ function App() {
             <span>cd into react app and run "npm run build"</span>
           </div>
 
+          <div className="item-row">
+              <span>Now with a pre-alpha (<a href="/pre-alpha-13tris">LINK</a> )</span>
+          </div>
+
           <canvas
               onMouseDown={key_gain}
               onMouseUp={key_lose}
