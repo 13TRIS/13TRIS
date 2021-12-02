@@ -1,14 +1,9 @@
 name: Test and Build Phase
 
 on:
-  push:
-    paths-ignore:
-      - 'docs/**'
-      - '.github/**'
   pull_request:
     paths-ignore:
       - 'docs/**'
-      - '.github/**'
 
 # https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#jobsjob_idstepscontinue-on-error
 # https://docs.github.com/en/actions/learn-github-actions/contexts
@@ -35,46 +30,8 @@ jobs:
           cd djangoproject
           python3 manage.py behave
 
-  build:
-    needs: test
-    defaults:
-      run:
-        working-directory: frontend
-
-    name: Build
-    runs-on: self-hosted
-    steps:
-
-      - uses: actions/checkout@v2
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
-
-      - name: Cache yarn dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('frontend/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Cache npm dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install Dependencies
-        run: yarn --prefer-offline
-
-      - name: Build frontend
-        run: yarn run build
-
   notify:
-    needs: build
+    needs: test
     name: Discord Notification
     runs-on: self-hosted
     continue-on-error: true
@@ -85,4 +42,4 @@ jobs:
         DISCORD_CHANNEL_TOKEN: ${{ secrets.DISCORD_CHANNEL_TOKEN }}
       run: |
         echo "$(date +'%Y-%m-%d-%T')" ${{ github.ref_name }} ${{ runner.name }} ${{ github.actor }}
-        python3 .github/discord_python/discord_bot.py -t "$(date +'%d %h %T')" -b ${{ github.ref_name }} -s ${{ needs.build.result }} -p ${{ github.run_id }} -r ${{ runner.name }} -a ${{ github.actor }} -c ${{ github.sha }}
+        python3 .github/discord_python/discord_bot.py -t "$(date +'%d %h %T')" -b ${{ github.ref_name }} -s ${{ needs.test.result }} -p ${{ github.run_id }} -r ${{ runner.name }} -a ${{ github.actor }} -c ${{ github.sha }}
