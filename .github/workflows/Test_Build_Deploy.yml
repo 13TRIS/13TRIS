@@ -1,10 +1,6 @@
 name: Test and Build Phase
 
-on:
-  pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - '.github/**'
+on: [pull_request]
 
 # https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#jobsjob_idstepscontinue-on-error
 # https://docs.github.com/en/actions/learn-github-actions/contexts
@@ -13,7 +9,7 @@ jobs:
 
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
 
       - uses: actions/checkout@v2
@@ -32,9 +28,8 @@ jobs:
           python3 manage.py behave
 
   notify:
-    needs: test
     name: Discord Notification
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     continue-on-error: true
     steps:
     - name: Discord Notification
