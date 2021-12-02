@@ -36,7 +36,7 @@ jobs:
           python3 manage.py behave
 
   notify:
-    needs: build
+    needs: test
     name: Discord Notification
     runs-on: self-hosted
     continue-on-error: true
