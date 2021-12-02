@@ -35,44 +35,6 @@ jobs:
           cd djangoproject
           python3 manage.py behave
 
-  build:
-    needs: test
-    defaults:
-      run:
-        working-directory: frontend
-
-    name: Build
-    runs-on: self-hosted
-    steps:
-
-      - uses: actions/checkout@v2
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
-
-      - name: Cache yarn dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('frontend/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Cache npm dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install Dependencies
-        run: yarn --prefer-offline
-
-      - name: Build frontend
-        run: yarn run build
-
   notify:
     needs: build
     name: Discord Notification
