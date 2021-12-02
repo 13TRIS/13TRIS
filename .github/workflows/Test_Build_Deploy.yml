@@ -1,10 +1,6 @@
 name: Test and Build Phase
 
 on:
-  push:
-    paths-ignore:
-      - 'docs/**'
-      - '.github/**'
   pull_request:
     paths-ignore:
       - 'docs/**'
