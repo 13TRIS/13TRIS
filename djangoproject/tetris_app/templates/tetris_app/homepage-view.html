@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% load static %}
+{% load static %}   <!--  djangoproject/tetris_app/static  -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,35 +23,29 @@
         <div class="col"> <!--d-flex flex-column justify-content-around-->
             <div class="row">
                 <div class="col">
-                    <!-- <img class="img-responsive center-block" src="{% static 'tetris_app/block.png' %}" alt="Solo" %}>
-                     <img class="img-responsive center-block" src="{% static 'tetris_app/block.png' %}" alt="1vs1">
-                     <img class="img-responsive center-block" src="{% static 'tetris_app/block.png' %}" alt="1vsAI">-->
+                    <!-- <img class="img-responsive center-block" src="{tetris_app/static/block.png'}" alt="Solo" %}>
+                     <img class="img-responsive center-block" src="{tetris_app/static/block.png}" alt="1vs1">
+                     <img class="img-responsive center-block" src="{tetris_app/static/block.png}" alt="1vsAI">-->
                     <!-- alternativ als cards statt img-responsive-->
                     <div class="card" style="height: 580px; margin-top: 20px">
-                        <img src="{% static 'tetris_app/solo_without_text.png' %}">
+                        <img src="/docs/picture/solo.png" class="card-img-top">   <!--  /static/tetris_app/solo_without_text.png  -->
                         <div class="card-body">
                             <h5 class="card-title">Singleplayer</h5>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aut
-                                consectetur
-                                cum
-                                cumque dolore dolorum, ducimus eum itaque laboriosam nisi numquam optio qui, quis
-                                reprehenderit,
-                                saepe sed voluptatem voluptates voluptatum!</p>
+                                consectetur cum cumque dolore dolorum, ducimus eum itaque laboriosam nisi numquam optio qui, quis
+                                reprehenderit, saepe sed voluptatem voluptates voluptatum!</p>
                             <a href="" class="btn btn-primary">Play now!</a>
                         </div>
                     </div>
                 </div>
                 <div class="col">
                     <div class="card" style="height: 580px; margin-top: 20px">
-                        <img src="{% static 'tetris_app/1vs1_without_text.png' %}">
+                        <img src="/docs/picture/1vs1_big.png" class="card-img-top">
                         <div class="card-body">
                             <h5 class="card-title">Player versus Player</h5>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aut
-                                consectetur
-                                cum
-                                cumque dolore dolorum, ducimus eum itaque laboriosam nisi numquam optio qui, quis
-                                reprehenderit,
-                                saepe sed voluptatem voluptates voluptatum!</p>
+                                consectetur cum cumque dolore dolorum, ducimus eum itaque laboriosam nisi numquam optio qui, quis
+                                reprehenderit, saepe sed voluptatem voluptates voluptatum!</p>
                             <a href="" class="btn btn-primary">Play now!</a>
                         </div>
                     </div>
@@ -59,15 +53,12 @@
                 <div class="col">
                     <div class="card" style="height: 580px; margin-top: 20px">
                         <!-- later we have do add actual breakpoints to the height because it looks weir on smaller screens-->
-                        <img src="{% static 'tetris_app/1vsAI_without_text.png' %}">
+                        <img src="/docs/picture/1vsAI.png" class="card-img-top">
                         <div class="card-body">
                             <h5 class="card-title">Player versus AI</h5>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aut
-                                consectetur
-                                cum
-                                cumque dolore dolorum, ducimus eum itaque laboriosam nisi numquam optio qui, quis
-                                reprehenderit,
-                                saepe sed voluptatem voluptates voluptatum!</p>
+                                consectetur cum cumque dolore dolorum, ducimus eum itaque laboriosam nisi numquam optio qui, quis
+                                reprehenderit, saepe sed voluptatem voluptates voluptatum!</p>
                             <a href="" class="btn btn-primary">Play now!</a>
                         </div>
                     </div>
@@ -112,7 +103,7 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>2</td>
+                                    <td>1</td>
                                     <td>mike</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
@@ -124,19 +115,19 @@
                                     <td>1.9.21</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td>3</td>
                                     <td>mike</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td>4</td>
                                     <td>mike</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td>5</td>
                                     <td>mike</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
@@ -157,7 +148,7 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>2</td>
+                                    <td>1</td>
                                     <td>felix</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
@@ -169,13 +160,13 @@
                                     <td>1.9.21</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td>3</td>
                                     <td>felix</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td>4</td>
                                     <td>felix</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
@@ -196,7 +187,7 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>2</td>
+                                    <td>1</td>
                                     <td>marc</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
@@ -208,85 +199,55 @@
                                     <td>1.9.21</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td>3</td>
                                     <td>marc</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td>4</td>
                                     <td>marc</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td>5</td>
                                     <td>marc</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td>6</td>
                                     <td>marc</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td>7</td>
                                     <td>marc</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td>8</td>
                                     <td>marc</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td>9</td>
                                     <td>marc</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td>10</td>
                                     <td>marc</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
-                                    <td>marc</td>
-                                    <td>100</td>
-                                    <td>1.9.21</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>marc</td>
-                                    <td>100</td>
-                                    <td>1.9.21</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>marc</td>
-                                    <td>100</td>
-                                    <td>1.9.21</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>marc</td>
-                                    <td>100</td>
-                                    <td>1.9.21</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>marc</td>
-                                    <td>100</td>
-                                    <td>1.9.21</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
+                                    <td>x</td>
                                     <td>marc</td>
                                     <td>100</td>
                                     <td>1.9.21</td>
@@ -300,14 +261,23 @@
         </div>
         <div class="col-4">
             <div class="position-fixed">
+
+                <img src="/docs/Logo/Logo_full.png" class="img-fluid" alt="Logo">    <!--  /tetris_app/static/tetris_app/Logo_full.png -->
+
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <img src="{% static 'tetris_app/Logo_full.png' %}" class="img-fluid" alt="Logo">
-                        <div class="card">
-                            <img src="..." class="card-img-top" alt="usericon">
-                            <div class="card-body">
-                                <h5 class="username">Username</h5>
-                                <p class="card-text">status</p>
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                                <div class="col-md-2">
+                                    <img src="/docs/picture/user_icon_128px.png" class="img-fluid rounded-start" alt="...">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Username</h5>
+                                        <p class="card-text">Status</p>
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </li>
@@ -315,46 +285,81 @@
                          width="8rem" was before -->
                     <li class="list-group-item">
                         <h3>Friends</h3>
-                        <div class="card mb-2">
-                            <img src="..." class="card-img-top" alt="usericon">
-                            <div class="card-body">
-                                <h5 class="username">Username</h5>
-                                <p class="card-text">status</p>
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                                <div class="col-md-2">
+                                    <img src="/docs/picture/user_icon_128px.png" class="img-fluid rounded-start" alt="...">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Username</h5>
+                                        <p class="card-text">Status</p>
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="card mb-2">
-                            <img src="..." class="card-img-top" alt="usericon">
-                            <div class="card-body">
-                                <h5 class="username">Username</h5>
-                                <p class="card-text">status</p>
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                                <div class="col-md-2">
+                                    <img src="/docs/picture/user_icon_128px.png" class="img-fluid rounded-start" alt="...">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Username</h5>
+                                        <p class="card-text">Status</p>
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="card mb-2">
-                            <img src="..." class="card-img-top" alt="usericon">
-                            <div class="card-body">
-                                <h5 class="username">Username</h5>
-                                <p class="card-text">status</p>
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                                <div class="col-md-2">
+                                    <img src="/docs/picture/user_icon_128px.png" class="img-fluid rounded-start" alt="...">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Username</h5>
+                                        <p class="card-text">Status</p>
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="card mb-2">
-                            <img src="..." class="card-img-top" alt="usericon">
-                            <div class="card-body">
-                                <h5 class="username">Username</h5>
-                                <p class="card-text">status</p>
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                                <div class="col-md-2">
+                                    <img src="/docs/picture/user_icon_128px.png" class="img-fluid rounded-start" alt="...">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Username</h5>
+                                        <p class="card-text">Status</p>
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div>
-                            <!-- otherwise it wont show because of the stupid position fixed :) -->
-                            <a class="link-primary" href="http://13tris.dkoeck.de/">Blog</a>
-                            <a class="link-primary" href="impressum-view.html">Imprint</a>
-                            <a class="link-primary" href="FAQ-view.html">FAQ</a>
-                            <a class="link-primary" href="#">Data Protection</a>
+
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                                <div class="col-md-2">
+                                    <img src="/docs/picture/user_icon_128px.png" class="img-fluid rounded-start" alt="...">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Username</h5>
+                                        <p class="card-text">Status</p>
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                        <!--  <ul class="list-group borderless" style="list-style: none">
                              <li>
                                  <a href="http://13tris.dkoeck.de/" class="link-primary"> Blog </a> <br>
