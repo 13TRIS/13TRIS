@@ -17,17 +17,13 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
-
-{% static ''%}
-
-<!-- <h2>homepage</h2> -->
 <div class="container-fluid">
     <div class="row">
         <div class="col"> <!--d-flex flex-column justify-content-around-->
             <div class="row">
                 <div class="col">
                     <div class="card" style="height: 580px; margin-top: 20px">
-                        <img src="{% static '/docs/picture/black_rock.png'%}" class="card-img-top">   <!--  /static/tetris_app/solo_without_text.png  -->
+                        <img src="{% static '/tetris_app/black_rock.png'%}" class="card-img-top">   <!--  /static/tetris_app/solo_without_text.png  -->
                         <div class="card-body">
                             <h5 class="card-title">Singleplayer</h5>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aut
@@ -39,7 +35,7 @@
                 </div>
                 <div class="col">
                     <div class="card" style="height: 580px; margin-top: 20px">
-                        <img src="{% static '/docs/picture/red_block.png'%}" class="card-img-top">
+                        <img src="{% static '/tetris_app/red_block.png'%}" class="card-img-top">
                         <div class="card-body">
                             <h5 class="card-title">Player versus Player</h5>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aut
@@ -52,7 +48,7 @@
                 <div class="col">
                     <div class="card" style="height: 580px; margin-top: 20px">
                         <!-- later we have do add actual breakpoints to the height because it looks weir on smaller screens-->
-                        <img src="{% static '/docs/picture/purple_block.png'%}" class="card-img-top">
+                        <img src="{% static '/tetris_app/purple_block.png'%}" class="card-img-top">
                         <div class="card-body">
                             <h5 class="card-title">Player versus AI</h5>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aut
@@ -261,14 +257,14 @@
         <div class="col-4">
             <div class="position-fixed">
 
-                <img src="{% static '/docs/Logo/Logo_full.png'%}" class="img-fluid" alt="Logo">    <!--  /tetris_app/static/tetris_app/Logo_full.png -->
+                <img src="{% static '/tetris_app/Logo_full.png'%}" class="img-fluid" alt="Logo">    <!--  /tetris_app/static/tetris_app/Logo_full.png -->
 
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <div class="card mb-3">
                             <div class="row g-0">
                                 <div class="col-md-2">
-                                    <img src="{% static '/docs/picture/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/docs/picture/user_icon_128px.png'%}">
+                                    <img src="{% static '/tetris_app/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/tetris_app/user_icon_128px.png'%}">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
@@ -287,7 +283,7 @@
                         <div class="card mb-3">
                             <div class="row g-0">
                                 <div class="col-md-2">
-                                <img src="{% static '/docs/picture/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/docs/picture/user_icon_128px.png'%}">                                </div>
+                                <img src="{% static '/tetris_app/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/tetris_app/user_icon_128px.png'%}">                                </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
                                         <h5 class="card-title">Username</h5>
@@ -301,22 +297,7 @@
                         <div class="card mb-3">
                             <div class="row g-0">
                                 <div class="col-md-2">
-                                    <img src="{% static '/docs/picture/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/docs/picture/user_icon_128px.png'%}">
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Username</h5>
-                                        <p class="card-text">Status</p>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card mb-3">
-                            <div class="row g-0">
-                                <div class="col-md-2">
-                                    <img src="{% static '/docs/picture/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/docs/picture/user_icon_128px.png'%}">
+                                    <img src="{% static '/tetris_app/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/tetris_app/user_icon_128px.png'%}">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
@@ -331,7 +312,22 @@
                         <div class="card mb-3">
                             <div class="row g-0">
                                 <div class="col-md-2">
-                                    <img src="{% static '/docs/picture/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/docs/picture/user_icon_128px.png'%}">
+                                    <img src="{% static '/tetris_app/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/tetris_app/user_icon_128px.png'%}">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Username</h5>
+                                        <p class="card-text">Status</p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                                <div class="col-md-2">
+                                    <img src="{% static '/tetris_app/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static 'tetris_app/user_icon_128px.png'%}">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
@@ -348,13 +344,13 @@
                                  <a href="http://13tris.dkoeck.de/" class="link-primary"> Blog </a> <br>
                             </li>
                             <li>
-                                 <a href="templates/tetris_app/impressum-view.html" class="link-primary"> Impressum </a> <br>
+                                 <a href="impressum" class="link-primary"> Impressum </a> <br>
                             </li>
                             <li>
-                                 <a href="./FAQ.html" class="link-primary"> FAQ </a>
+                                 <a href="faq" class="link-primary"> FAQ </a>
                             </li>
                             <li>
-                                 <a href="./datenschutz.html" class="link-primary"> Datenschutz </a> <br>
+                                 <a href="datenschutz" class="link-primary"> Datenschutz </a> <br>
                             </li>
                         </ul>
                     </li>

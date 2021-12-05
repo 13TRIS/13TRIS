@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import login_view, register_view, homepage_view, impressum_view, FAQ_view
+from .views import login_view, register_view, homepage_view, impressum_view, faq_view, datenschutz_view
 from django.views.generic import RedirectView
 
 urlpatterns = [
@@ -8,5 +8,6 @@ urlpatterns = [
     path('register', register_view),
     path('home', homepage_view),
     path('impressum', impressum_view),
-    path('faq', FAQ_view)
+    path('faq', faq_view),
+    path('datenschutz',datenschutz_view)
 ]

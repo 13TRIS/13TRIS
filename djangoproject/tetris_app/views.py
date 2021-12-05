@@ -17,9 +17,13 @@ def homepage_view(request):
     return render(request, 'tetris_app/homepage-view.html')
 
 # This has to be removed eventually
-def FAQ_view(request):
+def faq_view(request):
     return render(request, 'tetris_app/FAQ-view.html')
 
 # This has to be removed eventually
 def impressum_view(request):
     return render(request, 'tetris_app/impressum-view.html')
+
+# This has to be removed eventually
+def datenschutz_view(request):
+    return render(request, 'tetris_app/datenschutz-view.html')
