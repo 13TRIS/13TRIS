@@ -119,7 +119,9 @@ Popular choices are:
 - AWS
 - Azure
 
---missing--
+Another possibility for us to deploy our application is to deploy it on a private Raspberry Pi (see the diagram below).
+
+![Deployment View](./diagrams/deployment-view.svg)
 
 ## 8. Implementation View
 
