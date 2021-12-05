@@ -11,7 +11,6 @@ def login_view(request):
 def register_view(request):
     return render(request, 'tetris_app/register-view.html')
 
-
 # This has to be removed eventually
 def homepage_view(request):
     return render(request, 'tetris_app/homepage-view.html')
@@ -27,3 +26,7 @@ def impressum_view(request):
 # This has to be removed eventually
 def datenschutz_view(request):
     return render(request, 'tetris_app/datenschutz-view.html')
+
+# This has to be removed eventually
+def game_solo_view(request):
+    return render(request, 'tetris_app/game-solo-view.html')
