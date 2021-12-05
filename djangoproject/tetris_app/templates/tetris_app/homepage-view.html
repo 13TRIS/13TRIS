@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-  <!--  djangoproject/tetris_app/static  -->
+{% load static %}
 <html lang="en">
 <head>
-    {% load static %}
     <meta charset="UTF-8">
     <title>13TRIS</title>
     <!-- Bootstrap CSS -->
@@ -18,18 +17,17 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
+
+{% static ''%}
+
 <!-- <h2>homepage</h2> -->
 <div class="container-fluid">
     <div class="row">
         <div class="col"> <!--d-flex flex-column justify-content-around-->
             <div class="row">
                 <div class="col">
-                    <!-- <img class="img-responsive center-block" src="{tetris_app/static/block.png'}" alt="Solo" %}>
-                     <img class="img-responsive center-block" src="{tetris_app/static/block.png}" alt="1vs1">
-                     <img class="img-responsive center-block" src="{tetris_app/static/block.png}" alt="1vsAI">-->
-                    <!-- alternativ als cards statt img-responsive-->
                     <div class="card" style="height: 580px; margin-top: 20px">
-                        <img src="/docs/picture/black_rock.png" class="card-img-top">   <!--  /static/tetris_app/solo_without_text.png  -->
+                        <img src="{% static '/docs/picture/black_rock.png'%}" class="card-img-top">   <!--  /static/tetris_app/solo_without_text.png  -->
                         <div class="card-body">
                             <h5 class="card-title">Singleplayer</h5>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aut
@@ -41,7 +39,7 @@
                 </div>
                 <div class="col">
                     <div class="card" style="height: 580px; margin-top: 20px">
-                        <img src="/docs/picture/red_block.png" class="card-img-top">
+                        <img src="{% static '/docs/picture/red_block.png'%}" class="card-img-top">
                         <div class="card-body">
                             <h5 class="card-title">Player versus Player</h5>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aut
@@ -54,7 +52,7 @@
                 <div class="col">
                     <div class="card" style="height: 580px; margin-top: 20px">
                         <!-- later we have do add actual breakpoints to the height because it looks weir on smaller screens-->
-                        <img src="/docs/picture/purple_block.PNG" class="card-img-top">
+                        <img src="{% static '/docs/picture/purple_block.png'%}" class="card-img-top">
                         <div class="card-body">
                             <h5 class="card-title">Player versus AI</h5>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aut
@@ -263,14 +261,14 @@
         <div class="col-4">
             <div class="position-fixed">
 
-                <img src="/docs/Logo/Logo_full.png" class="img-fluid" alt="Logo">    <!--  /tetris_app/static/tetris_app/Logo_full.png -->
+                <img src="{% static '/docs/Logo/Logo_full.png'%}" class="img-fluid" alt="Logo">    <!--  /tetris_app/static/tetris_app/Logo_full.png -->
 
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <div class="card mb-3">
                             <div class="row g-0">
                                 <div class="col-md-2">
-                                    <img src="/docs/picture/user_icon_128px.png" class="img-fluid rounded-start" alt="...">
+                                    <img src="{% static '/docs/picture/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/docs/picture/user_icon_128px.png'%}">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
@@ -289,7 +287,21 @@
                         <div class="card mb-3">
                             <div class="row g-0">
                                 <div class="col-md-2">
-                                    <img src="/docs/picture/user_icon_128px.png" class="img-fluid rounded-start" alt="...">
+                                <img src="{% static '/docs/picture/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/docs/picture/user_icon_128px.png'%}">                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Username</h5>
+                                        <p class="card-text">Status</p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                                <div class="col-md-2">
+                                    <img src="{% static '/docs/picture/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/docs/picture/user_icon_128px.png'%}">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
@@ -304,7 +316,7 @@
                         <div class="card mb-3">
                             <div class="row g-0">
                                 <div class="col-md-2">
-                                    <img src="/docs/picture/user_icon_128px.png" class="img-fluid rounded-start" alt="...">
+                                    <img src="{% static '/docs/picture/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/docs/picture/user_icon_128px.png'%}">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
@@ -319,22 +331,7 @@
                         <div class="card mb-3">
                             <div class="row g-0">
                                 <div class="col-md-2">
-                                    <img src="/docs/picture/user_icon_128px.png" class="img-fluid rounded-start" alt="...">
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Username</h5>
-                                        <p class="card-text">Status</p>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card mb-3">
-                            <div class="row g-0">
-                                <div class="col-md-2">
-                                    <img src="/docs/picture/user_icon_128px.png" class="img-fluid rounded-start" alt="...">
+                                    <img src="{% static '/docs/picture/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/docs/picture/user_icon_128px.png'%}">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
