@@ -1,12 +1,10 @@
 from django.contrib.auth import authenticate
-from django.http import HttpResponse
+from django.contrib.auth.models import User
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-
-
-# Create your views here.
 
 
 def login_view(request):
@@ -44,6 +42,17 @@ def register_view(request):
             form.save()
             return redirect('login')
     return render(request, 'tetris_app/register-view.html', context)
+
+
+def validate_username(request):
+    """Check username availability"""
+    username = request.GET.get('username', None)
+    print(len(username.strip()))
+    taken = len(username.strip()) < 1 or User.objects.filter(username__iexact=username).exists()
+    response = {
+        'is_taken': taken
+    }
+    return JsonResponse(response)
 
 
 # This has to be removed eventually

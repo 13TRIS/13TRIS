@@ -10,32 +10,133 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'tetris_app/Logo_small.png' %}">
     <link rel="stylesheet" href="{% static 'tetris_app/app.css' %}">
     <link rel="stylesheet" href="{% static 'tetris_app/login-register-view.css' %}">
-    <script type="text/javascript" src="{% static 'tetris_app/FormValidator.js' %}" async></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            const username = $('#id_username');
+            const user_error = $('#user-error');
+            const user_pattern = $('#user_pattern');
+            const password1 = $('#id_password1');
+            const password2 = $('#id_password2');
+            const password_error = $('#password-error');
+            const password_confirmation_error = $('#confirm-password-error');
+
+            function checkUsername() {
+                const pattern = /^[a-z0-9_-]{3,}$/;
+                return pattern.test(username.val());
+            }
+
+            function checkPassword() {
+                const pattern = /^[a-zA-Z](?=.*?[a-zA-Z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{7,}$/;
+                return pattern.test(password1.val());
+            }
+
+            function checkPasswordMatch() {
+                return password2.val() !== password1.val();
+            }
+
+            username.keyup(function () {
+                if (checkUsername()) {
+                    user_error.removeClass('error').addClass('d-none');
+                    user_pattern.removeClass('error').addClass('d-none');
+
+                    $.ajax({
+                        data: $(this).serialize(), // get the form data
+                        url: "{% url 'validate_username' %}",
+                        // on success
+                        success: function (response) {
+                            if (response.is_taken === true) {
+                                username.removeClass('is-valid').addClass('is-invalid');
+                                user_error.addClass('error').removeClass('d-none');
+                            } else {
+                                username.removeClass('is-invalid').addClass('is-valid');
+                                user_error.removeClass('error').addClass('d-none');
+                            }
+
+                        },
+                        // on error
+                        error: function (response) {
+                            // alert the error if any error occured
+                            console.log(response.responseJSON.errors)
+                            alert('A network error has occured. Please excuse us, while we fix this error!')
+                        }
+                    })
+                } else {
+                    user_error.removeClass('error').addClass('d-none');
+                    user_pattern.addClass('error').removeClass('d-none');
+                }
+                return false;
+            });
+
+            password1.keyup(function () {
+                if (checkPassword()) {
+                    password_error.removeClass('error').addClass('d-none');
+                } else {
+                    password_error.addClass('error').removeClass('d-none');
+                }
+                return false;
+            });
+
+            password2.keyup(function () {
+                if (checkPasswordMatch()) {
+                    password_confirmation_error.addClass('error').removeClass('d-none');
+                } else {
+                    password_confirmation_error.removeClass('error').addClass('d-none');
+                }
+                return false;
+            });
+
+            $('register_form').submit(() => {
+                return (checkUsername() && checkPassword() && checkPasswordMatch())
+            })
+        })
+    </script>
 </head>
-    <body>
-    <!--<img hidden src="{% static 'tetris_app/block.png' %}" id="block">
+<body>
+<!--<img hidden src="{% static 'tetris_app/block.png' %}" id="block">
 <canvas width="500px" height="500px"></canvas>--><!-- TODO: Maybe have an animated background -->
 <div id="loginViewContainer" class="d-flex flex-column justify-content-around">
     <div class="container-sm">
         <img src="{% static 'tetris_app/Logo_full.png' %}" alt="Logo">
     </div>
     <div class="container w-25">
-        <form method="post" action="" novalidate>
+        <form method="post" action="" novalidate id="register_form">
             {% csrf_token %}
             <div class="mb-3 form-group">
                 {{form.username.label}}
                 {{form.username}}
-                <div id="user-error"></div>
+                <div id="user-error" class="d-none">Username already taken :(</div>
+                <div id="user_pattern" class="d-none">
+                    The Username must only consist of:<br>
+                    <ul>
+                        <li>Latin Letters a-z A-Z</li>
+                        <li>Numbers from 0-9</li>
+                        <li>No special characters</li>
+                        <li>Minimum 3 characters long</li>
+                    </ul>
+                </div>
             </div>
             <div class="mb-3 form-group">
                 {{form.password1.label}}
                 {{form.password1}}
-                <div id="password-error"></div>
+                <div id="password-error" class="d-none">
+                    The password must only consist of:<br>
+                    <ul>
+                        <li>Starting with a letter</li>
+                        <li>At least one letter</li>
+                        <li>At least one digit</li>
+                        <li>At least one special character or space</li>
+                        <li>( # ? ! @ $ % ^ & * - )</li>
+                        <li>Minimum 8 characters long</li>
+                    </ul>
+                </div>
             </div>
             <div class="mb-5 form-group">
                 {{form.password2.label}}
                 {{form.password2}}
-                <div id="confirm-password-error"></div>
+                <div id="confirm-password-error" class="d-none">
+                    The passwords don't match !
+                </div>
             </div>
 
             {{form.errors}}
@@ -53,5 +154,5 @@
 <!--<script type="text/javascript" src="{% static 'tetris_app/AnimateBackground.js' %}"></script>-->
 <!-- JavaScript Bundle with Popper -->
 
-    </body>
+</body>
 </html>
