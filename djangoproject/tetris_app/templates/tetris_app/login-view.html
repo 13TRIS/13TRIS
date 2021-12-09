@@ -31,6 +31,9 @@
                 <input class="form-control" type="password" name="password" id="fieldPassword"
                        placeholder="Enter your password"/>
             </div>
+            {% for message in messages %}
+                {{message}}
+            {% endfor %}
             <div class="text-center mb-5">
                 <button type="submit" id="signInButton">Sign in</button>
             </div>

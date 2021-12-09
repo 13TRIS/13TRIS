@@ -268,8 +268,9 @@
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
-                                        <h5 class="card-title">Username</h5>
+                                        <h5 class="card-title">{{request.user}}</h5>
                                         <p class="card-text">Status</p>
+                                        <a class="btn btn-primary" href="{% url 'logout' %}"> Logout</a>
 
                                     </div>
                                 </div>
