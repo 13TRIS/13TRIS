@@ -4,9 +4,9 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/login')),  # for going to the login view even if no url path is specified
-    path('login', login_view),
+    path('login', login_view, name='login'),
     path('register', register_view),
-    path('home', homepage_view),
+    path('home', homepage_view, name='home'),
     path('impressum', impressum_view),
     path('faq', faq_view),
     path('datenschutz',datenschutz_view),
