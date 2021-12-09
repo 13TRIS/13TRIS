@@ -10,6 +10,9 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'tetris_app/Logo_small.png' %}">
     <link rel="stylesheet" href="{% static 'tetris_app/app.css' %}">
     <link rel="stylesheet" href="{% static 'tetris_app/login-register-view.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">const validate_username = "{% url 'validate_username' %}";</script> <!-- dont ask -->
+    <script type="text/javascript" src="{% static 'tetris_app/loginUsernameValidation.js' %}"></script>
 </head>
 <body>
 <!--<img hidden src="{% static 'tetris_app/block.png' %}" id="block">
@@ -19,20 +22,22 @@
         <img src="{% static 'tetris_app/Logo_full.png' %}" alt="Logo">
     </div>
     <div class="container w-25">
-        <form method="post" action="">
+        <form method="post" action="" id="login_form">
             {% csrf_token %}
             <div class="mb-3 form-group">
                 <label class="form-label" for="fieldUserName">Username</label>
                 <input class="form-control input-sm" type="text" name="username" id="fieldUserName"
                        placeholder="Enter your username"/>
             </div>
+            <div id="user-error" class="d-none">Username not found</div>
+
             <div class="mb-5 form-group">
                 <label class="form-label" for="fieldPassword">Password</label>
                 <input class="form-control" type="password" name="password" id="fieldPassword"
                        placeholder="Enter your password"/>
             </div>
             {% for message in messages %}
-                {{message}}
+            <div class="error">{{message}}</div>
             {% endfor %}
             <div class="text-center mb-5">
                 <button type="submit" id="signInButton">Sign in</button>

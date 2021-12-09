@@ -6,6 +6,8 @@ $(document).ready(function () {
     const password2 = $('#id_password2');
     const password_error = $('#password-error');
     const password_confirmation_error = $('#confirm-password-error');
+    let timeout = null;
+
 
     function checkUsername() {
         const pattern = /^[a-z0-9_-]{3,}$/;
@@ -21,32 +23,32 @@ $(document).ready(function () {
         return password2.val() !== password1.val();
     }
 
-    username.keyup(function () {
+    username.keyup(() => {
+        clearTimeout(timeout);
+
         if (checkUsername()) {
             user_error.removeClass('error').addClass('d-none');
             user_pattern.removeClass('error').addClass('d-none');
 
-            $.ajax({
-                data: $(this).serialize(), // get the form data
-                url: validate_username,
-                // on success
-                success: function (response) {
-                    if (response.is_taken === true) {
-                        username.removeClass('is-valid').addClass('is-invalid');
-                        user_error.addClass('error').removeClass('d-none');
-                    } else {
-                        username.removeClass('is-invalid').addClass('is-valid');
-                        user_error.removeClass('error').addClass('d-none');
+            const ajaxFn = () => {
+                $.ajax({
+                    data: $(username).serialize(), // get the form data
+                    url: validate_username,
+                    success: (response) => {
+                        if (response.is_taken === true) {
+                            username.removeClass('is-valid').addClass('is-invalid');
+                            user_error.addClass('error').removeClass('d-none');
+                        } else {
+                            username.removeClass('is-invalid').addClass('is-valid');
+                            user_error.removeClass('error').addClass('d-none');
+                        }
+                    },
+                    error: () => {
+                        alert('A network error has occured. Please excuse us, while we fix this error!');
                     }
-
-                },
-                // on error
-                error: function (response) {
-                    // alert the error if any error occurred
-                    console.log(response.responseJSON.errors)
-                    alert('A network error has occured. Please excuse us, while we fix this error!')
-                }
-            })
+                })
+            };
+            timeout = setTimeout(ajaxFn, 1000);
         } else {
             user_error.removeClass('error').addClass('d-none');
             user_pattern.addClass('error').removeClass('d-none');
@@ -54,7 +56,7 @@ $(document).ready(function () {
         return false;
     });
 
-    password1.keyup(function () {
+    password1.keyup(() => {
         if (checkPassword()) {
             password_error.removeClass('error').addClass('d-none');
         } else {
@@ -63,7 +65,7 @@ $(document).ready(function () {
         return false;
     });
 
-    password2.keyup(function () {
+    password2.keyup(() => {
         if (checkPasswordMatch()) {
             password_confirmation_error.addClass('error').removeClass('d-none');
         } else {
