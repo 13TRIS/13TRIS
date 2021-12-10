@@ -53,27 +53,29 @@
                          width="8rem" was before -->
                     <li class="list-group-item">
                         <h3>Friends</h3>
-                        {% for friend in friends %}
+                        {% if friends is not null %}
+                            {% for friend in friends %}
 
-                            <div class="card mb-3">
-                                <div class="row g-0">
-                                    <div class="col-md-2">
-                                        <img src="{% static '/tetris_app/user_icon_128px.png' %}"
-                                             class="img-fluid rounded-start"
-                                             alt="{% static '/tetris_app/user_icon_128px.png' %}"></div>
-                                    <div class="col-md-8">
-                                        <div class="card-body">
-                                            <h5 class="card-title">{{ friend.username }}</h5>
-                                            <p class="card-text">Status</p>
+                                <div class="card mb-3">
+                                    <div class="row g-0">
+                                        <div class="col-md-2">
+                                            <img src="{% static '/tetris_app/user_icon_128px.png' %}"
+                                                 class="img-fluid rounded-start"
+                                                 alt="{% static '/tetris_app/user_icon_128px.png' %}"></div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ friend.username }}</h5>
+                                                <p class="card-text">Status</p>
 
-                                            <a href="{% url 'update_friend' operation='remove' username=friend.username %}">
-                                                <button type="button" class="btn btn-default">Remove Friend</button>
-                                            </a>
+                                                <a href="{% url 'update_friend' operation='remove' username=friend.username %}">
+                                                    <button type="button" class="btn btn-default">Remove Friend</button>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
+                        {% endif %}
 
                         <ul class="list-group borderless" style="list-style: none">
                             <li>

@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
@@ -59,16 +60,19 @@ def validate_username(request):
 
 # This has to be removed eventually
 def homepage_view(request):
-    template_name = 'tetris_app/homepage-view.html'
-    friend = Friend.objects.get(current_user=request.user)
-    friends = friend.users.all()
-    print(f'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz {str(friend.users.count())}')
+    try:
+        if not request.user.is_authenticated:
+            raise ObjectDoesNotExist
+        friend = Friend.objects.get(current_user=request.user)
+        friends = friend.users.all()
+        print(f'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz {str(friend.users.count())}')
 
-    args = {
-        'friends': friends
-    }
-    return render(request, 'tetris_app/homepage-view.html', args)
-
+        args = {
+            'friends': friends
+        }
+        return render(request, 'tetris_app/homepage-view.html', args)
+    except ObjectDoesNotExist:
+        return render(request, 'tetris_app/homepage-view.html')
 
 # This has to be removed eventually
 def faq_view(request):
@@ -91,11 +95,12 @@ def game_solo_view(request):
 
 
 def update_friend(request, operation, username):
-    new_friend = User.objects.get(username=username)
-    print(type(new_friend))
-    if operation == 'add':
-        Friend.make_friend(request.user, new_friend)
-    if operation == 'remove':
-        Friend.lose_friend(request.user, new_friend)
+    if request.user.is_authenticated:
+        new_friend = User.objects.get(username=username)
+        print(type(new_friend))
+        if operation == 'add':
+            Friend.make_friend(request.user, new_friend)
+        if operation == 'remove':
+            Friend.lose_friend(request.user, new_friend)
     return redirect('home')
 
