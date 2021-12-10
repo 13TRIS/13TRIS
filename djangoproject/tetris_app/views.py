@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import Friend, Profile
+from django.views.generic import TemplateView
 
 
 def login_view(request):
@@ -58,7 +59,15 @@ def validate_username(request):
 
 # This has to be removed eventually
 def homepage_view(request):
-    return render(request, 'tetris_app/homepage-view.html')
+    template_name = 'tetris_app/homepage-view.html'
+    friend = Friend.objects.get(current_user=request.user)
+    friends = friend.users.all()
+    print(f'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz {str(friend.users.count())}')
+
+    args = {
+        'friends': friends
+    }
+    return render(request, 'tetris_app/homepage-view.html', args)
 
 
 # This has to be removed eventually

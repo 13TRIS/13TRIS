@@ -40,11 +40,13 @@ class Friend(models.Model):
     def make_friend(cls, current_user, new_friend):
         friend, created = cls.objects.get_or_create(current_user=current_user)
         friend.users.add(new_friend)
+        print(f'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx {str(friend.users.count())}')
 
     @classmethod
     def lose_friend(cls, current_user, new_friend):
         friend, created = cls.objects.get_or_create(current_user=current_user)
         friend.users.remove(new_friend)
+        print(f'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy {str(friend.users.count())}')
 
     def __str__(self):
         return self.current_user.username

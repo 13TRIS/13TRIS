@@ -20,25 +20,28 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col">
-          {% block content %}
-          {% endblock %}
+            {% block content %}
+            {% endblock %}
         </div>
         <div class="col-4">
             <div class="position-fixed">
 
-                <img src="{% static '/tetris_app/Logo_full.png'%}" class="img-fluid" alt="Logo">    <!--  /tetris_app/static/tetris_app/Logo_full.png -->
+                <img src="{% static '/tetris_app/Logo_full.png' %}" class="img-fluid" alt="Logo">
+                <!--  /tetris_app/static/tetris_app/Logo_full.png -->
 
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <div class="card mb-3">
                             <div class="row g-0">
                                 <div class="col-md-2">
-                                    <img src="{% static '/tetris_app/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/tetris_app/user_icon_128px.png'%}">
+                                    <img src="{% static '/tetris_app/user_icon_128px.png' %}"
+                                         class="img-fluid rounded-start"
+                                         alt="{% static '/tetris_app/user_icon_128px.png' %}">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
-                                        <h5 class="card-title">{{request.user}}</h5>
-                                        <p class="card-text">Status</p>
+                                        <h5 class="card-title">{{ request.user }}</h5>
+                                        <p class="card-text">{{ request.user }}</p>
                                         <a class="btn btn-primary" href="{% url 'logout' %}"> Logout</a>
 
                                     </div>
@@ -50,77 +53,40 @@
                          width="8rem" was before -->
                     <li class="list-group-item">
                         <h3>Friends</h3>
-                        <div class="card mb-3">
-                            <div class="row g-0">
-                                <div class="col-md-2">
-                                <img src="{% static '/tetris_app/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/tetris_app/user_icon_128px.png'%}">                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Username</h5>
-                                        <p class="card-text">Status</p>
+                        {% for friend in friends %}
 
+                            <div class="card mb-3">
+                                <div class="row g-0">
+                                    <div class="col-md-2">
+                                        <img src="{% static '/tetris_app/user_icon_128px.png' %}"
+                                             class="img-fluid rounded-start"
+                                             alt="{% static '/tetris_app/user_icon_128px.png' %}"></div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ friend.username }}</h5>
+                                            <p class="card-text">Status</p>
+
+                                            <a href="{% url 'update_friend' operation='remove' username=friend.username %}">
+                                                <button type="button" class="btn btn-default">Remove Friend</button>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="card mb-3">
-                            <div class="row g-0">
-                                <div class="col-md-2">
-                                    <img src="{% static '/tetris_app/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/tetris_app/user_icon_128px.png'%}">
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Username</h5>
-                                        <p class="card-text">Status</p>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card mb-3">
-                            <div class="row g-0">
-                                <div class="col-md-2">
-                                    <img src="{% static '/tetris_app/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static '/tetris_app/user_icon_128px.png'%}">
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Username</h5>
-                                        <p class="card-text">Status</p>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card mb-3">
-                            <div class="row g-0">
-                                <div class="col-md-2">
-                                    <img src="{% static '/tetris_app/user_icon_128px.png'%}" class="img-fluid rounded-start" alt="{% static 'tetris_app/user_icon_128px.png'%}">
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Username</h5>
-                                        <p class="card-text">Status</p>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
 
                         <ul class="list-group borderless" style="list-style: none">
                             <li>
-                                 <a href="http://13tris.dkoeck.de/" class="link-primary"> Blog </a> <br>
+                                <a href="http://13tris.dkoeck.de/" class="link-primary"> Blog </a> <br>
                             </li>
                             <li>
-                                 <a href="impressum" class="link-primary"> Impressum </a> <br>
+                                <a href="impressum" class="link-primary"> Impressum </a> <br>
                             </li>
                             <li>
-                                 <a href="faq" class="link-primary"> FAQ </a>
+                                <a href="faq" class="link-primary"> FAQ </a>
                             </li>
                             <li>
-                                 <a href="datenschutz" class="link-primary"> Datenschutz </a> <br>
+                                <a href="datenschutz" class="link-primary"> Datenschutz </a> <br>
                             </li>
                         </ul>
                     </li>
