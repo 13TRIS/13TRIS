@@ -1,9 +1,11 @@
 from django.contrib import admin
 # Register your models here.
 
-from .models import *
+from . import models
 
-admin.site.register(User)
-admin.site.register(Match)
-admin.site.register(History)
-admin.site.register(MatchManagement)
+admin.site.register(models.Profile)
+admin.site.register(models.Match)
+admin.site.register(models.History)
+admin.site.register(models.MatchManagement)
+admin.site.register(models.Friend)
+

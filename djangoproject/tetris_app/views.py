@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from .models import Friend, Profile
 
 
 def login_view(request):
@@ -78,3 +79,14 @@ def datenschutz_view(request):
 # This has to be removed eventually
 def game_solo_view(request):
     return render(request, 'tetris_app/game-solo-view.html')
+
+
+def update_friend(request, operation, username):
+    new_friend = User.objects.get(username=username)
+    print(type(new_friend))
+    if operation == 'add':
+        Friend.make_friend(request.user, new_friend)
+    if operation == 'remove':
+        Friend.lose_friend(request.user, new_friend)
+    return redirect('home')
+

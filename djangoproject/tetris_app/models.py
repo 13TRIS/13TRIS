@@ -1,34 +1,53 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 # python manage.py migrate
 # Create your models here.
 
-class User(models.Model):
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='Profile')
     STATUS = (
         ('Online', 'Online'),
         ('Playing', 'Playing'),
         ('Offline', 'Offline'),
     )
-    name = models.CharField(max_length=10, null=True)
-    password = models.CharField(max_length=50, null=True)
     profilePicture = models.CharField(max_length=200, null=True)
     ranking = models.IntegerField(null=True)
-    # friends = list
     status = models.CharField(max_length=10, null=True, choices=STATUS)
     dateCreated = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.user.username
 
-    def addFriend(self):
-        return
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
 
-    def viewFriends(self):
-        return
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.Profile.save()
 
-    def deleteFriend(self):
-        return
+
+class Friend(models.Model):
+    users = models.ManyToManyField(User)
+    current_user = models.ForeignKey(User, related_name='owner', null=True, on_delete=models.CASCADE)
+
+    @classmethod
+    def make_friend(cls, current_user, new_friend):
+        friend, created = cls.objects.get_or_create(current_user=current_user)
+        friend.users.add(new_friend)
+
+    @classmethod
+    def lose_friend(cls, current_user, new_friend):
+        friend, created = cls.objects.get_or_create(current_user=current_user)
+        friend.users.remove(new_friend)
+
+    def __str__(self):
+        return self.current_user.username
 
 
 class Match(models.Model):
