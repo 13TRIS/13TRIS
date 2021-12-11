@@ -25,18 +25,10 @@
         </div>
         <div class="col-4">
             <div class="position-fixed">
-
-                <img src="{% static '/tetris_app/Logo_full.png' %}" class="img-fluid" alt="Logo">
-                <!--  /tetris_app/static/tetris_app/Logo_full.png -->
-
-                <!-- <div class="view overlay">
-                    <img class="img-fluid" src="{% static '/tetris_app/Logo_full.png' %}" alt="Logo">
-                    <a href="home" class="link-primary">
-                        <div class="mask rgba-white-slight" style="height: auto"></div>
-                    </a>
-                </div> -->
-                <a href="home" class="link-primary">home</a>
-            <br> <br>
+                <a href="home">
+                    <img src="{% static '/tetris_app/Logo_full.png' %}" class="img-fluid" alt="Logo">
+                                    <!--  /tetris_app/static/tetris_app/Logo_full.png -->
+                </a>
 
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
@@ -62,6 +54,13 @@
                          width="8rem" was before -->
                     <li class="list-group-item">
                         <h3>Friends</h3>
+
+
+
+                        <button type="button" class="btn btn-primary">Primary</button>
+
+
+
                         {% if friends is not null %}
                             {% for friend in friends %}
 

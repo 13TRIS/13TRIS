@@ -1,9 +1,22 @@
 {% extends 'tetris_app/base.html' %}
 {% load static %}
+
 {% block content %}
-<div>
-    <canvas id="my_canvas"></canvas>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <canvas id="my_canvas"></canvas>
+        </div>
+        <div class="col-4">
+            <div class="position-fixed">
+
+            </div>
+        </div>
+    </div>
 </div>
+
+
 <link rel="stylesheet" href="../../static/tetris_app/canvas_engine.css"/>
 <script type="text/javascript" src="../../static/tetris_app/canvas_engine.js"></script>
 {% endblock %}
