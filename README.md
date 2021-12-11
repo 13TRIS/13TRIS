@@ -4,5 +4,5 @@
 
 ### run server:
 ```
-cd ./frontend/ ; npm run build ; cd ../djangoproject/ ; python manage.py runserver
+cd ../djangoproject/ ; python manage.py runserver
 ```
