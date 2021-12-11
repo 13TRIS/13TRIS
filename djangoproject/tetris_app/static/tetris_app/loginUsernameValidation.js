@@ -13,7 +13,7 @@ $(document).ready(function () {
                 data: $(username).serialize(),
                 url: validate_username,
                 success: (response) => {
-                    if (response.is_taken === true) {
+                    if (response.is_taken !== true) {
                         username.removeClass('is-valid').addClass('is-invalid');
                         user_error.addClass('error').removeClass('d-none');
                         allowSubmit = false;
