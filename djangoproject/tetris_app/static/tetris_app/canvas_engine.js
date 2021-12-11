@@ -52,7 +52,7 @@ let game = {
     level: 1,
     score: 0,
     highScore: 0,
-    name: 'Guest',
+    name: user,
     status: status.start
 }
 const blockSize = 40;
