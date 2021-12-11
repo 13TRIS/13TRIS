@@ -37,7 +37,10 @@
                        placeholder="Enter your password"/>
             </div>
             {% for message in messages %}
-            <div class="error">{{message}}</div>
+
+                <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}dark{% endif %}" role="alert">
+                    {{ message }}
+                </div>
             {% endfor %}
             <div class="text-center mb-5">
                 <button type="submit" id="signInButton">Sign in</button>

@@ -22,7 +22,7 @@ def login_view(request):
             login(request, user)
             return redirect('home')
         else:
-            messages.info(request, 'Username or password is incorrect')
+            messages.warning(request, 'Username or password is incorrect')
             return render(request, 'tetris_app/login-view.html')
     return render(request, 'tetris_app/login-view.html')
 
@@ -74,6 +74,7 @@ def homepage_view(request):
     except ObjectDoesNotExist:
         return render(request, 'tetris_app/homepage-view.html')
 
+
 # This has to be removed eventually
 def faq_view(request):
     return render(request, 'tetris_app/FAQ-view.html')
@@ -95,12 +96,14 @@ def game_solo_view(request):
 
 
 def update_friend(request, operation, username):
-    if request.user.is_authenticated:
-        new_friend = User.objects.get(username=username)
-        print(type(new_friend))
-        if operation == 'add':
-            Friend.make_friend(request.user, new_friend)
-        if operation == 'remove':
-            Friend.lose_friend(request.user, new_friend)
+    try:
+        if request.user.is_authenticated:
+            new_friend = User.objects.get(username=username)
+            print(type(new_friend))
+            if operation == 'add':
+                Friend.make_friend(request.user, new_friend)
+            if operation == 'remove':
+                Friend.lose_friend(request.user, new_friend)
+    except:
+        pass
     return redirect('home')
-
