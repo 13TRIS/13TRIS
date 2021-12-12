@@ -63,9 +63,36 @@
 
 
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Username" aria-label="username" aria-describedby="button-addon1">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon1">Add Friend</button>
+                            <input type="text" class="form-control" placeholder="Username" aria-label="username" aria-describedby="button-addon1" name="textFieldAddFriend">
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="addFriend()" >Add Friend</button>
                         </div>
+
+                        <script>
+                            function addFriend() {
+                                // Selecting the input element and get its value
+                                let userName = document.querySelector('[name="textFieldAddFriend"]').value; // selected by name
+                                // Displaying the value
+                                // alert(inputVal); //debugging
+
+
+                                //const params = {
+                                //    param1: userName,
+                                //};
+                                const options = {
+                                    method: 'POST',
+                                    //body: JSON.stringify( params )
+                                };
+
+                                let url = 'connect/add/' + userName
+
+                                fetch( url, options )
+                                    .then( response => response.json() )
+                                    .then( response => {
+                                        // Do something with response.
+                                    } );
+                            }
+                        </script>
+
 
 
                         {% if friends is not null %}
