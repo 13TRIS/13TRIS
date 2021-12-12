@@ -48,7 +48,7 @@ canvas {
     color: white;
     border-radius: 5px;
     padding: 12px;
-    margin-top: 8px;
+    margin-top: 0px !important;
 }
 
 
