@@ -46,8 +46,9 @@ canvas {
     width: 100%;
     background-color: #9C0000;
     color: white;
-    border-radius: 0 0 5px 5px;
-    padding: 5px;
+    border-radius: 5px;
+    padding: 12px;
+    margin-top: 8px;
 }
 
 
