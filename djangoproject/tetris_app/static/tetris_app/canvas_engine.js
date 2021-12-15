@@ -572,8 +572,6 @@ window.addEventListener('keydown', (e) => {
 }, false);
 
 
-
-
 // CHECKS IF THE START BUTTON HAS BEEN CLICKED
 /*
 canvas.addEventListener('mousedown', (e) => {
@@ -590,11 +588,10 @@ canvas.addEventListener('mousedown', (e) => {
 */
 
 
-
 //<button onClick="checkStart()">Start Game</button>
 
 function checkStart() {
-    if(game.status === status.start){
+    if (game.status === status.start) {
         startGame();
     }
 }

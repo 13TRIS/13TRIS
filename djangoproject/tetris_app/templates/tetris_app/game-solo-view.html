@@ -3,28 +3,27 @@
 
 {% block content %}
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col">
-            <div class="canvas-container">
-                <a href="javascript:checkStart()">
-                    <button type="button" class="btn btn-success btn-sm" id="button">Start Game</button>
-                </a>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="canvas-container">
+                    <button type="button" class="btn btn-dark btn-sm" id="button" onclick="checkStart()">
+                        Start Game
+                    </button>
+                    <canvas id="my_canvas" width='1000px' height='1000px'></canvas>
+                </div>
+            </div>
 
-                <canvas id="my_canvas" width='1000px' height='1000px'></canvas>
+
+            <div class="col-4">
+                <div class="position-fixed"></div>
             </div>
         </div>
-
-
-        <div class="col-4">
-            <div class="position-fixed"></div>
-        </div>
     </div>
-</div>
 
 
-<link rel="stylesheet" href="../../static/tetris_app/canvas_engine.css"/>
-<script type="text/javascript" src="../../static/tetris_app/canvas_engine.js"></script>
+    <link rel="stylesheet" href="../../static/tetris_app/canvas_engine.css"/>
+    <script type="text/javascript" src="../../static/tetris_app/canvas_engine.js"></script>
 {% endblock %}
 
 
