@@ -1,11 +1,11 @@
 #my_canvas {
-    width: 1000px;
-    height: 1000px;
-    position: absolute;
+  width: 1000px;
+  height: 1000px;
+  position: absolute;
 }
 
 .container-fluid {
-zoom: 90%;  /*tut nicht*/
+  zoom: 90%;  /*tut nicht*/
 }
 
 
@@ -19,5 +19,10 @@ zoom: 90%;  /*tut nicht*/
   position:absolute;
   left:0%;
   top:0%;
-  z-index: 1000;
+  z-index: 1100;
+}
+
+body{
+  zoom: 0.8;    //For IE, opera, safari and chrome.
+  -moz-transform: scale(0.8);   //Only for Firefox
 }
