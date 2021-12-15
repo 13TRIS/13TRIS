@@ -215,7 +215,7 @@ function renderBoard() {
 
         // DRAW THE TEXT (SCORE AND NAME)
         ctx.fillStyle = getColour(11);
-        ctx.font = '48px serif';
+        ctx.font = '48px segoe ui';
         ctx.fillText(
             'Score: ' + game.score,
             offset.x + (game.board[0].length + 1) * blockSize,
