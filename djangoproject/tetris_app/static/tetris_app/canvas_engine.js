@@ -637,8 +637,7 @@ canvas.addEventListener('mousedown', (e) => {
         y: e.clientY - pos.top
     }
 
-    if (clickInBlock(7, 16, 4, 2, cursor.x, cursor.y) && game.status === status.start)
-        console.log('start')//startGame();
+    if (clickInBlock(7, 16, 4, 2, cursor.x, cursor.y) && game.status === status.start) startGame();
     if (clickInBlock(1, 2, 1, 1, cursor.x, cursor.y)) scale(true);
     if (clickInBlock(1, 3, 1, 1, cursor.x, cursor.y)) scale(false);
 
