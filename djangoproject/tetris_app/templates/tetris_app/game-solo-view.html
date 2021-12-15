@@ -6,12 +6,18 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col">
-            <canvas id="my_canvas"></canvas>
-        </div>
-        <div class="col-4">
-            <div class="position-fixed">
+            <div class="canvas-container">
+                <a href="javascript:checkStart()">
+                    <button type="button" class="btn btn-primary btn-sm" id="button">Start Game</button>
+                </a>
 
+                <canvas id="my_canvas" width='1000px' height='1000px'></canvas>
             </div>
+        </div>
+
+
+        <div class="col-4">
+            <div class="position-fixed"></div>
         </div>
     </div>
 </div>
@@ -21,6 +27,4 @@
 <script type="text/javascript" src="../../static/tetris_app/canvas_engine.js"></script>
 {% endblock %}
 
-container-fluid {
-zoom: 90%;
-}
+

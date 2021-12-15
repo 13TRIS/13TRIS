@@ -1,5 +1,23 @@
-
 #my_canvas {
     width: 1000px;
     height: 1000px;
+    position: absolute;
+}
+
+.container-fluid {
+zoom: 90%;
+}
+
+
+.canvas-container{
+  position: relative;
+  width: 1000px;
+  height: 1000px;
+}
+
+#button {
+  position:absolute;
+  left:0%;
+  top:0%;
+  z-index: 1000;
 }

@@ -3,6 +3,7 @@ const ctx = canvas.getContext('2d');
 canvas.width = 1000;
 canvas.height = 1000;
 
+
 let isThemeDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 const status = {
@@ -570,8 +571,13 @@ window.addEventListener('keydown', (e) => {
     }
 }, false);
 
+
+
+
 // CHECKS IF THE START BUTTON HAS BEEN CLICKED
+/*
 canvas.addEventListener('mousedown', (e) => {
+
     const cursor = {
         x: e.clientX,
         y: e.clientY
@@ -581,6 +587,38 @@ canvas.addEventListener('mousedown', (e) => {
         startGame();
 
 }, false);
+*/
+
+
+
+//<button onClick="checkStart()">Start Game</button>
+
+function checkStart() {
+    if(game.status === status.start){
+        startGame();
+    }
+}
+
+
+/*
+//Startbutton Text
+    //The text that we want to write.
+    var text = 'Start Game here!';
+
+    //Set the color of the text. This can be
+    //an RGB color or a textual description
+    //such as red.
+    ctx.fillStyle = '0,0,0';
+
+    //The X coordinate where to start
+    var x = 50;
+
+    //The Y coordinate where to start
+    var y = 50;
+
+    //Use the fillText method to draw the text.
+    ctx.fillText(text, x, y);
+*/
 
 // setInterval(() => { generateBlock(); game.currentBlock.y = 0; }, 3000);
 
