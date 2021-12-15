@@ -638,8 +638,8 @@ canvas.addEventListener('mousedown', (e) => {
     }
 
     if (clickInBlock(7, 16, 4, 2, cursor.x, cursor.y) && game.status === status.start) startGame();
-    if (clickInBlock(1, 2, 1, 1, cursor.x, cursor.y)) scale(true);
-    if (clickInBlock(1, 3, 1, 1, cursor.x, cursor.y)) scale(false);
+    if (clickInBlock(1, 2, 1, 1, cursor.x, cursor.y) && game.status !== status.over) scale(true);
+    if (clickInBlock(1, 3, 1, 1, cursor.x, cursor.y) && game.status !== status.over) scale(false);
 
 }, false);
 
