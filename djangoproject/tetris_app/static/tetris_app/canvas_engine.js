@@ -336,7 +336,7 @@ function renderBoard() {
         if (game.status === status.start) {
             //cursor.x >= (6 * blockSize) && cursor.x < (10 * blockSize) && cursor.y >= (16 * blockSize) && cursor.y < (18 * blockSize)
             ctx.fillStyle = getColour(11);
-            ctx.font = (blockSize/10 * 12) + 'px courier';
+            ctx.font = (blockSize/10 * 12) + 'segoe ui';
             ctx.fillText(
                 'START',
                 4 * blockSize + 0.25 * blockSize + offset.x,
