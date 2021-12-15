@@ -41,8 +41,8 @@ let game = {
         [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
         [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
         [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-        [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-        [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+        [9, 0, 0, 0, 7, 7, 7, 7, 0, 0, 0, 9],
+        [9, 0, 0, 0, 7, 7, 7, 7, 0, 0, 0, 9],
         [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
         [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
         [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
@@ -56,7 +56,7 @@ let game = {
     name: user,
     status: status.start
 }
-const blockSize = 40;
+let blockSize = 40;
 
 let blocks;
 
@@ -105,10 +105,32 @@ blocks = [
     ]
 ];
 
-const offset = {
-    x: 2 * blockSize,
+let offset = {
+    x: 3 * blockSize,
     y: 2 * blockSize
 };
+
+function scale(up) {
+    if (blockSize <= 10 && !up) return;
+    if (up) {
+        blockSize += 5;
+        canvas.height += 125;
+        canvas.width += 125;
+        canvas.style.height = Number(canvas.style.height.substring(0, canvas.style.height.length - 2)) + 125 + 'px';
+        canvas.style.width = Number(canvas.style.width.substring(0, canvas.style.width.length - 2)) + 125 + 'px';
+    } else {
+        blockSize -= 5;
+        canvas.height -= 125;
+        canvas.width -= 125;
+        canvas.style.height = Number(canvas.style.height.substring(0, canvas.style.height.length - 2)) - 125 + 'px';
+        canvas.style.width = Number(canvas.style.width.substring(0, canvas.style.width.length - 2)) - 125 + 'px';
+    }
+
+    offset = {
+        x: 3 * blockSize,
+        y: 2 * blockSize
+    };
+}
 
 function getColour(tile) {
     // Get the hex color of a given number
@@ -213,9 +235,28 @@ function renderBoard() {
             }
         }
 
+        // DRAW THE ZOOM IN BUTTON
+        drawBlock(
+            blockSize - offset.x,
+            2 * blockSize - offset.y,
+            getColour(11)
+        );
+        ctx.fillStyle = getColour(10);
+        ctx.fillRect(7 / 5 * blockSize, 11 / 5 * blockSize, blockSize / 5, blockSize * 3 / 5);
+        ctx.fillRect(6 / 5 * blockSize, 12 / 5 * blockSize, blockSize * 3 / 5, blockSize / 5);
+
+        // DRAW THE ZOOM OUT BUTTON
+        drawBlock(
+            blockSize - offset.x,
+            3 * blockSize - offset.y,
+            getColour(11)
+        );
+        ctx.fillStyle = getColour(10);
+        ctx.fillRect(6 / 5 * blockSize, 17 / 5 * blockSize, blockSize * 3 / 5, blockSize / 5);
+
         // DRAW THE TEXT (SCORE AND NAME)
         ctx.fillStyle = getColour(11);
-        ctx.font = '48px segoe ui';
+        ctx.font = (blockSize/10 * 12) + 'px segoe ui';
         ctx.fillText(
             'Score: ' + game.score,
             offset.x + (game.board[0].length + 1) * blockSize,
@@ -290,6 +331,17 @@ function renderBoard() {
                         );
                 }
             }
+        }
+
+        if (game.status === status.start) {
+            //cursor.x >= (6 * blockSize) && cursor.x < (10 * blockSize) && cursor.y >= (16 * blockSize) && cursor.y < (18 * blockSize)
+            ctx.fillStyle = getColour(11);
+            ctx.font = (blockSize/10 * 12) + 'px courier';
+            ctx.fillText(
+                'START',
+                4 * blockSize + 0.25 * blockSize + offset.x,
+                16 * blockSize - 0.55 * blockSize + offset.y
+            );
         }
     } else if (game.status === status.over) {
         let i = 0;
@@ -572,20 +624,25 @@ window.addEventListener('keydown', (e) => {
 }, false);
 
 
+function clickInBlock(x1, y1, x2, y2, rx, ry) {
+    return rx >= (x1 * blockSize) && rx < ((x1 + x2) * blockSize) && ry >= (y1 * blockSize) && ry < ((y1 + y2) * blockSize);
+}
+
 // CHECKS IF THE START BUTTON HAS BEEN CLICKED
-/*
 canvas.addEventListener('mousedown', (e) => {
+    const pos = canvas.getBoundingClientRect();
 
     const cursor = {
-        x: e.clientX,
-        y: e.clientY
+        x: e.clientX - pos.left,
+        y: e.clientY - pos.top
     }
 
-    if (cursor.x < 100 && cursor.y < 100 && game.status === status.start)
-        startGame();
+    if (clickInBlock(7, 16, 4, 2, cursor.x, cursor.y) && game.status === status.start)
+        console.log('start')//startGame();
+    if (clickInBlock(1, 2, 1, 1, cursor.x, cursor.y)) scale(true);
+    if (clickInBlock(1, 3, 1, 1, cursor.x, cursor.y)) scale(false);
 
 }, false);
-*/
 
 function checkStart() {
     if (game.status === status.start) {
