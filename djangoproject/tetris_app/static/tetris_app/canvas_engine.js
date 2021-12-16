@@ -355,7 +355,7 @@ function renderBoard() {
                 );
             }
             i++;
-            // DO THIS FOR THE WHOLE GAMe BOARD
+            // DO THIS FOR THE WHOLE GAME BOARD
             if (i === game.board.length - 1) {
                 clearInterval(sss);
             }
