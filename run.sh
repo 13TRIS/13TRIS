@@ -1,4 +1,1 @@
-cd ./frontend/
-npm run build
-cd ../djangoproject/
-python manage.py runserver
+python djangoproject/manage.py runserver

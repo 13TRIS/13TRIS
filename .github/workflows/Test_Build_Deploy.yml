@@ -1,0 +1,50 @@
+name: Test and Build Phase
+
+on:
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Person that triggered the deploy:'
+        required: true
+
+# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#jobsjob_idstepscontinue-on-error
+# https://docs.github.com/en/actions/learn-github-actions/contexts
+
+jobs:
+
+  test:
+    name: Test
+    runs-on: self-hosted
+    steps:
+
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref_name }}
+          path: ${{ github.ref_name }}
+
+      - name: Install Dependencies
+        run: |
+          pip3 install --upgrade pip
+          pip3 install -r requirements.txt
+
+      - name: Run Tests
+        run: |
+          cd djangoproject
+          python3 manage.py behave
+
+  notify:
+    needs: test
+    name: Discord Notification
+    runs-on: self-hosted
+    continue-on-error: true
+    steps:
+    - name: Discord Notification
+      env:
+        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+        DISCORD_CHANNEL_TOKEN: ${{ secrets.DISCORD_CHANNEL_TOKEN }}
+      run: |
+        echo "$(date +'%Y-%m-%d-%T')" ${{ github.ref_name }} ${{ runner.name }} ${{ github.actor }}
+        python3 .github/discord_python/discord_bot.py -t "$(date +'%d %h %T')" -b ${{ github.ref_name }} -s ${{ needs.test.result }} -p ${{ github.run_id }} -r ${{ runner.name }} -a ${{ github.actor }} -c ${{ github.sha }}

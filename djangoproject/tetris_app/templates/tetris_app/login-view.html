@@ -1,0 +1,33 @@
+{% extends 'tetris_app/login-register-base.html' %}
+{% load static %}
+{% block form %}
+    <form method="post" action="" id="login_form">
+        {% csrf_token %}
+        <div class="mb-3 form-group">
+            <label class="form-label" for="fieldUserName">Username</label>
+            <input class="form-control input-sm" type="text" name="username" id="fieldUserName"
+                   placeholder="Enter your username"/>
+            <div id="user-error" class="d-none">Username not found</div>
+        </div>
+
+        <div class="mb-3 form-group">
+            <label class="form-label" for="fieldPassword">Password</label>
+            <input class="form-control" type="password" name="password" id="fieldPassword"
+                   placeholder="Enter your password"/>
+        </div>
+
+        {% for message in messages %}
+
+            <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}dark{% endif %}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div class="text-center mb-3">
+            <button type="submit" id="signInButton">Sign in</button>
+        </div>
+    </form>
+    <div class="text-center">
+        <a class="text-center" href="register">No account present? Register now!</a>
+    </div>
+{% endblock %}
