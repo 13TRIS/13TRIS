@@ -56,7 +56,8 @@ let game = {
     score: 0,
     highScore: 0,
     name: user,
-    status: status.start
+    status: status.start,
+    inverted: false
 }
 let blockSize = 40;
 
@@ -82,7 +83,7 @@ blocks = [// l
                 [[6, 6], [6, 6]], special: null
     }, {
         pattern: // i
-                [[0, 0, 7, 0], [0, 0, 7, 0], [0, 0, 7, 0], [0, 0, 7, 0]], special: null
+                [[0, 0, 7, 0], [0, 0, 7, 0], [0, 0, 7, 0], [0, 0, 7, 0]], special: "twist"
     }, {
         pattern: // bomb
                 [[8, 6], [6, 8]], special: "bomb"
@@ -148,7 +149,7 @@ function getColour(tile) {
             colour = '#352c56';
             break; // i
         case 9:
-            colour = isThemeDark ? '#45564a' : '#ffffff';
+            colour = game.inverted ? '#d23232' : (isThemeDark ? '#45564a' : '#ffffff');
             break; // edge blocks
         case 10:
             colour = isThemeDark ? '#32323f' : '#e8dec3';
@@ -391,7 +392,7 @@ function detonateBomb(x, y) {
 }
 
 function deleteBlock(x, y) {
-    if (game.board[x][y] != null &&game.board[x][y] !== 0 && game.board[x][y] !== 9 && game.board[x][y] !== 10)
+    if (game.board[x][y] != null && game.board[x][y] !== 0 && game.board[x][y] !== 9 && game.board[x][y] !== 10)
         game.board[x][y] = 0;
 }
 
@@ -399,6 +400,12 @@ function specialMove(block) {
     switch (block.special) {
         case "bomb":
             detonateBomb(block.x + 1, block.y + 1)
+            break;
+        case "twist":
+            game.inverted = true
+            setTimeout(function () {
+                game.inverted = false;
+            }, 5000);
             break;
         default:
     }
@@ -617,10 +624,10 @@ function playSound(number) {
 window.addEventListener('keydown', (e) => {
     switch (e.code) {
         case 'ArrowLeft':
-            moveSideways(3, game.currentBlock);
+            moveSideways(game.inverted ? 4 : 3, game.currentBlock);
             break;
         case 'ArrowRight':
-            moveSideways(4, game.currentBlock);
+            moveSideways(game.inverted ? 3 : 4, game.currentBlock);
             break;
         case 'ArrowUp':
             rotateBlock(game.currentBlock);
