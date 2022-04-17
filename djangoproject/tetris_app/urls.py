@@ -13,5 +13,6 @@ urlpatterns = [
     path('datenschutz',views.datenschutz_view),
     path('game-solo', views.game_solo_view),
     path('validate_username', views.validate_username, name='validate_username'),
-    path('connect/<str:operation>/<str:username>', views.update_friend, name='update_friend')
+    path('connect/<str:operation>/<str:username>', views.update_friend, name='update_friend'),
+    path('create-lobby', views.create_lobby)
 ]
