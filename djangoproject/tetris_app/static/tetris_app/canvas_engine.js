@@ -58,7 +58,10 @@ let game = {
     highScore: 0,
     name: user,
     status: status.start,
-    inverted: false
+    inverted: {
+        total: 0,
+        left: 0,
+    }
 }
 let blockSize = 40;
 
@@ -168,7 +171,7 @@ function getColour(tile) {
             colour = '#352c56';
             break; // i
         case 9:
-            colour = game.inverted ? '#d23232' : (isThemeDark ? '#45564a' : '#ffffff');
+            colour = isThemeDark ? '#45564a' : '#ffffff';
             break; // edge blocks
         case 10:
             colour = isThemeDark ? '#32323f' : '#e8dec3';
@@ -278,6 +281,73 @@ function renderBoard() {
                     j * blockSize,
                     i * blockSize,
                     getColour(game.board[i][j])
+                );
+            }
+        }
+
+        // DRAW THE INVERTED TIMER
+
+        if (game.inverted.left > 0) {
+            const percentage = Math.floor((game.inverted.left / game.inverted.total) * 52);
+            const fields = [
+                [0,0],
+                [0,1],
+                [0,2],
+                [0,3],
+                [0,4],
+                [0,5],
+                [0,6],
+                [0,7],
+                [0,8],
+                [0,9],
+                [0,10],
+                [0,11],
+                [0,12],
+                [0,13],
+                [0,14],
+                [0,15],
+                [0,16],
+                [0,17],
+                [0,18],
+                [0,19],
+                [0,20],
+                [1,20],
+                [2,20],
+                [3,20],
+                [4,20],
+                [5,20],
+                [6,20],
+                [7,20],
+                [8,20],
+                [9,20],
+                [10,20],
+                [11,20],
+                [11,19],
+                [11,18],
+                [11,17],
+                [11,16],
+                [11,15],
+                [11,14],
+                [11,13],
+                [11,12],
+                [11,11],
+                [11,10],
+                [11,9],
+                [11,8],
+                [11,7],
+                [11,6],
+                [11,5],
+                [11,4],
+                [11,3],
+                [11,2],
+                [11,1],
+                [11,0],
+            ]
+            for (let i = 0; i < percentage; i++) {
+                drawBlock(
+                    fields[i][0] * blockSize,
+                    fields[i][1] * blockSize,
+                    '#d23232'
                 );
             }
         }
@@ -418,16 +488,20 @@ function deleteBlock(x, y) {
         game.board[x][y] = 0;
 }
 
+function invertControls(units) {
+    game.inverted = {
+        total: units,
+        left: units
+    };
+}
+
 function specialMove(block) {
     switch (block.special) {
         case "bomb":
             detonateBomb(block.x + 1, block.y + 1)
             break;
         case "twist":
-            game.inverted = true
-            setTimeout(function () {
-                game.inverted = false;
-            }, 5000);
+            invertControls(50 - game.level);
             break;
         default:
     }
@@ -657,10 +731,10 @@ function playSound(number) {
 window.addEventListener('keydown', (e) => {
     switch (e.code) {
         case 'ArrowLeft':
-            moveSideways(game.inverted ? 4 : 3, game.currentBlock);
+            moveSideways(game.inverted.left > 0 ? 4 : 3, game.currentBlock);
             break;
         case 'ArrowRight':
-            moveSideways(game.inverted ? 3 : 4, game.currentBlock);
+            moveSideways(game.inverted.left > 0 ? 3 : 4, game.currentBlock);
             break;
         case 'ArrowUp':
             rotateBlock(game.currentBlock);
@@ -751,6 +825,15 @@ function startGame() {
         [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
         [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
     ]
+
+    game.special = 11;
+    game.level = 1;
+    game.score = 0;
+    game.name = user;
+    game.inverted = {
+        total: 0,
+        left: 0,
+    };
     const nextBlock = blocks[Math.floor(Math.random() * blocks.length)];
     game.nextBlock = {
         pattern: nextBlock.pattern,
@@ -766,8 +849,11 @@ function fun(now) {
         last = now;
         gameUpdate();
     }
-    if (game.status !== status.over)
+    if (game.status !== status.over) {
         renderBoard();
+        if (game.inverted.left > 0)
+            game.inverted.left--;
+    }
     requestAnimationFrame(fun);
 }
 
