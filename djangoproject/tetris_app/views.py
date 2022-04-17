@@ -23,6 +23,7 @@ def get_friends_if_exists(request):
         return None
 
 
+
 def login_view(request):
     context = {}
     if request.method == 'POST':
