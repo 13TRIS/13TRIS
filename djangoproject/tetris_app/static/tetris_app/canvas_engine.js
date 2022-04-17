@@ -117,6 +117,13 @@ blocks_special = [
                 [0, 3, 0, 3]
             ],
         special: "amogus"
+    },
+    {
+        pattern: // line bomb
+            [
+                [20],
+            ],
+        special: "cookie"
     }
 ];
 
@@ -189,6 +196,9 @@ function getColour(tile) {
         case 11:
             colour = isThemeDark ? '#f6f6f6' : '#042f3d';
             break; // font color
+        case 20:
+            colour = '#653600';
+            break; // font color
         case 99:
             colour = isThemeDark ? 'rgba(204,204,204,0.18)' : 'rgba(61,61,61,0.2)';
             break; // end screen blocks
@@ -208,6 +218,21 @@ function adjust(color, amount) {
     return '#' + color.replace(/^#/, '').replace(/../g, color => ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2));
 }
 
+function drawExtras(hexColor, strength, x, y) {
+    switch (hexColor) {
+        case '#653600':
+            ctx.fillStyle = adjust(getColour(5), strength);
+            ctx.fillRect(x + blockSize * 0.2, y + blockSize * 0.25, blockSize / 5, blockSize / 5);
+            ctx.fillStyle = adjust(getColour(6), strength);
+            ctx.fillRect(x + blockSize * 0.4, y + blockSize * 0.6, blockSize / 5, blockSize / 5);
+            ctx.fillStyle = adjust(getColour(7), strength);
+            ctx.fillRect(x + blockSize * 0.6, y + blockSize * 0.3, blockSize / 5, blockSize / 5);
+            break
+        default:
+            break;
+    }
+}
+
 // DRAWS A BLOCK
 function drawBlock(x, y, hexColor) {
     x += offset.x;
@@ -223,9 +248,11 @@ function drawBlock(x, y, hexColor) {
     ctx.fill();
     ctx.fillStyle = hexColor;
     ctx.fillRect(x + 3, y + 3, blockSize - 6, blockSize - 6);
+
+    drawExtras(hexColor, 0, x, y);
 }
 
-function drawHoloBlock(x, y, hexColor) {
+function drawHoloBlock(x, y, hexColor, hexColorIn = hexColor) {
     x += offset.x;
     y += offset.y;
     const strength = 10;
@@ -249,6 +276,8 @@ function drawHoloBlock(x, y, hexColor) {
     ctx.lineTo(x + blockSize, y + blockSize);
     ctx.lineTo(x + blockSize, y);
     ctx.fill();
+
+    drawExtras(hexColorIn, -50, x, y);
 }
 
 // DRAW BOARD
@@ -398,7 +427,8 @@ function renderBoard() {
                             drawHoloBlock(
                                 ((game.holoBlock.y + j) * blockSize),
                                 ((game.holoBlock.x + i) * blockSize),
-                                adjust(getColour(tile) + '4D', -50)
+                                adjust(getColour(tile) + '4D', -50),
+                                getColour(holoTile)
                             );
                         }
                     }
@@ -422,13 +452,13 @@ function renderBoard() {
             // DRAW SPECIAL NEXT BLOCK
             if (game.nextBlock.special != null) {
                 const specialBlock = [
-                    6,	8,	7,	1,	4,	7,	5,
-                    4,	6,	5,	5,	5,	6,	4,
-                    2,	2,	1,	4,	7,	8,	1,
-                    1,	8,	6,	8,	4,	7,	5,
-                    2,	1,	4,	2,	3,	2,	2,
-                    3,	1,	2,	3,	4,	2,	8,
-                    1,	7,	4,	2,	5,	3,	6
+                    6, 8, 7, 1, 4, 7, 5,
+                    4, 6, 5, 5, 5, 6, 4,
+                    2, 2, 1, 4, 7, 8, 1,
+                    1, 8, 6, 8, 4, 7, 5,
+                    2, 1, 4, 2, 3, 2, 2,
+                    3, 1, 2, 3, 4, 2, 8,
+                    1, 7, 4, 2, 5, 3, 6
                 ];
 
                 for (let i = 0; i < 7; i++) {
@@ -547,6 +577,18 @@ function invertControls(units) {
     };
 }
 
+function cookieBomb(x, y) {
+    console.log(x)
+    console.log(y)
+
+    for (let j = 0; j < game.board.length - 2; j++) {
+        game.board[j][y % game.board[0].length] = 0;
+    }
+    for (let i = 0; i < game.board[0].length - 2; i++) {
+        game.board[x][i + 1] = 5;
+    }
+}
+
 function specialMove(block) {
     switch (block.special) {
         case "bomb":
@@ -557,6 +599,9 @@ function specialMove(block) {
             break;
         case "amogus":
             generateNextBlock();
+            break;
+        case "cookie":
+            cookieBomb(block.x, block.y);
             break;
         default:
     }
