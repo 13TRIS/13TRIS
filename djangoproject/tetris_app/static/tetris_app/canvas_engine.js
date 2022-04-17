@@ -52,6 +52,7 @@ let game = {
         [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
         [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
     ],
+    special: 11,
     level: 1,
     score: 0,
     highScore: 0,
@@ -70,23 +71,41 @@ blocks = [// l
         pattern: [[0, 2, 0], [0, 2, 0], [0, 2, 2]], special: null
     }, {
         pattern: // t
-                [[0, 0, 0], [3, 3, 3], [0, 3, 0]], special: null
+            [[0, 0, 0], [3, 3, 3], [0, 3, 0]], special: null
     }, {
         pattern: // s
-                [[0, 4, 4], [4, 4, 0], [0, 0, 0]], special: null
+            [[0, 4, 4], [4, 4, 0], [0, 0, 0]], special: null
     }, {
         pattern: // z
-                [[5, 5, 0], [0, 5, 5], [0, 0, 0]], special: null
+            [[5, 5, 0], [0, 5, 5], [0, 0, 0]], special: null
     }, {
         pattern: // o
-                [[6, 6], [6, 6]], special: null
+            [[6, 6], [6, 6]], special: null
     }, {
         pattern: // i
-                [[0, 0, 7, 0], [0, 0, 7, 0], [0, 0, 7, 0], [0, 0, 7, 0]], special: null
-    }, {
+            [[0, 0, 7, 0], [0, 0, 7, 0], [0, 0, 7, 0], [0, 0, 7, 0]], special: null
+    }
+];
+
+blocks_special = [
+    {
         pattern: // bomb
-                [[8, 6], [6, 8]], special: "bomb"
-    }];
+            [[8, 6], [6, 8]],
+        special: "bomb"
+    },
+    {
+        pattern: // bomb
+            [
+                [0, 6, 1, 1],
+                [6, 6, 0, 1],
+                [0, 6, 6, 8],
+                [0, 4, 0, 8],
+                [0, 0, 8, 8]
+            ],
+        special: null
+    }
+];
+
 
 let offset = {
     x: 3 * blockSize,
@@ -211,18 +230,18 @@ function renderBoard() {
         for (let i = 0; i < (canvas.height / blockSize); i++) {
             for (let j = 0; j < (canvas.width / blockSize); j++) {
                 drawBlock(
-                        i * blockSize - offset.x,
-                        j * blockSize - offset.y,
-                        getColour(10)
+                    i * blockSize - offset.x,
+                    j * blockSize - offset.y,
+                    getColour(10)
                 );
             }
         }
 
         // DRAW THE ZOOM IN BUTTON
         drawBlock(
-                blockSize - offset.x,
-                2 * blockSize - offset.y,
-                getColour(11)
+            blockSize - offset.x,
+            2 * blockSize - offset.y,
+            getColour(11)
         );
         ctx.fillStyle = getColour(10);
         ctx.fillRect(7 / 5 * blockSize, 11 / 5 * blockSize, blockSize / 5, blockSize * 3 / 5);
@@ -230,9 +249,9 @@ function renderBoard() {
 
         // DRAW THE ZOOM OUT BUTTON
         drawBlock(
-                blockSize - offset.x,
-                3 * blockSize - offset.y,
-                getColour(11)
+            blockSize - offset.x,
+            3 * blockSize - offset.y,
+            getColour(11)
         );
         ctx.fillStyle = getColour(10);
         ctx.fillRect(6 / 5 * blockSize, 17 / 5 * blockSize, blockSize * 3 / 5, blockSize / 5);
@@ -241,23 +260,23 @@ function renderBoard() {
         ctx.fillStyle = getColour(11);
         ctx.font = (blockSize / 10 * 12) + 'px segoe ui';
         ctx.fillText(
-                'Score: ' + game.score,
-                offset.x + (game.board[0].length + 1) * blockSize,
-                offset.y + 9 * blockSize
+            'Score: ' + game.score,
+            offset.x + (game.board[0].length + 1) * blockSize,
+            offset.y + 9 * blockSize
         );
         ctx.fillText(
-                game.name,
-                offset.x + (game.board[0].length + 1) * blockSize,
-                offset.y + 11 * blockSize
+            game.name,
+            offset.x + (game.board[0].length + 1) * blockSize,
+            offset.y + 11 * blockSize
         );
 
         // DRAW game.board
         for (let i = 0; i < game.board.length; i++) {
             for (let j = 0; j < game.board[i].length; j++) {
                 drawBlock(
-                        j * blockSize,
-                        i * blockSize,
-                        getColour(game.board[i][j])
+                    j * blockSize,
+                    i * blockSize,
+                    getColour(game.board[i][j])
                 );
             }
         }
@@ -269,9 +288,9 @@ function renderBoard() {
                     const tile = game.currentBlock.pattern[i][j];
                     if (tile !== 0) {
                         drawBlock(
-                                ((game.currentBlock.y + j) * blockSize),
-                                ((game.currentBlock.x + i) * blockSize),
-                                getColour(tile)
+                            ((game.currentBlock.y + j) * blockSize),
+                            ((game.currentBlock.x + i) * blockSize),
+                            getColour(tile)
                         );
                     }
 
@@ -280,9 +299,9 @@ function renderBoard() {
                         const holoTile = game.holoBlock.pattern[i][j];
                         if (holoTile !== 0) {
                             drawBlock(
-                                    ((game.holoBlock.y + j) * blockSize),
-                                    ((game.holoBlock.x + i) * blockSize),
-                                    getColour(tile) + '5F'
+                                ((game.holoBlock.y + j) * blockSize),
+                                ((game.holoBlock.x + i) * blockSize),
+                                getColour(tile) + '5F'
                             );
                         }
                     }
@@ -296,9 +315,9 @@ function renderBoard() {
             for (let i = 0; i < 5; i++) {
                 for (let j = 0; j < 5; j++) {
                     drawBlock(
-                            (game.board[0].length + 2 + i) * blockSize,
-                            (blockSize * (2 + j)),
-                            adjust(getColour(9), -10)
+                        (game.board[0].length + 2 + i) * blockSize,
+                        (blockSize * (2 + j)),
+                        adjust(getColour(9), -10)
                     );
                 }
             }
@@ -308,9 +327,9 @@ function renderBoard() {
                     const tile = game.nextBlock.pattern[i][j];
                     if (tile !== 0)
                         drawBlock(
-                                (game.board[0].length + 3 + j) * blockSize,
-                                (blockSize * (i + 3)),
-                                getColour(tile)
+                            (game.board[0].length + 3 + j) * blockSize,
+                            (blockSize * (i + 3)),
+                            getColour(tile)
                         );
                 }
             }
@@ -321,9 +340,9 @@ function renderBoard() {
             ctx.fillStyle = getColour(11);
             ctx.font = (blockSize / 10 * 12) + 'segoe ui';
             ctx.fillText(
-                    'START',
-                    4 * blockSize + 0.25 * blockSize + offset.x,
-                    16 * blockSize - 0.55 * blockSize + offset.y
+                'START',
+                4 * blockSize + 0.25 * blockSize + offset.x,
+                16 * blockSize - 0.55 * blockSize + offset.y
             );
         }
     } else if (game.status === status.over) {
@@ -332,9 +351,9 @@ function renderBoard() {
             // DRAW EACH END SCREEN LINE
             for (let j = 0; j < game.board[i].length; j++) {
                 drawBlock(
-                        j * blockSize,
-                        i * blockSize,
-                        getColour(99)
+                    j * blockSize,
+                    i * blockSize,
+                    getColour(99)
                 );
             }
             i++;
@@ -373,25 +392,28 @@ function rotateBlock(block) {
 }
 
 function detonateBomb(x, y) {
-    deleteBlock(x, y - 2);
-    deleteBlock(x, y - 1);
-    deleteBlock(x, y);
-    deleteBlock(x, y + 1);
-    deleteBlock(x, y + 2);
-
-    deleteBlock(x - 2, y);
-    deleteBlock(x - 1, y);
-    deleteBlock(x + 1, y);
-    deleteBlock(x + 2, y);
-
-    deleteBlock(x + 1, y + 1);
-    deleteBlock(x + 1, y - 1);
-    deleteBlock(x - 1, y + 1);
-    deleteBlock(x - 1, y - 1);
+    const tempArr = [
+        [x, y - 2],
+        [x, y - 1],
+        [x, y],
+        [x, y + 1],
+        [x, y + 2],
+        [x - 2, y],
+        [x - 1, y],
+        [x + 1, y],
+        [x + 2, y],
+        [x + 1, y + 1],
+        [x + 1, y - 1],
+        [x - 1, y + 1],
+        [x - 1, y - 1]
+    ]
+    tempArr.forEach(item => {
+        deleteBlock.apply(null, item);
+    });
 }
 
 function deleteBlock(x, y) {
-    if (game.board[x][y] != null &&game.board[x][y] !== 0 && game.board[x][y] !== 9 && game.board[x][y] !== 10)
+    if (x >= 0 && y >= 0 && game.board[x][y] != null && game.board[x][y] !== 0 && game.board[x][y] !== 9 && game.board[x][y] !== 10)
         game.board[x][y] = 0;
 }
 
@@ -423,9 +445,9 @@ function drawPattern(block) {
                 const tile = block.pattern[i][j];
                 if (tile !== 0) {
                     drawBlock(
-                            ((block.y + j) * blockSize),
-                            ((block.x + i) * blockSize),
-                            getColour(tile)
+                        ((block.y + j) * blockSize),
+                        ((block.x + i) * blockSize),
+                        getColour(tile)
                     );
                 }
             }
@@ -554,33 +576,44 @@ function checkLegality(pos, block) {
     for (let i = 0; i < newPattern.length; i++)
         for (let j = 0; j < newPattern[i].length; j++)
             if (
-                    game.board[block.x + i + mov[0]][block.y + j + mov[1]] !== 0 &&
-                    newPattern[i][j] !== 0)
+                game.board[block.x + i + mov[0]][block.y + j + mov[1]] !== 0 && newPattern[i][j] !== 0)
                 return false;
     return true;
 }
 
+function generateNextBlock() {
+    if (game.special === 12) {
+        game.nextBlock = randomElementFromArray(blocks_special);
+        game.special = 0;
+    } else {
+        game.nextBlock = randomElementFromArray(blocks);
+        game.special++;
+    }
+}
+
+function randomElementFromArray(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
+function copyNextBlockIntoCurrent() {
+    game.currentBlock = {
+        x: 0,
+        y: 4,
+        pattern: game.nextBlock.pattern.map((a) => a.slice()),
+        special: game.nextBlock.special
+    };
+    game.holoBlock = {
+        x: 0,
+        y: 4,
+        pattern: game.nextBlock.pattern.map((a) => a.slice()),
+        special: false
+    };
+}
+
 function generateBlock() {
     if (game.status === status.playing) {
-        game.currentBlock = {
-            x: 0,
-            y: 4,
-            pattern: game.nextBlock.pattern.map((a) => a.slice()),
-            special: game.nextBlock.special
-        };
-        game.holoBlock = {
-            x: 0,
-            y: 4,
-            pattern: game.nextBlock.pattern.map((a) => a.slice()),
-            special: false
-        };
-
-        const nextBlock = blocks[Math.floor(Math.random() * blocks.length)];
-        game.nextBlock = {
-            pattern: nextBlock.pattern,
-            special: nextBlock.special
-        }
-
+        copyNextBlockIntoCurrent();
+        generateNextBlock()
         moveHolo();
         return checkLegality(0, game.currentBlock);
     }
