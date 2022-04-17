@@ -10,6 +10,7 @@ from .models import Friend, Profile
 from django.views.generic import TemplateView
 
 
+
 def login_view(request):
     context = {}
     if request.method == 'POST':
@@ -60,19 +61,7 @@ def validate_username(request):
 
 # This has to be removed eventually
 def homepage_view(request):
-    try:
-        if not request.user.is_authenticated:
-            raise ObjectDoesNotExist
-        friend = Friend.objects.get(current_user=request.user)
-        friends = friend.users.all()
-        print(f'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz {str(friend.users.count())}')
-
-        args = {
-            'friends': friends
-        }
-        return render(request, 'tetris_app/homepage-view.html', args)
-    except ObjectDoesNotExist:
-        return render(request, 'tetris_app/homepage-view.html')
+    return render(request, 'tetris_app/homepage-view.html', get_friends_if_exists(request))
 
 
 # This has to be removed eventually
@@ -92,7 +81,7 @@ def datenschutz_view(request):
 
 # This has to be removed eventually
 def game_solo_view(request):
-    return render(request, 'tetris_app/game-solo-view.html')
+    return render(request, 'tetris_app/game-solo-view.html', get_friends_if_exists(request))
 
 
 def update_friend(request, operation, username):
