@@ -98,7 +98,7 @@ blocks_special = [
         special: "bomb"
     },
     {
-        pattern: // bomb
+        pattern: // 13tris block
             [
                 [0, 6, 1, 1, 0],
                 [6, 6, 0, 1, 0],
@@ -107,6 +107,16 @@ blocks_special = [
                 [0, 4, 8, 8, 0]
             ],
         special: null
+    },
+    {
+        pattern: // amogus
+            [
+                [0, 3, 3, 3],
+                [3, 3, 4, 4],
+                [3, 3, 3, 3],
+                [0, 3, 0, 3]
+            ],
+        special: "amogus"
     }
 ];
 
@@ -544,6 +554,9 @@ function specialMove(block) {
             break;
         case "twist":
             invertControls(100 - game.level);
+            break;
+        case "amogus":
+            generateNextBlock();
             break;
         default:
     }
