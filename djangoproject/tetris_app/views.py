@@ -1,13 +1,27 @@
-from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .models import Friend, Profile
-from django.views.generic import TemplateView
+from .models import Friend
+
+
+def get_friends_if_exists(request):
+    try:
+        if not request.user.is_authenticated:
+            raise ObjectDoesNotExist
+        friend = Friend.objects.get(current_user=request.user)
+        friends = friend.users.all()
+
+        args = {
+            'friends': friends
+        }
+        return args
+    except ObjectDoesNotExist:
+        return None
+
 
 
 def login_view(request):
@@ -60,19 +74,7 @@ def validate_username(request):
 
 # This has to be removed eventually
 def homepage_view(request):
-    try:
-        if not request.user.is_authenticated:
-            raise ObjectDoesNotExist
-        friend = Friend.objects.get(current_user=request.user)
-        friends = friend.users.all()
-        print(f'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz {str(friend.users.count())}')
-
-        args = {
-            'friends': friends
-        }
-        return render(request, 'tetris_app/homepage-view.html', args)
-    except ObjectDoesNotExist:
-        return render(request, 'tetris_app/homepage-view.html')
+    return render(request, 'tetris_app/homepage-view.html', get_friends_if_exists(request))
 
 
 # This has to be removed eventually
@@ -92,7 +94,7 @@ def datenschutz_view(request):
 
 # This has to be removed eventually
 def game_solo_view(request):
-    return render(request, 'tetris_app/game-solo-view.html')
+    return render(request, 'tetris_app/game-solo-view.html', get_friends_if_exists(request))
 
 
 def update_friend(request, operation, username):
@@ -107,3 +109,7 @@ def update_friend(request, operation, username):
     except:
         pass
     return redirect('home')
+
+
+def create_lobby(request):
+    return render(request, 'tetris_app/lobby-view.html', get_friends_if_exists(request))
