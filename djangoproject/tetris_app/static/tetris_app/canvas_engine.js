@@ -100,11 +100,11 @@ blocks_special = [
     {
         pattern: // bomb
             [
-                [0, 6, 1, 1],
-                [6, 6, 0, 1],
-                [0, 6, 6, 8],
-                [0, 4, 0, 8],
-                [0, 0, 8, 8]
+                [0, 6, 1, 1, 0],
+                [6, 6, 0, 1, 0],
+                [0, 6, 6, 8, 0],
+                [0, 4, 0, 8, 0],
+                [0, 4, 8, 8, 0]
             ],
         special: null
     }
@@ -203,6 +203,22 @@ function drawBlock(x, y, hexColor) {
     x += offset.x;
     y += offset.y;
     const strength = 10;
+    ctx.fillStyle = adjust(hexColor, strength);
+    ctx.fillRect(x, y, blockSize, blockSize);
+    ctx.fillStyle = adjust(hexColor, -strength);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + blockSize, y + blockSize);
+    ctx.lineTo(x, y + blockSize);
+    ctx.fill();
+    ctx.fillStyle = hexColor;
+    ctx.fillRect(x + 3, y + 3, blockSize - 6, blockSize - 6);
+}
+
+function drawHoloBlock(x, y, hexColor) {
+    x += offset.x;
+    y += offset.y;
+    const strength = 10;
     ctx.fillStyle = hexColor;
     ctx.fillRect(x, y, blockSize, blockSize);
     ctx.fillStyle = adjust(hexColor, -strength);
@@ -290,58 +306,58 @@ function renderBoard() {
         if (game.inverted.left > 0) {
             const percentage = Math.floor((game.inverted.left / game.inverted.total) * 52);
             const fields = [
-                [0,0],
-                [0,1],
-                [0,2],
-                [0,3],
-                [0,4],
-                [0,5],
-                [0,6],
-                [0,7],
-                [0,8],
-                [0,9],
-                [0,10],
-                [0,11],
-                [0,12],
-                [0,13],
-                [0,14],
-                [0,15],
-                [0,16],
-                [0,17],
-                [0,18],
-                [0,19],
-                [0,20],
-                [1,20],
-                [2,20],
-                [3,20],
-                [4,20],
-                [5,20],
-                [6,20],
-                [7,20],
-                [8,20],
-                [9,20],
-                [10,20],
-                [11,20],
-                [11,19],
-                [11,18],
-                [11,17],
-                [11,16],
-                [11,15],
-                [11,14],
-                [11,13],
-                [11,12],
-                [11,11],
-                [11,10],
-                [11,9],
-                [11,8],
-                [11,7],
-                [11,6],
-                [11,5],
-                [11,4],
-                [11,3],
-                [11,2],
-                [11,1],
-                [11,0],
+                [0, 0],
+                [0, 1],
+                [0, 2],
+                [0, 3],
+                [0, 4],
+                [0, 5],
+                [0, 6],
+                [0, 7],
+                [0, 8],
+                [0, 9],
+                [0, 10],
+                [0, 11],
+                [0, 12],
+                [0, 13],
+                [0, 14],
+                [0, 15],
+                [0, 16],
+                [0, 17],
+                [0, 18],
+                [0, 19],
+                [0, 20],
+                [1, 20],
+                [2, 20],
+                [3, 20],
+                [4, 20],
+                [5, 20],
+                [6, 20],
+                [7, 20],
+                [8, 20],
+                [9, 20],
+                [10, 20],
+                [11, 20],
+                [11, 19],
+                [11, 18],
+                [11, 17],
+                [11, 16],
+                [11, 15],
+                [11, 14],
+                [11, 13],
+                [11, 12],
+                [11, 11],
+                [11, 10],
+                [11, 9],
+                [11, 8],
+                [11, 7],
+                [11, 6],
+                [11, 5],
+                [11, 4],
+                [11, 3],
+                [11, 2],
+                [11, 1],
+                [11, 0],
             ]
             for (let i = 0; i < percentage; i++) {
                 drawBlock(
@@ -369,10 +385,10 @@ function renderBoard() {
                     if (game.holoBlock) {
                         const holoTile = game.holoBlock.pattern[i][j];
                         if (holoTile !== 0) {
-                            drawBlock(
+                            drawHoloBlock(
                                 ((game.holoBlock.y + j) * blockSize),
                                 ((game.holoBlock.x + i) * blockSize),
-                                getColour(tile) + '5F'
+                                adjust(getColour(tile) + '4D', -50)
                             );
                         }
                     }
@@ -392,6 +408,32 @@ function renderBoard() {
                     );
                 }
             }
+
+            // DRAW SPECIAL NEXT BLOCK
+            if (game.nextBlock.special != null) {
+                const specialBlock = [
+                    6,	8,	7,	1,	4,	7,	5,
+                    4,	6,	5,	5,	5,	6,	4,
+                    2,	2,	1,	4,	7,	8,	1,
+                    1,	8,	6,	8,	4,	7,	5,
+                    2,	1,	4,	2,	3,	2,	2,
+                    3,	1,	2,	3,	4,	2,	8,
+                    1,	7,	4,	2,	5,	3,	6
+                ];
+
+                for (let i = 0; i < 7; i++) {
+                    for (let j = 0; j < 7; j++) {
+                        if (i === 0 || i === 6 || j === 0 || j === 6)
+                            drawBlock(
+                                (game.board[0].length + 1 + i) * blockSize,
+                                (blockSize * (1 + j)),
+                                adjust(getColour(specialBlock[(i * 7 + j) % specialBlock.length]), -10)
+                            );
+                    }
+                }
+
+            }
+
             // DRAW game.nextBlock.pattern
             for (let i = 0; i < game.nextBlock.pattern.length; i++) {
                 for (let j = 0; j < game.nextBlock.pattern[i].length; j++) {
@@ -421,7 +463,7 @@ function renderBoard() {
         const sss = setInterval(function () {
             // DRAW EACH END SCREEN LINE
             for (let j = 0; j < game.board[i].length; j++) {
-                drawBlock(
+                drawHoloBlock(
                     j * blockSize,
                     i * blockSize,
                     getColour(99)
@@ -501,7 +543,7 @@ function specialMove(block) {
             detonateBomb(block.x + 1, block.y + 1)
             break;
         case "twist":
-            invertControls(50 - game.level);
+            invertControls(100 - game.level);
             break;
         default:
     }
