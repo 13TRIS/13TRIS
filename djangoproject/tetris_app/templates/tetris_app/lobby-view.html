@@ -34,5 +34,6 @@
 
 {% block scripts %}
 <script>const lobby_id = "{{id}}"</script>
+<script>const session = "{{request.session.session_key}}"</script>
 <script src="{% static '/tetris_app/client.js' %}"></script>
 {% endblock %}

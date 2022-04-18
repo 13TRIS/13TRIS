@@ -3,7 +3,7 @@ import json
 
 import websockets
 
-CONNECTED = set()
+CONNECTED = {}
 LOBBIES = {}
 
 
@@ -13,24 +13,31 @@ async def handler(websocket):
             print("message received: " + message)
             event = json.loads(message)
             if event["type"] == "invite":
-                websockets.broadcast(CONNECTED, message)
+                for connected in CONNECTED.values():
+                    await connected[0].send(message)
             elif event["type"] == "init":
-                CONNECTED.add(websocket)
-                LOBBIES[event["lobby"]] = {websocket}
+                CONNECTED[event["user"]] = websocket, event["sessionId"]
+                LOBBIES[event["lobby"]] = {event["user"]}
                 print("lobbies: " + LOBBIES.__str__())
                 print("connections: " + CONNECTED.__str__())
             elif event["type"] == "join":
-                # get the list of websockets associated with the lobby id from which the invite request was received
-                connected = LOBBIES[event["lobby"]]
-                websockets.broadcast(connected, message)
-                # add the websocket to this list
-                connected.add(websocket)
+                # update connection of user (because of page reload/redirect)
+                CONNECTED[event["user"]] = websocket, event["sessionId"]
+                # get the list of users associated with the lobby id from which the invite request was received
+                lobby = LOBBIES[event["lobby"]]
+                # add the user to this list if he is not part of the lobby already
+                if event["user"] not in lobby:
+                    lobby.add(event["user"])
+                for user in lobby:
+                    socket, session = CONNECTED[user]
+                    await socket.send(message)
                 print("lobbies: " + LOBBIES.__str__())
             elif event["type"] == "leave":
                 del LOBBIES[event["lobby"]]
     finally:
-        CONNECTED.remove(websocket)
-        # TODO: remove lobby as well
+        for key in list(CONNECTED.keys()):
+            if CONNECTED[key] == websocket:
+                del CONNECTED[key]
 
 
 async def main():

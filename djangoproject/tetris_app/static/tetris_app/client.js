@@ -4,6 +4,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const websocket = new WebSocket("ws://localhost:8001");
     let modal = new bootstrap.Modal(document.querySelector("#invitation-modal"));
     init(websocket);
+    // close(websocket);
     sendInvite(websocket);
     acceptInvite(websocket, modal);
     receive(websocket, modal);
@@ -11,18 +12,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
 function acceptInvite(websocket, modal) {
     document.getElementById("invitation-accept").addEventListener("click", () => {
-        let joinEvent = {
-            "type": "join",
-            "lobby": INVITED_TO,
-            "playerName": user
-        }
         let leaveEvent = {
             "type": "leave",
             "lobby": lobby_id,
         }
         modal.hide();
         websocket.send(JSON.stringify(leaveEvent));
-        websocket.send(JSON.stringify(joinEvent));
         window.location.replace(window.location.href + "?lobby=" + INVITED_TO);
     });
 }
@@ -56,7 +51,7 @@ function receive(websocket, modal) {
                 }
                 break;
             case "join":
-                createCard(event.playerName);
+                createCard(event.user);
                 document.getElementById("start-btn").removeAttribute("hidden");
                 break;
         }
@@ -66,12 +61,21 @@ function receive(websocket, modal) {
 function init(websocket) {
     let event = {
         "type": "init",
-        "message": user + " connected",
-        "lobby": lobby_id
+        "user": user,
+        "lobby": lobby_id,
+        "sessionId": session,
+    }
+    let joinEvent = {
+        "type": "join",
+        "lobby": new URLSearchParams(window.location.search).get("lobby"),
+        "user": user,
+        "sessionId": session
     }
     websocket.addEventListener("open", () => {
         if (!new URLSearchParams(window.location.search).get("lobby"))
             websocket.send(JSON.stringify(event));
+        else
+            websocket.send(JSON.stringify(joinEvent));
     });
 }
 
@@ -99,4 +103,14 @@ function createCard(playerName) {
     card.appendChild(row);
     col.appendChild(card);
     playerDisplay.appendChild(col);
+}
+
+function close(websocket) {
+    let event = {
+        "type": "leave",
+        "lobby": lobby_id,
+    }
+    window.onbeforeunload = () => {
+        websocket.send(JSON.stringify(event));
+    }
 }
