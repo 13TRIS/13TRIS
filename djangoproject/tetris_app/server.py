@@ -4,11 +4,7 @@ import json
 import websockets
 
 CONNECTED = set()
-LOBBY = {}
-
-
-async def add_to_lobby(join_key):
-    pass
+LOBBIES = {}
 
 
 async def handler(websocket):
@@ -20,12 +16,21 @@ async def handler(websocket):
                 websockets.broadcast(CONNECTED, message)
             elif event["type"] == "init":
                 CONNECTED.add(websocket)
-                LOBBY[event["lobby"]] = {websocket}
+                LOBBIES[event["lobby"]] = {websocket}
+                print("lobbies: " + LOBBIES.__str__())
                 print("connections: " + CONNECTED.__str__())
             elif event["type"] == "join":
-                pass
+                # get the list of websockets associated with the lobby id from which the invite request was received
+                connected = LOBBIES[event["lobby"]]
+                websockets.broadcast(connected, message)
+                # add the websocket to this list
+                connected.add(websocket)
+                print("lobbies: " + LOBBIES.__str__())
+            elif event["type"] == "leave":
+                del LOBBIES[event["lobby"]]
     finally:
         CONNECTED.remove(websocket)
+        # TODO: remove lobby as well
 
 
 async def main():

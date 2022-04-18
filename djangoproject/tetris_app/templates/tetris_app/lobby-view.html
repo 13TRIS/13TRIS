@@ -1,7 +1,12 @@
 {% extends 'tetris_app/base.html' %}
 {% load static %}
 {% block content %}
-<h1>Create Lobby</h1>
+<h1 class="text-center">Create Lobby</h1>
+
+<div class="container">
+    <div class="row" id="invited-players"></div>
+    <button type="button" class="btn btn-primary" id="start-btn" hidden>Start Game</button>
+</div>
 
 <!-- Modal/Popup window for invitation message -->
 <div class="modal fade" id="invitation-modal" tabindex="-1" aria-hidden="true">
@@ -15,7 +20,7 @@
                 <p id="modal-text-content"></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Accept</button>
+                <button type="button" class="btn btn-primary" id="invitation-accept">Accept</button>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Decline</button>
             </div>
         </div>

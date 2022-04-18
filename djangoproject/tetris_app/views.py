@@ -111,6 +111,6 @@ def update_friend(request, operation, username):
 def create_lobby(request):
     args = {
         "friends": get_friends_if_exists(request),
-        "id": secrets.token_urlsafe(12),
+        "id": secrets.token_urlsafe(12), # TODO: do not create a new lobby id every time the site is refreshed!
     }
     return render(request, 'tetris_app/lobby-view.html', args)
