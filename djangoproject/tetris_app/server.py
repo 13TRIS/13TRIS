@@ -1,5 +1,7 @@
 import asyncio
 import json
+import secrets
+import pickle
 
 import websockets
 
@@ -10,31 +12,52 @@ LOBBIES = {}
 async def handler(websocket):
     try:
         async for message in websocket:
-            print("message received: " + message)
             event = json.loads(message)
             if event["type"] == "invite":
-                for connected in CONNECTED.values():
-                    await connected[0].send(message)
+                print(event["from"] + " invited " + event["to"] + " into lobby " + event["lobby"])
+                await CONNECTED[event["to"]].send(message)
             elif event["type"] == "init":
-                CONNECTED[event["user"]] = websocket, event["sessionId"]
-                LOBBIES[event["lobby"]] = {event["user"]}
-                print("lobbies: " + LOBBIES.__str__())
-                print("connections: " + CONNECTED.__str__())
+                lobby_id = secrets.token_urlsafe(12)
+                LOBBIES[lobby_id] = {event["user"]}
+                init_event = {
+                    "type": "init",
+                    "lobby_id": lobby_id,
+                }
+                print("user " + event["user"] + " was added to lobby " + lobby_id)
+                await websocket.send(json.dumps(init_event))
             elif event["type"] == "join":
-                # update connection of user (because of page reload/redirect)
-                CONNECTED[event["user"]] = websocket, event["sessionId"]
                 # get the list of users associated with the lobby id from which the invite request was received
                 lobby = LOBBIES[event["lobby"]]
                 # add the user to this list if he is not part of the lobby already
                 if event["user"] not in lobby:
+                    join_event = {
+                        "type": "join",
+                        "user": event["user"],
+                    }
                     lobby.add(event["user"])
-                for user in lobby:
-                    socket, session = CONNECTED[user]
-                    await socket.send(message)
-                print("lobbies: " + LOBBIES.__str__())
+                    for user in lobby:
+                        socket = CONNECTED[user]
+                        await socket.send(json.dumps(join_event))
             elif event["type"] == "leave":
-                del LOBBIES[event["lobby"]]
+                if len(LOBBIES[event["lobby"]]) <= 1:
+                    print("deleted lobby " + event["lobby"])
+                    del LOBBIES[event["lobby"]]
+                else:
+                    for user in LOBBIES[event["lobby"]]:
+                        if user == event["user"]:
+                            del user
+                            print("removed user " + event["user"] + "from lobby " + event["lobby"])
+            elif event["type"] == "update":
+                CONNECTED[event["user"]] = websocket
+            elif event["type"] == "request":
+                lobby_info = {
+                    "type": "lobby-info",
+                    "lobby": LOBBIES[event["lobby"]]
+                }
+                print("info about lobby " + event["lobby"] + ":" + LOBBIES[event["lobby"]].__str__() + " was requested")
+                await websocket.send(pickle.dumps(lobby_info))
     finally:
+        print("websocket " + websocket.__str__() + " lost connection")
         for key in list(CONNECTED.keys()):
             if CONNECTED[key] == websocket:
                 del CONNECTED[key]

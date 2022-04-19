@@ -2,36 +2,43 @@ var INVITED_TO = null;
 
 window.addEventListener("DOMContentLoaded", () => {
     const websocket = new WebSocket("ws://localhost:8001");
+    const lobby_id = new URLSearchParams(window.location.search).get("lobby");
     let modal = new bootstrap.Modal(document.querySelector("#invitation-modal"));
-    init(websocket);
-    // close(websocket);
-    sendInvite(websocket);
-    acceptInvite(websocket, modal);
+    init(websocket, lobby_id);
+    sendInvite(websocket, lobby_id);
+    acceptInvite(websocket, modal, lobby_id);
     receive(websocket, modal);
 });
 
-function acceptInvite(websocket, modal) {
+function acceptInvite(websocket, modal, lobby_id) {
     document.getElementById("invitation-accept").addEventListener("click", () => {
         let leaveEvent = {
             "type": "leave",
             "lobby": lobby_id,
+            "user": user,
+        }
+        let joinEvent = {
+            "type": "join",
+            "user": user,
+            "lobby": INVITED_TO,
         }
         modal.hide();
         websocket.send(JSON.stringify(leaveEvent));
-        window.location.replace(window.location.href + "?lobby=" + INVITED_TO);
+        websocket.send(JSON.stringify(joinEvent));
+        window.location.replace(window.location.href.split("?")[0] + "?lobby=" + INVITED_TO);
     });
 }
 
-function sendInvite(websocket) {
+function sendInvite(websocket, lobby_id) {
     document.querySelectorAll(".invite").forEach(item => {
         item.addEventListener("click", () => {
-            let event = {
+            let invite = {
                 "type": "invite",
                 "lobby": lobby_id,
                 "to": item.id,
                 "from": user,
             }
-            websocket.send(JSON.stringify(event));
+            websocket.send(JSON.stringify(invite));
         });
     });
 }
@@ -39,7 +46,6 @@ function sendInvite(websocket) {
 function receive(websocket, modal) {
     websocket.addEventListener("message", ({data}) => {
         const event = JSON.parse(data);
-        console.log(event);
         switch (event.type) {
             case "invite":
                 if (user === event.to) {
@@ -52,31 +58,48 @@ function receive(websocket, modal) {
                 break;
             case "join":
                 createCard(event.user);
-                document.getElementById("start-btn").removeAttribute("hidden");
                 break;
+            case "init":
+                window.location.replace(window.location.href.split("?")[0] + "?lobby=" + event.lobby_id);
+                break;
+            case "lobby-info":
+                updateUI(event.lobby);
         }
     });
 }
 
-function init(websocket) {
-    let event = {
+function init(websocket, lobby_id) {
+    let init = {
         "type": "init",
-        "user": user,
-        "lobby": lobby_id,
-        "sessionId": session,
+        "user": user
     }
-    let joinEvent = {
-        "type": "join",
-        "lobby": new URLSearchParams(window.location.search).get("lobby"),
-        "user": user,
-        "sessionId": session
+    let updateConnection = {
+        "type": "update",
+        "user": user
+    }
+    let lobbyRequest = {
+        "type": "request",
+        "lobby": lobby_id
     }
     websocket.addEventListener("open", () => {
-        if (!new URLSearchParams(window.location.search).get("lobby"))
-            websocket.send(JSON.stringify(event));
-        else
-            websocket.send(JSON.stringify(joinEvent));
+        if (!lobby_id) {
+            websocket.send(JSON.stringify(init));
+        } else {
+            websocket.send(JSON.stringify(updateConnection));
+            websocket.send(JSON.stringify(lobbyRequest));
+        }
     });
+}
+
+function updateUI(lobby) {
+    if (lobby.length > 1 && document.getElementById("start-btn").hasAttribute("hidden"))
+        document.getElementById("start-btn").removeAttribute("hidden");
+
+    for (let member in lobby) {
+        if (user !== member) {
+            createCard(member);
+        }
+    }
 }
 
 function createCard(playerName) {
@@ -103,14 +126,4 @@ function createCard(playerName) {
     card.appendChild(row);
     col.appendChild(card);
     playerDisplay.appendChild(col);
-}
-
-function close(websocket) {
-    let event = {
-        "type": "leave",
-        "lobby": lobby_id,
-    }
-    window.onbeforeunload = () => {
-        websocket.send(JSON.stringify(event));
-    }
 }
