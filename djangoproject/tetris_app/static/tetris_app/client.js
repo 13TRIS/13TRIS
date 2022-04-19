@@ -45,6 +45,7 @@ function sendInvite(websocket, lobby_id) {
 
 function receive(websocket, modal) {
     websocket.addEventListener("message", ({data}) => {
+        console.log(data);
         const event = JSON.parse(data);
         switch (event.type) {
             case "invite":
@@ -63,6 +64,7 @@ function receive(websocket, modal) {
                 window.location.replace(window.location.href.split("?")[0] + "?lobby=" + event.lobby_id);
                 break;
             case "lobby-info":
+                console.log(event.lobby)
                 updateUI(event.lobby);
         }
     });
@@ -95,9 +97,9 @@ function updateUI(lobby) {
     if (lobby.length > 1 && document.getElementById("start-btn").hasAttribute("hidden"))
         document.getElementById("start-btn").removeAttribute("hidden");
 
-    for (let member in lobby) {
-        if (user !== member) {
-            createCard(member);
+    for (let i = 0; i < lobby.length; i++) {
+        if (user !== lobby[i]) {
+            createCard(lobby[i]);
         }
     }
 }

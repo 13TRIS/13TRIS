@@ -52,10 +52,10 @@ async def handler(websocket):
             elif event["type"] == "request":
                 lobby_info = {
                     "type": "lobby-info",
-                    "lobby": LOBBIES[event["lobby"]]
+                    "lobby": list(LOBBIES[event["lobby"]])
                 }
                 print("info about lobby " + event["lobby"] + ":" + LOBBIES[event["lobby"]].__str__() + " was requested")
-                await websocket.send(pickle.dumps(lobby_info))
+                await websocket.send(json.dumps(lobby_info))
     finally:
         print("websocket " + websocket.__str__() + " lost connection")
         for key in list(CONNECTED.keys()):
