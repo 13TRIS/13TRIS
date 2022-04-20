@@ -73,36 +73,16 @@
                                     </th>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>danielm</td>
-                                    <td>27240</td>
-                                    <td>1.12.21</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>danielm</td>
-                                    <td>14690</td>
-                                    <td>16.12.21</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>mike</td>
-                                    <td>100</td>
-                                    <td>1.9.21</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>mike</td>
-                                    <td>100</td>
-                                    <td>1.9.21</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>mike</td>
-                                    <td>100</td>
-                                    <td>1.9.21</td>
-                                </tr>
+                                {% if history is not null %}
+                                    {% for place in history %}
+                                        <tr>
+                                            <td>1</td>
+                                            <td>{{ place.player.username }}</td>
+                                            <td>{{ place.score }}</td>
+                                            <td>{{ place.date_of_score }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
                                 </tbody>
                             </table>
                         </div>

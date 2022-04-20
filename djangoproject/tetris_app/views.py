@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .models import Friend
+from .models import Friend, History
 
 
 def get_friends_if_exists(request):
@@ -22,6 +22,37 @@ def get_friends_if_exists(request):
     except ObjectDoesNotExist:
         return None
 
+
+def get_leaderboard(request):
+    try:
+        args = {
+            'history': History.objects.order_by('-score')[0:10]
+        }
+        return args
+    except ObjectDoesNotExist:
+        return None
+
+
+def set_leaderboard(request):
+    try:
+        if request.method == 'POST':
+            if not request.user.is_authenticated:
+                raise ObjectDoesNotExist
+            history = History(score=request.POST.get('score', None), player=request.user)
+            history.save()
+            args = {
+                'score_added': True
+            }
+        else:
+            args = {
+                'score_added': False
+            }
+        return JsonResponse(args)
+    except ObjectDoesNotExist:
+        args = {
+            'score_added': False
+        }
+        return JsonResponse(args)
 
 
 def login_view(request):
@@ -74,7 +105,7 @@ def validate_username(request):
 
 # This has to be removed eventually
 def homepage_view(request):
-    return render(request, 'tetris_app/homepage-view.html', get_friends_if_exists(request))
+    return render(request, 'tetris_app/homepage-view.html', get_leaderboard(request))
 
 
 # This has to be removed eventually
