@@ -73,18 +73,18 @@
                         <script>
                             let input = document.getElementsByName("textFieldAddFriend")[0];
                             input.addEventListener("keypress", (e) => {
-                               if (e.key == "Enter")
-                               {
-                                   addFriend();
-                               }
+                                if (e.key === "Enter") {
+                                    addFriend();
+                                }
                             });
 
                             function addFriend() {
                                 // Selecting the input element and get its value
                                 let userName = document.querySelector('[name="textFieldAddFriend"]').value; // selected by name
-
-                                url = window.location.origin + '/connect/add/' + userName;
-                                window.open(url, "_self");
+                                const url = window.location.origin + '/connect/add/' + userName
+                                fetch(url).then(() =>
+                                    window.open(window.location, "_self")
+                                )
                             }
                         </script>
 
