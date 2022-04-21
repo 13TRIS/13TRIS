@@ -9,16 +9,13 @@ from .models import Friend, History
 from django.core import serializers
 from django.http import HttpResponse
 
+
 def get_friends_if_exists(request):
     try:
         if not request.user.is_authenticated:
             raise ObjectDoesNotExist
         friend = Friend.objects.get(current_user=request.user)
-        friends = friend.users.all()
-
-        args = {
-            'friends': friends
-        }
+        args = friend.users.all()
         return args
     except ObjectDoesNotExist:
         return None
@@ -26,8 +23,11 @@ def get_friends_if_exists(request):
 
 def get_leaderboard(request):
     try:
-        page = max(int(request.GET.get('page', '1')), 1)
-        data = serializers.serialize('json', History.objects.order_by('-score')[10*(page-1):10*page])
+        try:
+            page = max(int(request.GET.get('page', '1')), 1)
+        except ValueError:
+            page = 1
+        data = serializers.serialize('json', History.objects.order_by('-score')[10 * (page - 1):10 * page])
         return HttpResponse(data, content_type='application/json')
     except ObjectDoesNotExist:
         return None
@@ -105,7 +105,14 @@ def validate_username(request):
 
 # This has to be removed eventually
 def homepage_view(request):
-    return render(request, 'tetris_app/homepage-view.html', get_friends_if_exists(request))
+    return render(
+        request,
+        'tetris_app/homepage-view.html',
+        {
+            'friends': get_friends_if_exists(request),
+            'history': History.objects.order_by('-score')[:10]
+        }
+    )
 
 
 # This has to be removed eventually
@@ -125,7 +132,7 @@ def datenschutz_view(request):
 
 # This has to be removed eventually
 def game_solo_view(request):
-    return render(request, 'tetris_app/game-solo-view.html', get_friends_if_exists(request))
+    return render(request, 'tetris_app/game-solo-view.html', {'friends': get_friends_if_exists(request)})
 
 
 def update_friend(request, operation, username):
@@ -143,4 +150,4 @@ def update_friend(request, operation, username):
 
 
 def create_lobby(request):
-    return render(request, 'tetris_app/lobby-view.html', get_friends_if_exists(request))
+    return render(request, 'tetris_app/lobby-view.html', {'friends': get_friends_if_exists(request)})
