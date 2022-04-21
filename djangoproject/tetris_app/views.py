@@ -6,7 +6,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import Friend, History
-
+from django.core import serializers
+from django.http import HttpResponse
 
 def get_friends_if_exists(request):
     try:
@@ -25,10 +26,9 @@ def get_friends_if_exists(request):
 
 def get_leaderboard(request):
     try:
-        args = {
-            'history': History.objects.order_by('-score')[0:10]
-        }
-        return args
+        page = max(int(request.GET.get('page', '1')), 1)
+        data = serializers.serialize('json', History.objects.order_by('-score')[10*(page-1):10*page])
+        return HttpResponse(data, content_type='application/json')
     except ObjectDoesNotExist:
         return None
 
@@ -105,7 +105,7 @@ def validate_username(request):
 
 # This has to be removed eventually
 def homepage_view(request):
-    return render(request, 'tetris_app/homepage-view.html', get_leaderboard(request))
+    return render(request, 'tetris_app/homepage-view.html', get_friends_if_exists(request))
 
 
 # This has to be removed eventually
