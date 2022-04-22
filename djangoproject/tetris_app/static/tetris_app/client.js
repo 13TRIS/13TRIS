@@ -7,7 +7,7 @@ window.addEventListener("DOMContentLoaded", () => {
     init(websocket, lobby_id);
     sendInvite(websocket, lobby_id);
     acceptInvite(websocket, modal, lobby_id);
-    receive(websocket, modal);
+    receive(websocket, modal, lobby_id);
 });
 
 function acceptInvite(websocket, modal, lobby_id) {
@@ -43,7 +43,7 @@ function sendInvite(websocket, lobby_id) {
     });
 }
 
-function receive(websocket, modal) {
+function receive(websocket, modal, lobby_id) {
     websocket.addEventListener("message", ({data}) => {
         console.log(data);
         const event = JSON.parse(data);
@@ -58,14 +58,17 @@ function receive(websocket, modal) {
                 }
                 break;
             case "join":
-                createCard(event.user);
+                let lobbyRequest = {
+                    "type": "request",
+                    "lobby": lobby_id
+                }
+                websocket.send(JSON.stringify(lobbyRequest));
                 break;
             case "init":
                 window.location.replace(window.location.href.split("?")[0] + "?lobby=" + event.lobby_id);
                 break;
             case "lobby-info":
-                console.log(event.lobby)
-                updateUI(event.lobby);
+                updateUI(event.lobby, event.admin);
         }
     });
 }
@@ -93,37 +96,42 @@ function init(websocket, lobby_id) {
     });
 }
 
-function updateUI(lobby) {
-    if (lobby.length > 1 && document.getElementById("start-btn").hasAttribute("hidden"))
+function updateUI(lobby, admin) {
+    let playerDisplay = document.getElementById("invited-players");
+    playerDisplay.innerHTML = "";
+    if (lobby.length > 1 && document.getElementById("start-btn").hasAttribute("hidden") && user === admin)
         document.getElementById("start-btn").removeAttribute("hidden");
 
     for (let i = 0; i < lobby.length; i++) {
-        createCard(lobby[i]);
+        if (admin !== lobby[i]) {
+            createCard(lobby[i]);
+        } else {
+            createCard(lobby[i], "border-danger");
+        }
     }
 }
 
-function createCard(playerName) {
-    let innerHTML = " <div class=\"col-md-2\">\n" +
-        "                                    <img src=\"user_icon_128px.png\"\n" +
-        "                                         class=\"img-fluid rounded-start\"\n" +
-        "                                         alt=\"user logo\"></div>\n" +
-        "                                <div class=\"col-md-8\">\n" +
-        "                                    <div class=\"card-body\">\n" +
-        `                                       <h5 class=\"card-title\">${playerName}</h5>\n` +
-        "                                        <p class=\"card-text\">Status: In Lobby</p>\n" +
-        "                                        <a href=\"{% url 'update_friend' operation='remove' username=friend.username %}\">\n" +
-        "                                            <button type=\"button\" class=\"btn btn-danger\">Kick from Lobby</button>\n" +
-        "                                        </a>\n" +
-        "                                    </div>"
+function createCard(playerName, backgroundColor) {
+    let innerHTML = ` <div class='card mb-3 ${backgroundColor}'>` +
+        "                            <div class='row g-0'>" +
+        "                                <div class='col-md-2'>" +
+        "                                    <img src='user-logo.png'" +
+        "                                         class='img-fluid rounded-start'" +
+        "                                         alt='user logo'></div>" +
+        "                                <div class='col-md-8'>" +
+        "                                    <div class='card-body'>" +
+        `                                       <h5 class='card-title'>${playerName}</h5>` +
+        "                                        <p class='card-text'>Status: In Lobby</p>" +
+        "                                        <a href=''>" +
+        "                                            <button type='button' class='btn btn-danger'>Kick from Lobby</button>" +
+        "                                        </a>" +
+        "                                    </div>" +
+        "                                </div>" +
+        "                            </div>" +
+        "                        </div>";
     let playerDisplay = document.getElementById("invited-players");
     let col = document.createElement("div");
     col.classList.add("col");
-    let card = document.createElement("div");
-    card.classList.add("card", "mb-3");
-    let row = document.createElement("div");
-    row.classList.add("row", "g-0");
-    row.innerHTML = innerHTML;
-    card.appendChild(row);
-    col.appendChild(card);
+    col.innerHTML = innerHTML;
     playerDisplay.appendChild(col);
 }
