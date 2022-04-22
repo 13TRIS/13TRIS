@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import Friend
+import secrets
 
 
 def get_friends_if_exists(request):
@@ -15,13 +16,9 @@ def get_friends_if_exists(request):
         friend = Friend.objects.get(current_user=request.user)
         friends = friend.users.all()
 
-        args = {
-            'friends': friends
-        }
-        return args
+        return friends
     except ObjectDoesNotExist:
         return None
-
 
 
 def login_view(request):
@@ -74,7 +71,7 @@ def validate_username(request):
 
 # This has to be removed eventually
 def homepage_view(request):
-    return render(request, 'tetris_app/homepage-view.html', get_friends_if_exists(request))
+    return render(request, 'tetris_app/homepage-view.html', {"friends": get_friends_if_exists(request)})
 
 
 # This has to be removed eventually
@@ -94,7 +91,7 @@ def datenschutz_view(request):
 
 # This has to be removed eventually
 def game_solo_view(request):
-    return render(request, 'tetris_app/game-solo-view.html', get_friends_if_exists(request))
+    return render(request, 'tetris_app/game-solo-view.html', {"friends": get_friends_if_exists(request)})
 
 
 def update_friend(request, operation, username):
@@ -112,4 +109,4 @@ def update_friend(request, operation, username):
 
 
 def create_lobby(request):
-    return render(request, 'tetris_app/lobby-view.html', get_friends_if_exists(request))
+    return render(request, 'tetris_app/lobby-view.html', {"friends": get_friends_if_exists(request)})
