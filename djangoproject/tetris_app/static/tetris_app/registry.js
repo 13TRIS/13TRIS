@@ -62,6 +62,11 @@ $(document).ready(function () {
         } else {
             password_error.addClass('error').removeClass('d-none');
         }
+        if (checkPasswordMatch()) {
+            password_confirmation_error.addClass('error').removeClass('d-none');
+        } else {
+            password_confirmation_error.removeClass('error').addClass('d-none');
+        }
         return false;
     });
 
