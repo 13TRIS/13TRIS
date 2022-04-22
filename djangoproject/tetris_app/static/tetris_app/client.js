@@ -98,9 +98,7 @@ function updateUI(lobby) {
         document.getElementById("start-btn").removeAttribute("hidden");
 
     for (let i = 0; i < lobby.length; i++) {
-        if (user !== lobby[i]) {
-            createCard(lobby[i]);
-        }
+        createCard(lobby[i]);
     }
 }
 
