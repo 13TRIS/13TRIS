@@ -24,7 +24,10 @@ async def handler(websocket):
             elif event["type"] == "join":
                 await receive_join(event)
             elif event["type"] == "leave":
-                thread = StoppableThread(target=leave_lobby, args=(event,))
+                if event["instant"] is True:
+                    leave_lobby(event, True)
+                    return
+                thread = StoppableThread(target=leave_lobby, args=(event, False))
                 THREADS[event["user"]] = thread
                 thread.start()
             elif event["type"] == "update":
@@ -70,23 +73,35 @@ async def receive_join(event):
     print(event["user"] + " joined " + str(LOBBIES[event["lobby"]]))
 
 
-def leave_lobby(event):
-    print(THREADS)
+def leave_lobby(event, is_instant):
     # wait 5 seconds because something might come in from the user if he did not leave the site
-    time.sleep(5)
-    if THREADS[event["user"]].stopped():
+    time.sleep(1)
+    print(event["user"] + " left lobby " + event["lobby"])
+    if not is_instant and THREADS[event["user"]].stopped():
         del THREADS[event["user"]]
         return
     # if we do not get an update request in those 5 second the player has left the page and we can delete
     lobby, admin = LOBBIES[event["lobby"]]
+    websockets_in_lobby = set()
     if len(lobby) <= 1:
         del LOBBIES[event["lobby"]]
     else:
-        for user in lobby:
+        for user in lobby.copy():
             if user == event["user"]:
-                del user
-    del THREADS[event["user"]]
-    print(event["user"] + " left lobby " + event["lobby"])
+                lobby.discard(user)
+            else:
+                websockets_in_lobby.add(CONNECTED[user])
+        lobby_info = {
+            "type": "lobby_info",
+            "lobby": list(lobby),
+            "admin": admin
+        }
+        websockets.broadcast(websockets_in_lobby, json.dumps(lobby_info))
+        if not is_instant:
+            del THREADS[event["user"]]
+    print(THREADS)
+    print(LOBBIES)
+    print(CONNECTED)
 
 
 async def send_lobby_info(websocket, event):
