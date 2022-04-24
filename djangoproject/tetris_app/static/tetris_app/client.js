@@ -58,11 +58,7 @@ function receive(websocket, modal, lobby_id) {
                 }
                 break;
             case "join":
-                let lobbyRequest = {
-                    "type": "request",
-                    "lobby": lobby_id
-                }
-                websocket.send(JSON.stringify(lobbyRequest));
+                requestLobbyInfo(websocket, lobby_id);
                 break;
             case "init":
                 window.location.replace(window.location.href.split("?")[0] + "?lobby=" + event.lobby_id);
@@ -78,22 +74,30 @@ function init(websocket, lobby_id) {
         "type": "init",
         "user": user
     }
-    let updateConnection = {
-        "type": "update",
-        "user": user
-    }
-    let lobbyRequest = {
-        "type": "request",
-        "lobby": lobby_id
-    }
     websocket.addEventListener("open", () => {
         if (!lobby_id) {
             websocket.send(JSON.stringify(init));
         } else {
-            websocket.send(JSON.stringify(updateConnection));
-            websocket.send(JSON.stringify(lobbyRequest));
+            updateConnection(websocket);
+            requestLobbyInfo(websocket, lobby_id);
         }
     });
+}
+
+function updateConnection(websocket) {
+    let updateConnection = {
+        "type": "update",
+        "user": user
+    }
+    websocket.send(JSON.stringify(updateConnection));
+}
+
+function requestLobbyInfo(websocket, lobby_id) {
+    let lobbyRequest = {
+        "type": "request",
+        "lobby": lobby_id
+    }
+    websocket.send(JSON.stringify(lobbyRequest));
 }
 
 function updateUI(lobby, admin) {
@@ -104,14 +108,18 @@ function updateUI(lobby, admin) {
 
     for (let i = 0; i < lobby.length; i++) {
         if (admin !== lobby[i]) {
-            createCard(lobby[i]);
+            createCard(lobby[i], "", admin);
         } else {
-            createCard(lobby[i], "border-danger");
+            createCard(lobby[i], "border-danger", admin);
         }
     }
 }
 
-function createCard(playerName, backgroundColor) {
+function createCard(playerName, backgroundColor, admin) {
+    console.log("playerName: " + playerName + "; admin: " + admin);
+    let kickFromLobbyBtn = "";
+    if (user === admin && playerName !== user)
+        kickFromLobbyBtn = "<button type='button' class='btn btn-danger'>Kick from Lobby</button>";
     let innerHTML = ` <div class='card mb-3 ${backgroundColor}'>` +
         "                            <div class='row g-0'>" +
         "                                <div class='col-md-2'>" +
@@ -122,9 +130,7 @@ function createCard(playerName, backgroundColor) {
         "                                    <div class='card-body'>" +
         `                                       <h5 class='card-title'>${playerName}</h5>` +
         "                                        <p class='card-text'>Status: In Lobby</p>" +
-        "                                        <a href=''>" +
-        "                                            <button type='button' class='btn btn-danger'>Kick from Lobby</button>" +
-        "                                        </a>" +
+        `${kickFromLobbyBtn}` +
         "                                    </div>" +
         "                                </div>" +
         "                            </div>" +
