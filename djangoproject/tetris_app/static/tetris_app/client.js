@@ -1,32 +1,37 @@
 var INVITED_TO = null;
 
 window.addEventListener("DOMContentLoaded", () => {
-    const websocket = new WebSocket("ws://localhost:8001");
     const lobby_id = new URLSearchParams(window.location.search).get("lobby");
+    const websocket = new WebSocket("ws://localhost:8001");
     let modal = new bootstrap.Modal(document.querySelector("#invitation-modal"));
     init(websocket, lobby_id);
     sendInvite(websocket, lobby_id);
     acceptInvite(websocket, modal, lobby_id);
     receive(websocket, modal, lobby_id);
+    beforeUnload(websocket, lobby_id);
 });
 
 function acceptInvite(websocket, modal, lobby_id) {
     document.getElementById("invitation-accept").addEventListener("click", () => {
-        let leaveEvent = {
-            "type": "leave",
-            "lobby": lobby_id,
-            "user": user,
-        }
         let joinEvent = {
             "type": "join",
             "user": user,
             "lobby": INVITED_TO,
         }
         modal.hide();
-        websocket.send(JSON.stringify(leaveEvent));
+        leaveLobby(websocket, lobby_id);
         websocket.send(JSON.stringify(joinEvent));
         window.location.replace(window.location.href.split("?")[0] + "?lobby=" + INVITED_TO);
     });
+}
+
+function leaveLobby(websocket, lobby_id) {
+    let leaveEvent = {
+        "type": "leave",
+        "lobby": lobby_id,
+        "user": user,
+    }
+    websocket.send(JSON.stringify(leaveEvent));
 }
 
 function sendInvite(websocket, lobby_id) {
@@ -45,7 +50,6 @@ function sendInvite(websocket, lobby_id) {
 
 function receive(websocket, modal, lobby_id) {
     websocket.addEventListener("message", ({data}) => {
-        console.log(data);
         const event = JSON.parse(data);
         switch (event.type) {
             case "invite":
@@ -74,6 +78,7 @@ function init(websocket, lobby_id) {
         "type": "init",
         "user": user
     }
+    console.log(lobby_id);
     websocket.addEventListener("open", () => {
         if (!lobby_id) {
             websocket.send(JSON.stringify(init));
@@ -116,7 +121,6 @@ function updateUI(lobby, admin) {
 }
 
 function createCard(playerName, backgroundColor, admin) {
-    console.log("playerName: " + playerName + "; admin: " + admin);
     let kickFromLobbyBtn = "";
     if (user === admin && playerName !== user)
         kickFromLobbyBtn = "<button type='button' class='btn btn-danger'>Kick from Lobby</button>";
