@@ -43,6 +43,7 @@ async def handler(websocket):
                 lobby, admin = LOBBIES[event["lobby"]]
                 if len(lobby) <= 1:
                     del LOBBIES[event["lobby"]]
+                    print(LOBBIES)
                 else:
                     for user in lobby:
                         if user == event["user"]:

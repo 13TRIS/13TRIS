@@ -26,6 +26,25 @@
         </div>
     </div>
 </div>
+
+<!-- Modal/Popup for leaving the lobby -->
+<div class="modal fade" id="leave-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Leave lobby?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="leave-modal-text"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Stay</button>
+                <button type="button" class="btn btn-danger" id="leave-confirm">Leave</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block invite_button %}
