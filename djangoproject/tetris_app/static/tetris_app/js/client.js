@@ -4,27 +4,18 @@ window.addEventListener("DOMContentLoaded", () => {
     const lobby_id = new URLSearchParams(window.location.search).get("lobby");
     const websocket = new WebSocket("ws://localhost:8001");
     let modal = new bootstrap.Modal(document.querySelector("#invitation-modal"));
-    let leaveModal = new bootstrap.Modal(document.querySelector("#leave-modal"));
     init(websocket, lobby_id);
     sendInvite(websocket, lobby_id);
     acceptInvite(websocket, modal, lobby_id);
     receive(websocket, modal, lobby_id);
-    beforeUnload(websocket, lobby_id, leaveModal);
+    beforeUnload(websocket, lobby_id);
 });
 
-function beforeUnload(websocket, lobby_id, modal) {
+function beforeUnload(websocket, lobby_id) {
     if (!lobby_id)
         return;
-    window.addEventListener("beforeunload", (event) => {
-        event.preventDefault();
-        return event.returnValue = "Do you really want to leave the lobby?";
-    });
-    window.addEventListener("close", () => {
-       leaveLobby(websocket, lobby_id);
-    });
-    document.getElementById("leave-confirm").addEventListener("click", () => {
-       leaveLobby(websocket, lobby_id);
-       window.location.replace(window.location.href.split("?")[0]);
+    window.addEventListener("beforeunload", () => {
+        leaveLobby(websocket, lobby_id);
     });
 }
 
@@ -36,7 +27,7 @@ function acceptInvite(websocket, modal, lobby_id) {
             "lobby": INVITED_TO,
         }
         modal.hide();
-        leaveLobby(websocket, lobby_id);
+        //leaveLobby(websocket, lobby_id);
         websocket.send(JSON.stringify(joinEvent));
         window.location.replace(window.location.href.split("?")[0] + "?lobby=" + INVITED_TO);
     });
@@ -95,7 +86,6 @@ function init(websocket, lobby_id) {
         "type": "init",
         "user": user
     }
-    console.log(lobby_id);
     websocket.addEventListener("open", () => {
         if (!lobby_id) {
             websocket.send(JSON.stringify(init));
