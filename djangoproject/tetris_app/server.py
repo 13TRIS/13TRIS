@@ -13,6 +13,7 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
+            print(message)
             if event["type"] == "invite":
                 await CONNECTED[event["to"]].send(message)
             elif event["type"] == "init":
@@ -24,8 +25,6 @@ async def handler(websocket):
                     "lobby_id": lobby_id,
                 }
                 await websocket.send(json.dumps(init_event))
-                print(LOBBIES)
-                print(CONNECTED)
             elif event["type"] == "join":
                 # get the list of users associated with the lobby id from which the invite request was received
                 lobby, admin = LOBBIES[event["lobby"]]
@@ -35,10 +34,11 @@ async def handler(websocket):
                         "type": "join",
                         "user": event["user"],
                     }
-                    lobby.add(event["user"])
                     for user in lobby:
                         socket = CONNECTED[user]
                         await socket.send(json.dumps(join_event))
+                    # needs to be added afterwards -> otherwise KeyError!
+                    lobby.add(event["user"])
             elif event["type"] == "leave":
                 lobby, admin = LOBBIES[event["lobby"]]
                 if len(lobby) <= 1:

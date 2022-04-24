@@ -8,7 +8,6 @@ window.addEventListener("DOMContentLoaded", () => {
     sendInvite(websocket, lobby_id);
     acceptInvite(websocket, modal, lobby_id);
     receive(websocket, modal, lobby_id);
-    beforeUnload(websocket, lobby_id);
 });
 
 function acceptInvite(websocket, modal, lobby_id) {
