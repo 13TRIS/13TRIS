@@ -53,8 +53,6 @@ def set_leaderboard(request):
             'score_added': False
         }
         return JsonResponse(args)
-
-
 def login_view(request):
     context = {}
     if request.method == 'POST':
