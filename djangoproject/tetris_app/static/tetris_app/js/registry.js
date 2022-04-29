@@ -10,7 +10,7 @@ $(document).ready(function () {
 
 
     function checkUsername() {
-        const pattern = /^[a-z0-9_-]{3,}$/;
+        const pattern = /^[a-zA-Z0-9_-]{3,}$/;
         return pattern.test(username.val());
     }
 
