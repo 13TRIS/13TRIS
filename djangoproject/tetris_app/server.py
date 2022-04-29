@@ -17,7 +17,6 @@ async def handler(websocket):
         async for message in websocket:
             event = json.loads(message)
             if event["type"] == "invite":
-                print(event["from"] + " invited " + event["to"])
                 await CONNECTED[event["to"]].send(message)
             elif event["type"] == "init":
                 await receive_init(websocket, event)
@@ -72,6 +71,7 @@ def leave_lobby(event, is_instant):
     # if we do not get an update request in those 5 second the player has left the page and we can delete
     lobby, admin = LOBBIES[event["lobby"]]
     websockets_in_lobby = set()
+    users_in_lobby = set()
     if len(lobby) <= 1:
         del LOBBIES[event["lobby"]]
     else:
@@ -79,10 +79,19 @@ def leave_lobby(event, is_instant):
             if user == event["user"]:
                 lobby.discard(user)
             else:
+                users_in_lobby.add(user)
                 websockets_in_lobby.add(CONNECTED[user])
+        print(websockets_in_lobby)
         websockets.broadcast(websockets_in_lobby, json.dumps(lobby_info(lobby, admin)))
         if not is_instant:
             del THREADS[event["user"]]
+
+    if admin == event["user"] and len(websockets_in_lobby) > 0:
+        lobby_id = secrets.token_urlsafe(12)
+        rnd_user = users_in_lobby.pop()
+        users_in_lobby.add(rnd_user)
+        LOBBIES[lobby_id] = users_in_lobby, rnd_user
+        websockets.broadcast(websockets_in_lobby, json.dumps(init_event(lobby_id)))
 
 
 async def send_lobby_info(websocket, event):
