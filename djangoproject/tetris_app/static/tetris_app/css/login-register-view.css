@@ -12,7 +12,7 @@ canvas {
 }
 
 #loginViewContainer {
-    background-image: url("./login-view-background-2.svg");
+    background-image: url("../img/login-view-background-2.svg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
