@@ -70,17 +70,9 @@ class Match(models.Model):
 
 class History(models.Model):
     # matches = list
-    def getMatch(self):
-        return
-
-    def queryMatch(self):
-        return
-
-    def saveMatch(self):
-        return
-
-    def deleteMatch(self):
-        return
+    score = models.IntegerField(default=-1)
+    player = models.ForeignKey(User, on_delete=models.CASCADE)
+    date_of_score = models.DateTimeField(auto_now=True)
 
 
 class MatchManagement(models.Model):

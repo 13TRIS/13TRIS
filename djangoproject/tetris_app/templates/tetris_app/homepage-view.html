@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col">
                     <div class="card" style="height: auto; margin-top: 20px">
-                        <img src="{% static '/tetris_app/black_rock.png'%}" class="card-img-top">   <!--  /static/tetris_app/solo_without_text.png  -->
+                        <img src="{% static '/tetris_app/img/black_rock.png'%}" class="card-img-top">
                         <div class="card-body">
                             <h5 class="card-title">Singleplayer</h5>
                             <p class="card-text"></p>
@@ -15,7 +15,7 @@
                 </div>
                 <div class="col">
                     <div class="card" style="height: auto; margin-top: 20px">
-                        <img src="{% static '/tetris_app/red_block.png'%}" class="card-img-top">
+                        <img src="{% static '/tetris_app/img/red_block.png'%}" class="card-img-top">
                         <div class="card-body">
                             <h5 class="card-title">Player versus Player</h5>
                             <p class="card-text"></p>
@@ -26,7 +26,7 @@
                 <div class="col">
                     <div class="card" style="height: auto; margin-top: 20px">
                         <!-- later we have do add actual breakpoints to the height because it looks weir on smaller screens-->
-                        <img src="{% static '/tetris_app/purple_block.png'%}" class="card-img-top">
+                        <img src="{% static '/tetris_app/img/purple_block.png'%}" class="card-img-top">
                         <div class="card-body">
                             <h5 class="card-title">Player versus AI</h5>
                             <p class="card-text"></p>
@@ -73,36 +73,16 @@
                                     </th>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>danielm</td>
-                                    <td>27240</td>
-                                    <td>1.12.21</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>danielm</td>
-                                    <td>14690</td>
-                                    <td>16.12.21</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>mike</td>
-                                    <td>100</td>
-                                    <td>1.9.21</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>mike</td>
-                                    <td>100</td>
-                                    <td>1.9.21</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>mike</td>
-                                    <td>100</td>
-                                    <td>1.9.21</td>
-                                </tr>
+                                {% if history is not null %}
+                                    {% for place in history %}
+                                        <tr>
+                                            <td>1</td>
+                                            <td>{{ place.player.username }}</td>
+                                            <td>{{ place.score }}</td>
+                                            <td>{{ place.date_of_score }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
                                 </tbody>
                             </table>
                         </div>

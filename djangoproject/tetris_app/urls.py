@@ -14,5 +14,7 @@ urlpatterns = [
     path('game-solo', views.game_solo_view),
     path('validate_username', views.validate_username, name='validate_username'),
     path('connect/<str:operation>/<str:username>', views.update_friend, name='update_friend'),
+    path('history/add', views.set_leaderboard, name='set_leaderboard'),
+    path('history/get', views.get_leaderboard, name='get_leaderboard'),
     path('create-lobby', views.create_lobby),
 ]
