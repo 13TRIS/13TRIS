@@ -11,6 +11,16 @@ window.addEventListener("DOMContentLoaded", () => {
     beforeUnload(websocket, lobby_id);
 });
 
+function beforeUnload(websocket, lobby_id) {
+    if (!lobby_id)
+        return;
+    window.addEventListener("beforeunload", () => {
+        if (INVITED_TO == null) {
+            leaveLobby(websocket, lobby_id, false);
+        }
+    });
+}
+
 function acceptInvite(websocket, modal, lobby_id) {
     document.getElementById("invitation-accept").addEventListener("click", () => {
         let joinEvent = {
@@ -19,17 +29,18 @@ function acceptInvite(websocket, modal, lobby_id) {
             "lobby": INVITED_TO,
         }
         modal.hide();
-        leaveLobby(websocket, lobby_id);
         websocket.send(JSON.stringify(joinEvent));
+        leaveLobby(websocket, lobby_id, true);
         window.location.replace(window.location.href.split("?")[0] + "?lobby=" + INVITED_TO);
     });
 }
 
-function leaveLobby(websocket, lobby_id) {
+function leaveLobby(websocket, lobby_id, isInstant) {
     let leaveEvent = {
         "type": "leave",
         "lobby": lobby_id,
         "user": user,
+        "instant": isInstant,
     }
     websocket.send(JSON.stringify(leaveEvent));
 }
@@ -51,6 +62,7 @@ function sendInvite(websocket, lobby_id) {
 function receive(websocket, modal, lobby_id) {
     websocket.addEventListener("message", ({data}) => {
         const event = JSON.parse(data);
+        console.log(data);
         switch (event.type) {
             case "invite":
                 if (user === event.to) {
@@ -83,6 +95,7 @@ function init(websocket, lobby_id) {
         if (!lobby_id) {
             websocket.send(JSON.stringify(init));
         } else {
+            INVITED_TO = null;
             updateConnection(websocket);
             requestLobbyInfo(websocket, lobby_id);
         }
@@ -92,7 +105,7 @@ function init(websocket, lobby_id) {
 function updateConnection(websocket) {
     let updateConnection = {
         "type": "update",
-        "user": user
+        "user": user,
     }
     websocket.send(JSON.stringify(updateConnection));
 }
