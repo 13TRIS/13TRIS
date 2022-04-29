@@ -90,6 +90,7 @@ function init(websocket, lobby_id) {
         "type": "init",
         "user": user
     }
+    console.log(lobby_id);
     websocket.addEventListener("open", () => {
         if (!lobby_id) {
             websocket.send(JSON.stringify(init));
