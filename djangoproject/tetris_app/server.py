@@ -26,11 +26,10 @@ async def handler(websocket):
                 await receive_join(event)
             elif event["type"] == "leave":
                 if event["instant"] is True:
-                    instant = True
                     kick = False
                     if event["kick"] is True:
                         kick = True
-                    leave_lobby(event, instant, kick)
+                    leave_lobby(event, True, kick)
                     return
                 thread = StoppableThread(target=leave_lobby, args=(event, False, False))
                 THREADS[event["user"]] = thread
@@ -87,7 +86,8 @@ def leave_lobby(event, is_instant, kick):
                 lobby.discard(user)
                 if kick:
                     new = secrets.token_urlsafe(12)
-                    websockets.broadcast(CONNECTED[user], json.dumps(kick_event(event["lobby"], new)))
+                    user_iter = {CONNECTED[user]}
+                    websockets.broadcast(user_iter, json.dumps(kick_event(event["lobby"], new)))
             else:
                 users_in_lobby.add(user)
                 websockets_in_lobby.add(CONNECTED[user])

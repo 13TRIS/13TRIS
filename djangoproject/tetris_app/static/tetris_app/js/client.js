@@ -86,13 +86,19 @@ function receive(websocket, modal, lobby_id) {
                 break;
             case "kick":
                 let kickModal = new bootstrap.Modal(document.getElementById("kick-modal"));
+                kickModalEvent(websocket);
                 kickModal.show();
-                setTimeout(null, 2000);
-                window.location.replace(window.location.href.split("?")[0] + "?lobby=" + event.new);
                 break;
             default:
                 break;
         }
+    });
+}
+
+function kickModalEvent(websocket) {
+    document.getElementById("kick-modal").addEventListener("shown.bs.modal", () => {
+        sleep(5);
+        websocket.send(JSON.stringify({"type": "init", "user": user}));
     });
 }
 
@@ -179,4 +185,12 @@ function createCard(playerName, backgroundColor, admin) {
     col.classList.add("col");
     col.innerHTML = innerHTML;
     playerDisplay.appendChild(col);
+}
+
+function sleep(seconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+        currentDate = Date.now();
+    } while (currentDate - date < seconds * 1000);
 }
