@@ -16,7 +16,7 @@ function beforeUnload(websocket, lobby_id) {
         return;
     window.addEventListener("beforeunload", () => {
         if (INVITED_TO == null) {
-            leaveLobby(websocket, lobby_id, false);
+            leaveLobby(websocket, lobby_id, false, null, false);
         }
     });
 }
@@ -30,17 +30,18 @@ function acceptInvite(websocket, modal, lobby_id) {
         }
         modal.hide();
         websocket.send(JSON.stringify(joinEvent));
-        leaveLobby(websocket, lobby_id, true);
+        leaveLobby(websocket, lobby_id, true, null, false);
         window.location.replace(window.location.href.split("?")[0] + "?lobby=" + INVITED_TO);
     });
 }
 
-function leaveLobby(websocket, lobby_id, isInstant) {
+function leaveLobby(websocket, lobby_id, isInstant, userName, isKick) {
     let leaveEvent = {
         "type": "leave",
         "lobby": lobby_id,
-        "user": user,
+        "user": userName ? userName : user,
         "instant": isInstant,
+        "kick": isKick
     }
     websocket.send(JSON.stringify(leaveEvent));
 }
@@ -81,8 +82,28 @@ function receive(websocket, modal, lobby_id) {
                 break;
             case "lobby-info":
                 updateUI(event.lobby, event.admin);
+                registerListeners(websocket, lobby_id);
+                break;
+            case "kick":
+                let kickModal = new bootstrap.Modal(document.getElementById("kick-modal"));
+                kickModal.show();
+                setTimeout(null, 2000);
+                window.location.replace(window.location.href.split("?")[0] + "?lobby=" + event.new);
+                break;
+            default:
+                break;
         }
     });
+}
+
+function registerListeners(websocket, lobby_id) {
+    let elements = document.querySelectorAll("button[data-kick]")
+    for (let i = 0; i < elements.length; i++) {
+        elements[i].addEventListener("click", () => {
+            leaveLobby(websocket, lobby_id, true,
+                elements[i].getAttribute("id").split("-")[1], true);
+        });
+    }
 }
 
 function init(websocket, lobby_id) {
@@ -136,7 +157,8 @@ function updateUI(lobby, admin) {
 function createCard(playerName, backgroundColor, admin) {
     let kickFromLobbyBtn = "";
     if (user === admin && playerName !== user)
-        kickFromLobbyBtn = "<button type='button' class='btn btn-danger'>Kick from Lobby</button>";
+        kickFromLobbyBtn = `<button type='button' class='btn btn-danger' data-kick
+                            id='kick-${playerName}'>Kick from Lobby</button>`;
     let innerHTML = ` <div class='card mb-3 ${backgroundColor}'>` +
         "                            <div class='row g-0'>" +
         "                                <div class='col-md-2'>" +
