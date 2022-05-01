@@ -51,7 +51,8 @@ class TestServer(unittest.IsolatedAsyncioTestCase):
         await self.connection2.send(json.dumps({"type": "join", "user": "marc", "lobby": self.data1["lobby_id"]}))
         join = json.loads(await self.connection1.recv())
         await self.connection2.send(
-            json.dumps({"type": "leave", "lobby": self.data2["lobby_id"], "user": "marc", "instant": True}))
+            json.dumps(
+                {"type": "leave", "lobby": self.data2["lobby_id"], "user": "marc", "instant": True, "kick": False}))
         self.assertEqual(server.LOBBIES[self.data1["lobby_id"]], ({"felix", "marc"}, "felix"))
         self.assertEqual(join["type"], "join")
         self.assertEqual(join["user"], "marc")
