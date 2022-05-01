@@ -17,7 +17,6 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
-            print(LOBBIES.__str__())
             if event["type"] == "invite":
                 await CONNECTED[event["to"]].send(message)
             elif event["type"] == "init":
