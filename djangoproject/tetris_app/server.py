@@ -19,7 +19,8 @@ async def handler(websocket):
             print(message)
             event = json.loads(message)
             if event["type"] == "invite":
-                await CONNECTED[event["to"]].send(message)
+                if event["to"] in CONNECTED:
+                    await CONNECTED[event["to"]].send(message)
             elif event["type"] == "init":
                 await receive_init(websocket, event)
             elif event["type"] == "join":
