@@ -67,7 +67,7 @@ jobs:
       - name: Run unittest test
         run: |
           cd djangoproject/tetris_app
-          coverage run -m unittest TestServer.py
+          coverage run -m unittest discover -p "test*"
           coverage report -m 
           coverage-badge -o coverage.svg -f
           gh gist edit c70e1f6335770b1a486128be085f2f3f coverage.svg
