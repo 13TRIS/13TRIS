@@ -44,6 +44,7 @@ jobs:
         run: |
           cd djangoproject/tetris_app
           coverage run -m unittest TestServer.py
+          coverage report -m 
           coverage-badge -o coverage.svg -f
 
   notify:
