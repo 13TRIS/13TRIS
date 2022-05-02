@@ -41,7 +41,7 @@ jobs:
         run: |
           pwd
           ls -la
-          cd tetris_app
+          cd djangoproject/tetris_app
           python3 -m unittest -v TestServer.TestServer
 
   notify:
