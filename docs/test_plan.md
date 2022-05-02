@@ -353,6 +353,8 @@ n/a
 
 [Provide a brief outline of both the form and content of the reports used to measure the extent of testing, and indicate how frequently they will be produced. Give an dication as to the method and tools used to record, measure, and report on the extent of testing.]
 
+[![Alt text](../djangoproject/tetris_app/coverage.svg)](https://digitalocean.com)
+
 ## 7.3 Perceived Quality Reports
 
 n/a
