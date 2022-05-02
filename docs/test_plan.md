@@ -348,10 +348,10 @@ n/a
 ## 7.1 Test Evaluation Summaries
 
 Beta  
-[![Test and Build Phase : Beta](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml/badge.svg?branch=beta)](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml)  
+[![Test and Build Phase : Beta](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml/badge.svg?branch=beta)](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml?query=branch%3Abeta)  
 
 Main  
-[![Test and Build Phase : Main](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml/badge.svg?branch=main)](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml)
+[![Test and Build Phase : Main](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml/badge.svg?branch=main)](https://github.com/13TRIS/13TRIS/actions?query=branch%3Amain)
 
 ## 7.2 Reporting on Test Coverage
 
