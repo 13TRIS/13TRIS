@@ -43,7 +43,7 @@ jobs:
       - name: Run unittest test
         run: |
           cd djangoproject/tetris_app
-          python -m unittest -v TestServer.TestServer
+          coverage run -m unittest TestServer.py
           coverage-badge -o coverage.svg -f
 
   notify:
