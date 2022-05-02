@@ -34,6 +34,11 @@ jobs:
           cd djangoproject
           python3 manage.py behave
 
+      - name: Run unittest test
+        run: |
+          cd tetris_app
+          python3 -m unittest -v TestServer.TestServer
+
   notify:
     needs: test
     name: Discord Notification
