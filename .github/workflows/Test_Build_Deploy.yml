@@ -49,12 +49,6 @@ jobs:
           gh gist edit c70e1f6335770b1a486128be085f2f3f coverage.svg
           rm coverage.svg
 
-      - name: Archive code coverage results
-        uses: actions/upload-artifact@v2
-        with:
-          name: code-coverage-report
-          path: djangoproject/tetris_app/coverage.svg
-
   notify:
     needs: test
     name: Discord Notification
