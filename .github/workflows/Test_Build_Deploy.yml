@@ -78,6 +78,7 @@ jobs:
     name: Discord Notification
     runs-on: self-hosted
     continue-on-error: true
+    if: always()
     steps:
       - name: Discord Notification
         env:
