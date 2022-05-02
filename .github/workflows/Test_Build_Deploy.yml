@@ -46,6 +46,14 @@ jobs:
           coverage run -m unittest TestServer.py
           coverage report -m 
           coverage-badge -o coverage.svg -f
+          gh gist edit c70e1f6335770b1a486128be085f2f3f coverage.svg
+          rm coverage.svg
+
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v2
+        with:
+          name: code-coverage-report
+          path: djangoproject/tetris_app/coverage.svg
 
   notify:
     needs: test
@@ -53,10 +61,10 @@ jobs:
     runs-on: self-hosted
     continue-on-error: true
     steps:
-    - name: Discord Notification
-      env:
-        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-        DISCORD_CHANNEL_TOKEN: ${{ secrets.DISCORD_CHANNEL_TOKEN }}
-      run: |
-        echo "$(date +'%Y-%m-%d-%T')" ${{ github.ref_name }} ${{ runner.name }} ${{ github.actor }}
-        python .github/discord_python/discord_bot.py -t "$(date +'%d %h %T')" -b ${{ github.ref_name }} -s ${{ needs.test.result }} -p ${{ github.run_id }} -r ${{ runner.name }} -a ${{ github.actor }} -c ${{ github.sha }}
+      - name: Discord Notification
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_CHANNEL_TOKEN: ${{ secrets.DISCORD_CHANNEL_TOKEN }}
+        run: |
+          echo "$(date +'%Y-%m-%d-%T')" ${{ github.ref_name }} ${{ runner.name }} ${{ github.actor }}
+          python .github/discord_python/discord_bot.py -t "$(date +'%d %h %T')" -b ${{ github.ref_name }} -s ${{ needs.test.result }} -p ${{ github.run_id }} -r ${{ runner.name }} -a ${{ github.actor }} -c ${{ github.sha }}
