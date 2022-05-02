@@ -347,12 +347,15 @@ n/a
 
 ## 7.1 Test Evaluation Summaries
 
-[![Test and Build Phase](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml/badge.svg)](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml)
+Beta  
+[![Test and Build Phase : Beta](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml/badge.svg?branch=beta)](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml)  
+
+Main  
+[![Test and Build Phase : Main](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml/badge.svg?branch=main)](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml)
 
 ## 7.2 Reporting on Test Coverage
 
-[Provide a brief outline of both the form and content of the reports used to measure the extent of testing, and indicate how frequently they will be produced. Give an dication as to the method and tools used to record, measure, and report on the extent of testing.]
-
+Last test-run:  
 [![Alt text](https://gist.githubusercontent.com/MKrabs/c70e1f6335770b1a486128be085f2f3f/raw/b6a0bb58f504bd98dee911c4292e9bd593877cac/coverage.svg)](https://github.com/13TRIS/13TRIS/actions)
 
 ## 7.3 Perceived Quality Reports
