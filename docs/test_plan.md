@@ -1,4 +1,6 @@
-# Test Plan Template
+![image](Logo/Logo_full.png)
+
+# Test Plan of 13TRIS
 
 ## Table of contents
 
@@ -123,8 +125,6 @@ already be tested.
 n/a
 
 ## 2. Evaluation Mission and Test Motivation
-
-[Provide an overview of the mission and motivation for the testing that will be conducted in this iteration.]
 
 ### 2.1 Background
 
@@ -348,7 +348,7 @@ n/a
 ## 7.1 Test Evaluation Summaries
 
 Beta  
-[![Test and Build Phase : Beta](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml/badge.svg?branch=beta)](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml?query=branch%3Abeta)  
+[![Test and Build Phase : Beta](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml/badge.svg?branch=beta)](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml?query=branch%3Abeta)
 
 Main  
 [![Test and Build Phase : Main](https://github.com/13TRIS/13TRIS/actions/workflows/Test_Build_Deploy.yml/badge.svg?branch=main)](https://github.com/13TRIS/13TRIS/actions?query=branch%3Amain)
@@ -364,7 +364,9 @@ n/a
 
 ## 7.4 Incident Logs and Change Requests
 
-[Provide a brief outline of both the method and tools used to record, track, and manage test incidents, associated change requests, and their status.]
+We use GitHub to track (breaking) changes, an overview of our code base and documentation and for reporting code
+coverage and passing tests via badges. We use SonarCloud to analyze the code and track certain branches of our GitHub
+repository.
 
 ## 7.5 Smoke Test Suite and Supporting Test Scripts
 
@@ -380,7 +382,11 @@ n/a
 
 ### 7.6.2     Additional Automated Functional Test Scripts
 
-[These will be either a collection of the source code files for automated test scripts, or the repository of both source code and compiled executables for test scripts maintained by the test automation product.]
+Our tests reside inside our GitHub repository with all the other
+code: [https://github.com/13TRIS/13TRIS](https://github.com/13TRIS/13TRIS). Test scripts so far:
+
+- [test_server.py](https://github.com/13TRIS/13TRIS/blob/beta/djangoproject/tetris_app/test_server.py)
+- more to come...
 
 ### 7.6.3     Test Guidelines
 
@@ -404,22 +410,15 @@ This section presents the non-human resources required for the Test Plan.
 
 ### 9.1 Base System Hardware
 
-[The specific elements of the test system may not be fully understood in early iterations, so expect this section to be completed over time. We recommend that the system simulates the production environment, scaling down the concurrent access and database size, if and where appropriate.]
-
 The following table sets forth the system resources for the test effort presented in this Test Plan.
 
 | Resource                                                                | Quantity | Name and Type |
 |-------------------------------------------------------------------------|----------|---------------|
-| Database Server                                                         |          |               |
-| - Network or Subnet                                                     |          | TBD           |
-| - Server Name                                                           |          | TBD           |
-| - Database Name                                                         |          | TBD           |
-| Client Test PCs                                                         |          |               |
-| - Include special configuration requirements                            |          | TBD           |
-| Test Repository                                                         |          |               |
-| - Network or Subnet                                                     |          | TBD           |
-| - Server Name                                                           |          | TBD           |
-| Test Development PCs                                                    |          | TBD           |
+| Database Server                                                         |  1        |  Django DB             |
+| Network connection                                                    |      1    | localhost           |
+| Database                                                          |     1     | SQLite           |
+| Test Development PCs                                                    |   1       | n/a           |
+| Browser | 1 | Chrome, Firefox, Edge, Opera, ... |
 
 ### 9.2 Base Software Elements in the Test Environment
 
@@ -439,25 +438,13 @@ The following tools will be employed to support the test process for this Test P
 
 | Tool Category or Type             | Tool Brand Name | Vendor or In-house | Version |
 |-----------------------------------|-----------------|--------------------|---------|
-| Test Management                   |                 |                    |         |
-| Defect Tracking                   |                 |                    |         |
-| ASQ Tool for functional testing   |                 |                    |         |
-| ASQ Tool for performance testing  |                 |                    |         |
-| Test Coverage Monitor or Profiler |                 |                    |         |
-| Project Management                |                 |                    |         |
-| DBMS tools                        |                 |                    |         |
+| Test Management                   |   PyCharm              |  JetBrains      2022.1            |         |
+| Project Management                |  YouTrack               |     JetBrains               |         |
+| DBMS tools                        |  SQLite with Django               |                    |         |
 
 ### 9.4 Test Environment Configurations
 
-The following Test Environment Configurations need to be provided and supported for this project.
-
-| Configuration Name                | Description | Implemented in Physical Configuration |
-|-----------------------------------|-------------|---------------------------------------|
-| Average user configuration        |             |                                       |
-| Minimal configuration supported   |             |                                       |
-| Visually and mobility challenged  |             |                                       |
-| International Double Byte OS      |             |                                       |
-| Network installation (not client) |             |                                       |
+Currently, the only test environment that is needed is already integrated inside the IDE.
 
 ## 10. Responsibilities, Staffing, and Training Needs
 
@@ -465,35 +452,28 @@ The following Test Environment Configurations need to be provided and supported 
 
 This table shows the staffing assumptions for the test effort.
 
-| Human Resources                          |                                                                         |                                                                                                                                                                                                                                                                                   |
+| Role                          |                               Minimum Resources Recommended (number of full-time roles allocated)                                          |    Specific Responsbilities or Comments                                                                                                                                                                                                                                                                                 |
 |------------------------------------------|-------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Role                                     | Minimum Resources Recommended (number of full-time roles allocated)     | Specific Responsbilities or Comments                                                                                                                                                                                                                                              |
-| Test Manager                             |                                                                         | Provides management oversight. Responsibilities include: planning and logistics agree mission identify motivators acquire appropriate resources present management reporting advocate the interests of test evaluate effectiveness of test effort                                 |
-| Test Analyst                             |                                                                         | Identifies and defines the specific tests to be conducted. Responsibilities include: identify test ideas define test details determine test results document change requests evaluate product quality                                                                             |
-| Test Designer                            |                                                                         | Defines the technical approach to the implementation of the test effort. Responsibilities include: define test approace define test automation architecture verify test techniques define testability elements structure test implementation                                      |
-| Tester                                   |                                                                         | Implements and executes the tests. Responsibilities include: implement tests and test suites execute test suites log results analyze and recover from test failures document incidents                                                                                            |
-| Test System Administrator                |                                                                         | Ensurs test environment and assets are managed and maintained. Responsibilities include: administer test management system install and support access to, and recovery of, test environment configurations and test labs                                                          |
-| Database Administrator, Database Manager |                                                                         | Ensures test data (database) environment and assets are managed andmaintained. Responsibilities include: support the administration of test data and test beds (database)                                                                                                         |
-| Designer                                 |                                                                         | Identifies and defines the operations, attributes, and associations of the test classes. Responsibilities include: defines the test classes required to support testability requirements as defined by the test team                                                              |
-| Implementer                              |                                                                         | Implements and unit tests the test classes and test packages. Responsibilities include: creates the test components required to support testability requirements as defined by the designer                                                                                       |
+| Test Manager                             |                  Felix Gervasi                                                       | Provides management oversight. Responsibilities include: planning and logistics agree mission identify motivators acquire appropriate resources present management reporting advocate the interests of test evaluate effectiveness of test effort                                 |
+| Test Designer                            |                   Marc Gökce                                                      | Defines the technical approach to the implementation of the test effort. Responsibilities include: define test approace define test automation architecture verify test techniques define testability elements structure test implementation                                      |
+| Tester                                   |             Marc Gökce, Felix Gervasi, Daniel Köck                                                            | Implements and executes the tests. Responsibilities include: implement tests and test suites execute test suites log results analyze and recover from test failures document incidents                                                                                            |
+| Implementer                              |        Marc Gökce, Felix Gervasi, Daniel Köck                                                                 | Implements and unit tests the test classes and test packages. Responsibilities include: creates the test components required to support testability requirements as defined by the designer                                                                                       |
 
 ### 10.2 Staffing and Training Needs
 
-This section outlines how to approach staffing and training the test roles for the project.
-
-[The way to approach staffing and training will vary from project to project. If this section is part of a Master Test Plan, you should indicate at what points in the project lifecycle different skills and numbers of staff are needed. If this is an Iteration Test Plan, you should focus mainly on where and what training might occur during the Iteration. Give thought to your training needs, and plan to schedule this based on a Just-In-Time (JIT) approach—there is often a temptation to attend training too far in advance of its usage when the test team has apparent slack. Doing this introduces the risk of the training being forgotten by the time it's needed. Look for opportunities to combine the purchase of productivity tools with training on those tools, and arrange with the vendor to delay delivery of the training until just before you need it. If you have enough headcount, consider having training delivered in a customized manner for you, possibly at your own site. The test team often requires the support and skills of other team members not directly part of the test team. Make sure you arrange in your plan for appropriate availability of System Administrators, Database Administrators, and Developers who are required to enable the test effort.]
+n/a
 
 ## 11. Iteration Milestones
 
-We want to keep over [XX]% code coverage.
+We want to keep over 20% code coverage.
 
 ## 12. Risks, Dependencies, Assumptions, and Constraints
 
-| Risk                                    | Mitigation Strategy                                           | Contingency (Risk is realized)                                                                              |
-|-----------------------------------------|---------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
-| Prerequisite Entry Criteria is not met. |  Tester  will define the prerequisites that must be met before Load Testing can start. Customer  will endeavor to meet prerequisites indicated by  Tester .          | meet outstanding prerequisites consider Load Test Failure                                                   |
-| Test data proves to be inadequate.      |  Customer  will ensure a full set of suitable and protected test data is available. br/ Tester  will indicate what is required and will verify suitability of test data. | redefine test data review Test Plan and modify Components (that is, scripts) consider Load Test Failure |
-| Database requires a refresh.            |  System Administrator  will endeavor to ensure that the Database is regularly refreshed as required by the  Tester .                                                      | restore data and restart clear Database                                                                     |
+We have a list of our risks created with Microsoft lists. You can find it following
+this [link](https://lists.live.com/:l:/g/personal/af4e32ee5822202e/FA8opXAFjkFMuIRSrDKU9tkB1fzlbs7_kgN0QIQ_JleAPA?e=yYvmXN)
+. We also have a markdown file but this one will most likely not be updated
+anymore: [risks markdown](https://github.com/13TRIS/13TRIS/blob/b0a20072665ba28019909b8d9415801d4059045d/docs/Risk-management.md)
+.
 
 ## 13. Management Process and Procedures
 
