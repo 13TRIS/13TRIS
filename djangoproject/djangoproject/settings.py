@@ -124,6 +124,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_URL = ''
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'tetris_app/static/')
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '../frontend/build/static'),
 ]

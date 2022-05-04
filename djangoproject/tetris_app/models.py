@@ -14,7 +14,7 @@ class Profile(models.Model):
         ('Playing', 'Playing'),
         ('Offline', 'Offline'),
     )
-    profilePicture = models.CharField(max_length=200, null=True)
+    profilePicture = models.ImageField(default='img/user_icon_128px.png', upload_to='profile_pictures', blank=True)
     ranking = models.IntegerField(null=True)
     status = models.CharField(max_length=10, null=True, choices=STATUS)
     dateCreated = models.DateTimeField(auto_now_add=True, null=True)
@@ -25,11 +25,15 @@ class Profile(models.Model):
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
-            Profile.objects.create(user=instance)
+            Profile.objects.update_or_create(user=instance)
 
     @receiver(post_save, sender=User)
     def save_user_profile(sender, instance, **kwargs):
         instance.Profile.save()
+
+    @classmethod
+    def get_profile_by_name(cls, username_input):
+        return cls.objects.filter(username=username_input).first()
 
 
 class Friend(models.Model):

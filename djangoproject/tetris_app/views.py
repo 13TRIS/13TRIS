@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import Friend, History
@@ -53,7 +53,11 @@ def set_leaderboard(request):
             'score_added': False
         }
         return JsonResponse(args)
+
+
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('home')
     context = {}
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -88,6 +92,19 @@ def register_view(request):
             form.save()
             return redirect('login')
     return render(request, 'tetris_app/register-view.html', context)
+
+
+def user_profile(request, user):
+    profile = User.objects.get(username=user).Profile
+    return render(
+        request,
+        'tetris_app/view_profile.html',
+        {
+            "friends": get_friends_if_exists(request),
+            "profile": profile,
+            'history_top': History.objects.filter(player=profile.user).order_by('-score')[:10],
+            'history_latest': History.objects.filter(player=profile.user).order_by('-date_of_score')[:10]
+        })
 
 
 def validate_username(request):
