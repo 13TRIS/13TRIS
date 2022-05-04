@@ -43,6 +43,7 @@
                                         <h5 class="card-title">{{ request.user }}</h5>
                                         <p class="card-text">Status: {% include 'tetris_app/status.html' with status=request.user.Profile.status %}</p>
                                         <a class="btn btn-primary" href="{% url 'logout' %}"> Logout</a>
+                                        <a class="btn btn-success" href="{% url 'edit' %}">Edit</a>
 
                                     </div>
                                 </div>
@@ -101,7 +102,7 @@
                                 <div class="col-md-8">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ friend.username }}</h5>
-                                        <p class="card-text">Status: {{ friend.Profile.status }}</p>
+                                        <p class="card-text">Status: {% include 'tetris_app/status.html' with status=friend.Profile.status %}</p>
 
 
                                         {% block invite_button %}

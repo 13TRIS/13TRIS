@@ -128,6 +128,10 @@ MEDIA_URL = ''
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'tetris_app/static/')
 
+EMAIL_HOST = 'localhost'
+
+EMAIL_PORT = 1025
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '../frontend/build/static'),
 ]
