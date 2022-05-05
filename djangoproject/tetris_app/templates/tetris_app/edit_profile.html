@@ -1,0 +1,22 @@
+{% extends 'tetris_app/base.html' %}
+{% load static %}
+{% block content %}
+    <h1>Edit Profile</h1>
+
+    <div class="form-group">
+        <form method="post" enctype="multipart/form-data" id="register_form">
+            {% csrf_token %}
+            {{ form_u.as_p }}
+            {{ form_p.as_p }}
+
+            {{ form.errors }}
+
+            <div class="text-center mb-5">
+                <button type="submit" id="registerButton" class="btn btn-primary">Update Account</button>
+            </div>
+        </form>
+    </div>
+
+    <h2>Looking to update your password ?</h2>
+    <a href="{% url 'password' %}">Change here.</a>
+{% endblock %}

@@ -2,12 +2,15 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import Friend, History
 from django.core import serializers
 from django.http import HttpResponse
+from .models import Friend, Profile
+from .forms import EditProfileForm, EditProfilePictureForm
+import secrets
 
 
 def get_friends_if_exists(request):
@@ -53,7 +56,11 @@ def set_leaderboard(request):
             'score_added': False
         }
         return JsonResponse(args)
+
+
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('home')
     context = {}
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -88,6 +95,39 @@ def register_view(request):
             form.save()
             return redirect('login')
     return render(request, 'tetris_app/register-view.html', context)
+
+
+def user_profile(request, user):
+    profile = User.objects.get(username=user).Profile
+    return render(
+        request,
+        'tetris_app/view_profile.html',
+        {
+            "friends": get_friends_if_exists(request),
+            "profile": profile,
+            'history_top': History.objects.filter(player=profile.user).order_by('-score')[:10],
+            'history_latest': History.objects.filter(player=profile.user).order_by('-date_of_score')[:10]
+        })
+
+
+def edit_view(request):
+    if request.method == "POST":
+        form_u = EditProfileForm(request.POST, instance=request.user)
+        form_p = EditProfilePictureForm(request.POST, request.FILES or None, instance=request.user.Profile)
+        if form_u.is_valid() and form_p.is_valid():
+            form_u.save()
+            form_p.save()
+            if not request.user.Profile.profilePicture:
+                request.user.Profile.profilePicture = 'img/user_icon_128px.png'
+                request.user.save()
+            return redirect('user/' + request.user.username)
+        messages.warning(request, 'Form is not valid')
+    else:
+        messages.warning(request, 'Request was not a POST')
+        form_u = EditProfileForm(instance=request.user)
+        form_p = EditProfilePictureForm(request.FILES or None, instance=request.user.Profile)
+    context = {'form_u': form_u, 'form_p': form_p}
+    return render(request, 'tetris_app/edit_profile.html', context)
 
 
 def validate_username(request):
