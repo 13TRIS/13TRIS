@@ -108,6 +108,7 @@ function registerListeners(websocket, lobby_id) {
         elements[i].addEventListener("click", () => {
             leaveLobby(websocket, lobby_id, true,
                 elements[i].getAttribute("id").split("-")[1], true);
+            window.location.replace(window.location.href.split("?")[0] + "?lobby=" + lobby_id);
         });
     }
 }
