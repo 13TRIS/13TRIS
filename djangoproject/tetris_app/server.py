@@ -102,6 +102,7 @@ def leave_lobby(event, is_instant, kick):
         users_in_lobby.add(rnd_user)
         LOBBIES[lobby_id] = users_in_lobby, rnd_user
         websockets.broadcast(websockets_in_lobby, json.dumps(init_event(lobby_id)))
+        del LOBBIES[event["lobby"]]
 
 
 async def send_lobby_info(websocket, event):
