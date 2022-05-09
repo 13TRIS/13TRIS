@@ -4,6 +4,12 @@ on:
   pull_request:
     paths-ignore:
       - 'docs/**'
+  push:
+    branches:
+      - main
+      - beta
+    paths-ignore:
+      - 'docs/**'
   workflow_dispatch:
     inputs:
       name:
@@ -15,36 +21,69 @@ on:
 
 jobs:
 
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install tox and any other packages
+        run: pip install tox
+      - name: Run tox
+        run: tox -e py
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   test:
     name: Test
     runs-on: self-hosted
     steps:
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.ref_name }}
-          path: ${{ github.ref_name }}
+
+      - name: Setup Virtual Environment
+        run: source ~/django_env/bin/activate
 
       - name: Install Dependencies
         run: |
-          pip3 install --upgrade pip
-          pip3 install -r requirements.txt
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Run Tests
         run: |
           cd djangoproject
-          python3 manage.py behave
+          python manage.py behave
+
+      - name: Run unittest test
+        run: |
+          cd djangoproject/tetris_app
+          coverage run -m unittest discover -p "test*"
+          coverage report -m 
+          coverage-badge -o coverage.svg -f
+          gh gist edit c70e1f6335770b1a486128be085f2f3f coverage.svg
+          rm coverage.svg
 
   notify:
     needs: test
     name: Discord Notification
     runs-on: self-hosted
     continue-on-error: true
+    if: always()
     steps:
-    - name: Discord Notification
-      env:
-        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-        DISCORD_CHANNEL_TOKEN: ${{ secrets.DISCORD_CHANNEL_TOKEN }}
-      run: |
-        echo "$(date +'%Y-%m-%d-%T')" ${{ github.ref_name }} ${{ runner.name }} ${{ github.actor }}
-        python3 .github/discord_python/discord_bot.py -t "$(date +'%d %h %T')" -b ${{ github.ref_name }} -s ${{ needs.test.result }} -p ${{ github.run_id }} -r ${{ runner.name }} -a ${{ github.actor }} -c ${{ github.sha }}
+      - name: Discord Notification
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_CHANNEL_TOKEN: ${{ secrets.DISCORD_CHANNEL_TOKEN }}
+        run: |
+          echo "$(date +'%Y-%m-%d-%T')" ${{ github.ref_name }} ${{ runner.name }} ${{ github.actor }}
+          python .github/discord_python/discord_bot.py -t "$(date +'%d %h %T')" -b ${{ github.ref_name }} -s ${{ needs.test.result }} -p ${{ github.run_id }} -r ${{ runner.name }} -a ${{ github.actor }} -c ${{ github.sha }}
