@@ -9,6 +9,7 @@ window.addEventListener("DOMContentLoaded", () => {
     acceptInvite(websocket, modal, lobby_id);
     receive(websocket, modal, lobby_id);
     beforeUnload(websocket, lobby_id);
+    startGame(websocket, lobby_id);
 });
 
 function beforeUnload(websocket, lobby_id) {
@@ -88,6 +89,9 @@ function receive(websocket, modal, lobby_id) {
                 let kickModal = new bootstrap.Modal(document.getElementById("kick-modal"));
                 kickModalEvent(websocket);
                 kickModal.show();
+                break;
+            case "move": // TODO
+                // draw board of user event.user
                 break;
             default:
                 break;
@@ -194,4 +198,31 @@ function sleep(seconds) {
     do {
         currentDate = Date.now();
     } while (currentDate - date < seconds * 1000);
+}
+
+function startGame(websocket, lobbyID) {
+    document.getElementById("start-btn").addEventListener("click", () => {
+        createBoards();
+        let canvasEngineScript = document.createElement("script");
+        canvasEngineScript.setAttribute("src", "/static/js/canvas_engine.js");
+        document.getElementsByTagName("body")[0].appendChild(canvasEngineScript);
+        const interval = setInterval(() => {
+            const move = {
+                "type": "move",
+                "player": user,
+                "lobby": lobbyID,
+                "board": game.board,
+            }
+            websocket.send(JSON.stringify(move));
+        }, 2000);
+    });
+}
+
+function createBoards() { // TODO
+    let content = "";
+    content = "<canvas id=\"my_canvas\" class=\"tetris-board\" width=\"1000px\" height=\"1000px\" />"
+    /*for (let i = 0; i < 3; i++) {
+        content += `<canvas id="player${i}" class="tetris-board" width="1000px" height="1000px" />`;
+    }*/
+    document.getElementById("content").innerHTML = content;
 }

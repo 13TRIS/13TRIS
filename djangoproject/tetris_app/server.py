@@ -110,6 +110,10 @@ async def send_lobby_info(websocket, event):
     await websocket.send(json.dumps(lobby_info(lobby, admin)))
 
 
+async def send_game_state(websocket, event): # TODO
+    pass
+
+
 async def main():
     async with websockets.serve(handler, "", 8001):
         await asyncio.Future()
