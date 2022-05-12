@@ -76,8 +76,17 @@
                                 {% if history is not null %}
                                     {% for place in history %}
                                         <tr>
-                                            <td>1</td>
-                                            <td>{{ place.player.username }}</td>
+                                            <td>{{ forloop.counter0 | add:1 }}</td>
+                                            <td>
+                                                <a href="{% url 'user' place.player.username %}"
+                                                   class="text-reset text-decoration-none">
+                                                    <img src="{% static place.player.Profile.profilePicture %}"
+                                                         style="max-height: 30px"
+                                                         class="rounded"
+                                                         alt="user icon">
+                                                    {{ place.player.username }}
+                                                </a>
+                                            </td>
                                             <td>{{ place.score }}</td>
                                             <td>{{ place.date_of_score }}</td>
                                         </tr>
