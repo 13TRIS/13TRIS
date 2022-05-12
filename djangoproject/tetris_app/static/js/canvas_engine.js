@@ -3,8 +3,13 @@ const ctx = canvas.getContext('2d');
 canvas.width = 1000;
 canvas.height = 1000;
 
-
 let isThemeDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+window.addEventListener("DOMContentLoaded", event => {
+  const audio = document.querySelector("audio");
+  audio.volume = 0.2;
+  audio.play();
+});
 
 const status = {
     ready: 'Start',
