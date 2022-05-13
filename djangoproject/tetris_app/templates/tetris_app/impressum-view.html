@@ -3,12 +3,95 @@
 {% block content %}
 <div class="p-5">
     <H1>Impressum</H1>
-    <ul>
-        <li>Marc G</li>
-        <li>Felix G</li>
-        <li>Daniel K</li>
-        <li>Ishaan S <span class="badge alert-secondary ms-2">Deprecated</span></li>
-        <li>Daniel M <span class="badge alert-secondary ms-2">Deprecated</span></li>
-    </ul>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="card m-2 col-lg-5 wm-100 d-flex align-items-center justify-content-center">
+                <img src="{% static request.user.Profile.profilePicture %}"
+                     class="card-img-top shadow-4"
+                     style="width: 150px;"
+                     alt="no">
+                <h2 class="card-title">Marc G</h2>
+                <h6 class="card-subtitle m-2">
+                    <a href="#" class="text-decoration-none btn-sm btn-outline-dark ms-2">Github</a>
+                    <a href="#" class="text-decoration-none btn-sm btn-outline-secondary ms-2">Website</a>
+                    <a href="#" class="text-decoration-none btn-sm btn-outline-danger ms-2">Link</a>
+                </h6>
+                <div class="card-body">
+                    <p class="card-text">filler filler filler filler filler filler filler filler filler filler filler
+                        filler filler filler filler filler filler filler filler filler filler filler filler filler</p>
+                </div>
+            </div>
+
+            <div class="card m-2 col-lg-5 wm-100  d-flex align-items-center justify-content-center">
+                <img src="{% static request.user.Profile.profilePicture %}"
+                     class="card-img-top shadow-4"
+                     style="width: 150px;"
+                     alt="no">
+                <h2 class="card-title">Felix G</h2>
+                <h6 class="card-subtitle m-2">
+                    <a href="#" class="text-decoration-none btn-sm btn-outline-dark ms-2">Github</a>
+                    <a href="#" class="text-decoration-none btn-sm btn-outline-secondary ms-2">Website</a>
+                    <a href="#" class="text-decoration-none btn-sm btn-outline-danger ms-2">Link</a>
+                </h6>
+                <div class="card-body">
+                    <p class="card-text">filler filler filler filler filler filler filler filler filler filler filler
+                        filler filler filler filler filler filler filler filler filler filler filler filler filler</p>
+                </div>
+            </div>
+
+            <div class="card m-2 col-lg-5 wm-100  d-flex align-items-center justify-content-center">
+                <img src="{% static request.user.Profile.profilePicture %}"
+                     class="card-img-top shadow-4"
+                     style="width: 150px;"
+                     alt="no">
+                <h2 class="card-title">Daniel K</h2>
+                <h6 class="card-subtitle m-2">
+                    <a href="#" class="text-decoration-none btn-sm btn-outline-dark ms-2">Github</a>
+                    <a href="#" class="text-decoration-none btn-sm btn-outline-secondary ms-2">Website</a>
+                    <a href="#" class="text-decoration-none btn-sm btn-outline-danger ms-2">Link</a>
+                </h6>
+                <div class="card-body">
+                    <p class="card-text">filler filler filler filler filler filler filler filler filler filler filler
+                        filler filler filler filler filler filler filler filler filler filler filler filler filler</p>
+                </div>
+            </div>
+
+            <div class="card m-2 col-lg-5 wm-100  d-flex align-items-center justify-content-center">
+                <img src="{% static request.user.Profile.profilePicture %}"
+                     class="card-img-top shadow-4"
+                     style="width: 150px;"
+                     alt="no">
+                <h2 class="card-title">Ishaan S</h2>
+                <h6 class="card-subtitle m-2">
+                    <a href="#" class="text-decoration-none btn-sm btn-outline-dark ms-2">Github</a>
+                    <a href="#" class="text-decoration-none btn-sm btn-outline-secondary ms-2">Website</a>
+                    <a href="#" class="text-decoration-none btn-sm btn-outline-danger ms-2">Link</a>
+                </h6>
+                <div class="card-body">
+                    <p class="card-text">filler filler filler filler filler filler filler filler filler filler filler
+                        filler filler filler filler filler filler filler filler filler filler filler filler filler</p>
+                </div>
+            </div>
+
+            <div class="card m-2 col-lg-5 wm-100  d-flex align-items-center justify-content-center">
+                <img src="{% static request.user.Profile.profilePicture %}"
+                     class="card-img-top shadow-4"
+                     style="width: 150px;"
+                     alt="no">
+                <h2 class="card-title">Daniel M</h2>
+                <h6 class="card-subtitle m-2">
+                    <a href="#" class="text-decoration-none btn-sm btn-outline-dark ms-2">Github</a>
+                    <a href="#" class="text-decoration-none btn-sm btn-outline-secondary ms-2">Website</a>
+                    <a href="#" class="text-decoration-none btn-sm btn-outline-danger ms-2">Link</a>
+                </h6>
+                <div class="card-body">
+                    <p class="card-text">filler filler filler filler filler filler filler filler filler filler filler
+                        filler filler filler filler filler filler filler filler filler filler filler filler filler</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
 {% endblock %}
