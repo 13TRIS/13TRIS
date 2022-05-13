@@ -117,19 +117,19 @@
                         {% endfor %}
                         {% endif %}
 
-                        <ul class="list-group borderless" style="list-style: none">
-                            <li>
-                                <a href="http://13tris.dkoeck.de/" class="link-primary"> Blog </a> <br>
-                            </li>
-                            <li>
-                                <a href="{% url 'impressum' %}" class="link-primary"> Impressum </a> <br>
-                            </li>
-                            <li>
-                                <a href="{% url 'faq' %}" class="link-primary"> FAQ </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'datenschutz' %}" class="link-primary"> Datenschutz </a> <br>
-                            </li>
+                        <ul class="list-group">
+                            <a href="http://13tris.dkoeck.de/" class="btn-outline-success text-start list-group-item">
+                                Blog
+                            </a>
+                            <a href="{% url 'impressum' %}" class="btn-outline-primary text-start list-group-item">
+                                Impressum
+                            </a>
+                            <a href="{% url 'faq' %}" class="btn-outline-warning text-start list-group-item">
+                                FAQ
+                            </a>
+                            <a href="{% url 'datenschutz' %}" class="btn-outline-danger text-start list-group-item">
+                                Datenschutz
+                            </a>
                         </ul>
                     </li>
                 </ul>
