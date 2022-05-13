@@ -1,19 +1,19 @@
-<!DOCTYPE html>
+{% extends 'tetris_app/base.html' %}
 {% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>13TRIS</title>
-    <link rel="stylesheet" href="{% static "tetris_app/../../static/css/app.css" %}">
-</head>
-<body>
-        <img src="{% static 'img/Logo_full.png' %}" class="img-fluid" alt="Logo" style="width:25%">
-        <h2>FAQ</h2>
+{% block content %}
+<div class="p-5">
+    <H1>FAQ</H1>
+    <hr>
 
-        <a class="link-primary" href="{% url 'home' %}"> Zurück zur Startseite </a>
+    {% for i in '123456789' %}
+    <div class="card mx-auto m-3 w-75">
+        <div class="card-body">
+            <h5 class="card-title">Frage {{ forloop.counter0|add:1 }}</h5>
+            <h6 class="card-subtitle m-2 text-muted">Subtitle 1</h6>
+            <p class="card-text">filler filler filler filler filler filler filler filler filler filler filler filler filler filler filler filler filler filler filler filler filler filler filler filler</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 
-        <p>Lorem ipsum dolor sit amet, consectetur adipisici elit</p>
-
-        <a class="link-primary" href="{% url 'home' %}"> Zurück zur Startseite </a>
-</body>
-</html>
+{% endblock %}

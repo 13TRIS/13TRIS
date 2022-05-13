@@ -1,18 +1,14 @@
-<!DOCTYPE html>
+{% extends 'tetris_app/base.html' %}
 {% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>13TRIS</title>
-    <link rel="stylesheet" href="{% static "tetris_app/../../static/css/app.css" %}">
-</head>
-<body>
-    <img src=" {% static 'img/Logo_full.png' %}" class="img-fluid" alt="Logo" style="width:25%">
-    <h2>Impressum</h2>
-    <a class="link-primary" href="{% url 'home' %}"> Zurück zur Startseite </a>
-
-     <p>Lorem ipsum dolor sit amet, consectetur adipisici elit</p>
-
-    <a class="link-primary" href="{% url 'home' %}"> Zurück zur Startseite </a>
-</body>
-</html>
+{% block content %}
+<div class="p-5">
+    <H1>Impressum</H1>
+    <ul>
+        <li>Marc G</li>
+        <li>Felix G</li>
+        <li>Daniel K</li>
+        <li>Ishaan S <span class="badge alert-secondary ms-2">Deprecated</span></li>
+        <li>Daniel M <span class="badge alert-secondary ms-2">Deprecated</span></li>
+    </ul>
+</div>
+{% endblock %}
