@@ -90,8 +90,12 @@ function receive(websocket, modal, lobby_id) {
                 kickModalEvent(websocket);
                 kickModal.show();
                 break;
-            case "move": // TODO
-                // draw board of user event.user
+            case "start":
+                // render the boards for all players
+                createBoard(websocket, lobby_id);
+                break;
+            case "game-info":
+                updateScore(event.player, event.score);
                 break;
             default:
                 break;
@@ -170,7 +174,7 @@ function createCard(playerName, backgroundColor, admin) {
     if (user === admin && playerName !== user)
         kickFromLobbyBtn = `<button type='button' class='btn btn-danger' data-kick
                             id='kick-${playerName}'>Kick from Lobby</button>`;
-    let innerHTML = ` <div class='card mb-3 ${backgroundColor}'>` +
+    let innerHTML = ` <div class='card mb-3 ${backgroundColor}' style="width: 500px; height: 150px;">` +
         "                            <div class='row g-0'>" +
         "                                <div class='col-md-2'>" +
         "                                    <img src='user-logo.png'" +
@@ -179,7 +183,8 @@ function createCard(playerName, backgroundColor, admin) {
         "                                <div class='col-md-8'>" +
         "                                    <div class='card-body'>" +
         `                                       <h5 class='card-title'>${playerName}</h5>` +
-        "                                        <p class='card-text'>Status: In Lobby</p>" +
+        "                                        <p class='card-text'>Status: In Lobby" +
+        `<br><span id="score-${playerName}" class="score-label" hidden>Score: 0</span></p>` +
         `${kickFromLobbyBtn}` +
         "                                    </div>" +
         "                                </div>" +
@@ -200,29 +205,52 @@ function sleep(seconds) {
     } while (currentDate - date < seconds * 1000);
 }
 
+// send start event that gets broadcast to all websocket connections in the lobby
 function startGame(websocket, lobbyID) {
     document.getElementById("start-btn").addEventListener("click", () => {
-        createBoards();
-        let canvasEngineScript = document.createElement("script");
-        canvasEngineScript.setAttribute("src", "/static/js/canvas_engine.js");
-        document.getElementsByTagName("body")[0].appendChild(canvasEngineScript);
-        const interval = setInterval(() => {
-            const move = {
-                "type": "move",
-                "player": user,
-                "lobby": lobbyID,
-                "board": game.board,
-            }
-            websocket.send(JSON.stringify(move));
-        }, 2000);
+        websocket.send(JSON.stringify({"type": "start", "user": user, "lobby": lobbyID}));
     });
 }
 
-function createBoards() { // TODO
-    let content = "";
-    content = "<canvas id=\"my_canvas\" class=\"tetris-board\" width=\"1000px\" height=\"1000px\" />"
-    /*for (let i = 0; i < 3; i++) {
-        content += `<canvas id="player${i}" class="tetris-board" width="1000px" height="1000px" />`;
-    }*/
-    document.getElementById("content").innerHTML = content;
+function createBoard(websocket, lobbyID) {
+    let canvasEngineScript = document.createElement("script");
+    canvasEngineScript.setAttribute("src", "/static/js/canvas_engine.js");
+    document.getElementsByTagName("body")[0].appendChild(canvasEngineScript);
+    let content = "<canvas id=\"my_canvas\" width=\"1000px\" height=\"1000px\" />"
+    document.getElementById("content").innerHTML += content;
+    document.getElementById("start-btn").setAttribute("hidden", "true");
+    toggleKickButtons();
+    toggleScoreLabels();
+    const interval = setInterval(() => {
+        const gameInfo = {
+            "type": "game-info",
+            "player": user,
+            "lobby": lobbyID,
+            "board": game.status,
+            "score": game.score,
+        }
+        websocket.send(JSON.stringify(gameInfo));
+        if (game.status === "Game over") {
+            clearInterval(interval);
+        }
+    }, Math.random() * 1000);
+}
+
+function toggleKickButtons() {
+    let kickButtons = document.querySelectorAll("[data-kick]");
+    for (let i = 0; i < kickButtons.length; i++) {
+        kickButtons[i].toggleAttribute("hidden", true);
+    }
+}
+
+function toggleScoreLabels() {
+    let labels = document.getElementsByClassName("score-label");
+    for (let i = 0; i < labels.length; i++) {
+        labels[i].toggleAttribute("hidden");
+    }
+}
+
+function updateScore(playerName, score) {
+    let label = document.getElementById(`score-${playerName}`);
+    label.textContent = `Score: ${score}`;
 }
