@@ -96,6 +96,7 @@ function receive(websocket, modal, lobby_id) {
                 break;
             case "game-info":
                 updateScore(event.player, event.score);
+                updatePlayerState(event.player, event.status);
                 break;
             default:
                 break;
@@ -174,7 +175,7 @@ function createCard(playerName, backgroundColor, admin) {
     if (user === admin && playerName !== user)
         kickFromLobbyBtn = `<button type='button' class='btn btn-danger' data-kick
                             id='kick-${playerName}'>Kick from Lobby</button>`;
-    let innerHTML = ` <div class='card mb-3 ${backgroundColor}' style="width: 500px; height: 150px;">` +
+    let innerHTML = ` <div class='card mb-3 ${backgroundColor} player-card' id='player-card-${playerName}' style="width: 500px; height: 150px;">` +
         "                            <div class='row g-0'>" +
         "                                <div class='col-md-2'>" +
         "                                    <img src='user-logo.png'" +
@@ -221,12 +222,13 @@ function createBoard(websocket, lobbyID) {
     document.getElementById("start-btn").setAttribute("hidden", "true");
     toggleKickButtons();
     toggleScoreLabels();
+    changeCardColors();
     const interval = setInterval(() => {
         const gameInfo = {
             "type": "game-info",
             "player": user,
             "lobby": lobbyID,
-            "board": game.status,
+            "status": game.status,
             "score": game.score,
         }
         websocket.send(JSON.stringify(gameInfo));
@@ -253,4 +255,17 @@ function toggleScoreLabels() {
 function updateScore(playerName, score) {
     let label = document.getElementById(`score-${playerName}`);
     label.textContent = `Score: ${score}`;
+}
+
+function changeCardColors() {
+    let playerCards = document.getElementsByClassName("player-card");
+    for (let i = 0; i < playerCards.length; i++) {
+        playerCards[i].setAttribute("class", "card mb-3 border-success player-card");
+    }
+}
+
+function updatePlayerState(playerName, status) {
+    if (status === "Game over") {
+        document.getElementById(`player-card-${playerName}`).setAttribute("class", "card mb-3 border-danger player-card");
+    }
 }
