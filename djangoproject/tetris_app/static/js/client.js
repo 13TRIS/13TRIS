@@ -9,7 +9,7 @@ window.addEventListener("DOMContentLoaded", () => {
     acceptInvite(websocket, modal, lobby_id);
     receive(websocket, modal, lobby_id);
     beforeUnload(websocket, lobby_id);
-    startGame(websocket, lobby_id);
+    sendStartEvent(websocket, lobby_id);
 });
 
 function beforeUnload(websocket, lobby_id) {
@@ -64,7 +64,6 @@ function sendInvite(websocket, lobby_id) {
 function receive(websocket, modal, lobby_id) {
     websocket.addEventListener("message", ({data}) => {
         const event = JSON.parse(data);
-        console.log(data);
         switch (event.type) {
             case "invite":
                 if (user === event.to) {
@@ -175,7 +174,7 @@ function createCard(playerName, backgroundColor, admin) {
     if (user === admin && playerName !== user)
         kickFromLobbyBtn = `<button type='button' class='btn btn-danger' data-kick
                             id='kick-${playerName}'>Kick from Lobby</button>`;
-    let innerHTML = ` <div class='card mb-3 ${backgroundColor} player-card' id='player-card-${playerName}' style="width: 500px; height: 150px;">` +
+    let innerHTML = ` <div class='card mb-3 ${backgroundColor} player-card' id='player-card-${playerName}' style="width: 250px; height: 150px;">` +
         "                            <div class='row g-0'>" +
         "                                <div class='col-md-2'>" +
         "                                    <img src='user-logo.png'" +
@@ -207,22 +206,37 @@ function sleep(seconds) {
 }
 
 // send start event that gets broadcast to all websocket connections in the lobby
-function startGame(websocket, lobbyID) {
+function sendStartEvent(websocket, lobbyID) {
     document.getElementById("start-btn").addEventListener("click", () => {
         websocket.send(JSON.stringify({"type": "start", "user": user, "lobby": lobbyID}));
     });
 }
 
 function createBoard(websocket, lobbyID) {
-    let canvasEngineScript = document.createElement("script");
-    canvasEngineScript.setAttribute("src", "/static/js/canvas_engine.js");
-    document.getElementsByTagName("body")[0].appendChild(canvasEngineScript);
+    // 1. add canvas
     let content = "<canvas id=\"my_canvas\" width=\"1000px\" height=\"1000px\" />"
     document.getElementById("content").innerHTML += content;
+
+    // 2. load game engine script
+    let canvasEngineScript = document.createElement("script");
+    canvasEngineScript.setAttribute("src", "/static/js/canvas_engine.js");
+    document.getElementsByTagName("head")[0].appendChild(canvasEngineScript);
+
+    // 3. invoke start game function
+    let btn = document.createElement("button");
+    btn.setAttribute("id", "start-game-btn");
+    btn.setAttribute("hidden", "true");
+    btn.setAttribute("onclick", "startGame()");
+    document.getElementById("content").appendChild(btn);
+    document.getElementById("start-game-btn").dispatchEvent(new Event("click"));
+
+    // 4. other changes to the UI
     document.getElementById("start-btn").setAttribute("hidden", "true");
     toggleKickButtons();
     toggleScoreLabels();
     changeCardColors();
+
+    // 5. start sending state
     const interval = setInterval(() => {
         const gameInfo = {
             "type": "game-info",
@@ -231,11 +245,11 @@ function createBoard(websocket, lobbyID) {
             "status": game.status,
             "score": game.score,
         }
-        websocket.send(JSON.stringify(gameInfo));
+        //websocket.send(JSON.stringify(gameInfo));
         if (game.status === "Game over") {
             clearInterval(interval);
         }
-    }, Math.random() * 1000);
+    }, Math.random() * 2000);
 }
 
 function toggleKickButtons() {
