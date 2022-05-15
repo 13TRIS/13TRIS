@@ -220,15 +220,13 @@ function createBoard(websocket, lobbyID) {
     // 2. load game engine script
     let canvasEngineScript = document.createElement("script");
     canvasEngineScript.setAttribute("src", "/static/js/canvas_engine.js");
+    canvasEngineScript.setAttribute("type", "text/javascript");
     document.getElementsByTagName("head")[0].appendChild(canvasEngineScript);
 
     // 3. invoke start game function
-    let btn = document.createElement("button");
-    btn.setAttribute("id", "start-game-btn");
-    btn.setAttribute("hidden", "true");
-    btn.setAttribute("onclick", "startGame()");
-    document.getElementById("content").appendChild(btn);
-    document.getElementById("start-game-btn").dispatchEvent(new Event("click"));
+    canvasEngineScript.onload = () => {
+        startGame();
+    }
 
     // 4. other changes to the UI
     document.getElementById("start-btn").setAttribute("hidden", "true");
