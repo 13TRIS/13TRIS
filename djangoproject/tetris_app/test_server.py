@@ -84,11 +84,13 @@ class TestServer(unittest.IsolatedAsyncioTestCase):
         await self.connection1.send(
             json.dumps({"type": "leave", "lobby": self.data1["lobby_id"], "user": "marc", "instant": False,
                         "kick": False}))
-        await asyncio.sleep(6)
         await self.connection2.send(
             json.dumps({"type": "leave", ",lobby": self.data1["lobby_id"], "user": "felix", "instant": False,
                         "kick": False}))
+        await asyncio.sleep(1)
+        self.assertEqual(len(server.THREADS), 1)
         await asyncio.sleep(6)
+        self.assertEqual(len(server.LOBBIES), 1)
         # user 'felix' and 'marc' close their connections to the server
         await self.connection1.close()
         await self.connection2.close()
