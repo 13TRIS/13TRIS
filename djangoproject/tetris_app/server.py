@@ -110,6 +110,11 @@ async def send_lobby_info(websocket, event):
     await websocket.send(json.dumps(lobby_info(lobby, admin)))
 
 
+def send_game_state(event):
+    lobby_websockets = get_websockets_in_lobby(event["lobby"])
+    websockets.broadcast(lobby_websockets, json.dumps(event))
+
+
 async def main():
     async with websockets.serve(handler, "", 8001):
         await asyncio.Future()
@@ -129,6 +134,14 @@ def join_event(user):
 
 def kick_event(lobby_id, new):
     return {"type": "kick", "lobby": lobby_id, "new": new}
+
+
+def get_websockets_in_lobby(lobby_id):
+    lobby, _ = LOBBIES[lobby_id]
+    lobby_websockets = set()
+    for user in lobby:
+        lobby_websockets.add(CONNECTED[user])
+    return lobby_websockets
 
 
 if __name__ == "__main__":
