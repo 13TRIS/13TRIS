@@ -10,89 +10,199 @@
         <hr>
 
         <div class="accordion accordion-flush" id="accordionPanelsStayOpenExample">
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+
+            <div class="accordion-item"> <!-- FAQ -->
+                <h2 class="accordion-header" id="Question1">
                     <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
-                            aria-controls="panelsStayOpen-collapseOne">
-                        <span class="overflow-hidden" style="max-width: 24px; max-height: 20px;">
-                            <i class="bi bi-bookmark-dash-fill me-2 collapse" id="panelsStayOpen-collapseOne"></i>
-                            <i class="bi bi-bookmark-check-fill me-2 show text-success" id="panelsStayOpen-collapseOne"></i>
+                            data-bs-target="#Question1Collapse" aria-expanded="true"
+                            aria-controls="Question1Collapse">
+                        <span class="overflow-hidden" style="max-width: 24px; max-height: 18px;">
+                            <i class="bi bi-quora me-2 show text-danger" id="Question1Collapse"></i>
+                            <i class="bi bi-suit-heart-fill me-2 collapse text-danger"
+                               id="Question1Collapse"></i>
                         </span>
                         What is this FAQ meant for ?
-                        <span id="panelsStayOpen-collapseOne" class="show ms-1">
+                        <span id="Question1Collapse" class="collapse ms-1">
                             To answer Questions !
-                        </span>
-                    </button>
-                </h2>
-                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
-                     aria-labelledby="panelsStayOpen-headingOne">
-                    <div class="accordion-body">
-                        <strong>This is the first item's accordion body.</strong> It is shown by default, until the
-                        collapse plugin adds the appropriate classes that we use to style each element. These classes
-                        control the overall appearance, as well as the showing and hiding via CSS transitions. You can
-                        modify any of this with custom CSS or overriding our default variables. It's also worth noting
-                        that just about any HTML can go within the <code>.accordion-body</code>, though the transition
-                        does limit overflow.
-                    </div>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
-                            aria-controls="panelsStayOpen-collapseTwo">
-                        <span class="overflow-hidden" style="max-width: 24px; max-height: 20px;">
-                            <i class="bi bi-bookmark-dash-fill me-2 show" id="panelsStayOpen-collapseTwo"></i>
-                            <i class="bi bi-bookmark-check-fill me-2 collapse text-success" id="panelsStayOpen-collapseTwo"></i>
-                        </span>
-                        What is this Website? Where am I?
-                        <span id="panelsStayOpen-collapseTwo" class="collapse ms-1">
-                            On 13TRIS !
                         </span>
                     </button>
                 </h2>
                 <div class="accordion-collapse collapse show">
                     <div class="accordion-body">
-                        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the
-                        collapse plugin adds the appropriate classes that we use to style each element.
+                        <p>
+                            <strong>This FAQ is supposed to clear up general questions about 13TRIS.</strong> Since
+                            we're no
+                            <code>UX/UI</code> experts, some things might not be clear from the get-go. On this page, we
+                            will try to address questions someone could have while browsing our website. Since we don't
+                            have
+                            a form or any kind of feedback inbox to ask questions directly on here, please refer to our
+                            <a href="https://github.com/13TRIS/13TRIS/issues"
+                               class="text-decoration-none badge bg-dark link-light"
+                               target="_blank">
+                                Github
+                                <i class="bi bi-github"></i>
+                            </a>
+                            page and ask there. We hope to clear
+                            up most of the questions on here.
+                        </p>
+                        <p>
+                            Some questions have a short answer always open (like this part), some don't. But all of them
+                            have a body you can expand via the questions title. Just click on them reveal the rest of
+                            their card.
+                        </p>
                     </div>
                 </div>
-                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
-                     aria-labelledby="panelsStayOpen-headingTwo">
+                <div id="Question1Collapse" class="accordion-collapse collapse collapse"
+                     aria-labelledby="Question1">
                     <div class="accordion-body">
-                        These classes control the overall appearance, as well as the showing and hiding via CSS
-                        transitions. You can
-                        modify any of this with custom CSS or overriding our default variables. It's also worth noting
-                        that just about any HTML can go within the <code>.accordion-body</code>, though the transition
-                        does limit overflow.
+                        Thank you,<br>
+                        Team 13TRIS <i class="bi bi-robot"></i>
                     </div>
                 </div>
-            </div>
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false"
-                            aria-controls="panelsStayOpen-collapseThree">
+            </div> <!-- FAQ -->
+
+            <div class="accordion-item"> <!-- Website -->
+                <h2 class="accordion-header" id="Question2">
+                    <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#Question2collapse" aria-expanded="false"
+                            aria-controls="Question2collapse">
                         <span class="overflow-hidden" style="max-width: 24px; max-height: 20px;">
-                            <i class="bi bi-bookmark-dash-fill me-2 show" id="panelsStayOpen-collapseThree"></i>
-                            <i class="bi bi-bookmark-check-fill me-2 collapse text-success" id="panelsStayOpen-collapseThree"></i>
+                            <i class="bi bi-bookmark-dash-fill me-2 show" id="Question2collapse"></i>
+                            <i class="bi bi-bookmark-check-fill me-2 collapse text-success"
+                               id="Question2collapse"></i>
                         </span>
-                        Q3 - Any bamboozle ?
-                        <span id="panelsStayOpen-collapseThree" class="collapse ms-1">
-                            To answer Questions !
+                        What is this Website ? Where am I ?
+                        <span id="Question2collapse" class="collapse ms-1">
+                            Obviously on https://13tris.mkrabs.duckdns.org/faq !
                         </span>
                     </button>
                 </h2>
-                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse"
-                     aria-labelledby="panelsStayOpen-headingThree">
+                <div class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                        <strong>13TRIS is the Project we
+                            <a href="{% url 'impressum' %}"
+                               class="text-decoration-none badge bg-primary link-light"
+                               target="_blank">
+                                5 <i class="bi bi-people-fill"></i>
+                            </a>
+                            developed for the lecture of Software engineering 1&2 at the</strong>
+                        <a href="https://www.karlsruhe.dhbw.de/" target="_blank" class="text-decoration-none">
+                            <img src="https://upload.wikimedia.org/wikipedia/de/1/1d/DHBW-Logo.svg"
+                                 alt="DHBW" style="max-height: 2em">
+                        </a>
+                        <strong>during the course of two semesters.</strong>
+                    </div>
+                </div>
+                <div id="Question2collapse" class="accordion-collapse collapse"
+                     aria-labelledby="Question2">
+                    <div class="accordion-body">
+                        <p>
+                            13TRIS is meant to be a dummy project for us to develop, while at the same time playing the
+                            roles of the project management team. It's a great way to get a glimpse of how companies
+                            manage the development of their software and all the thoughts that go into resource
+                            planning. The goal was not to programm however we wanted, in a chaotic and thoughtless way,
+                            but to structure and lay out a plan / future steps for the development process.
+                        </p>
+                        <p>
+                            To keep things organized we utilized the following services to help us maintain controll
+                            over everything:
+                            <a href="https://13tris.dkoeck.de/blog/s3-w2-setting-the-baseline/"
+                               class="text-decoration-none badge bg-dark link-light"
+                               target="_blank">
+                                Blog post S3 W2 <img
+                                    src="https://13tris.dkoeck.de/wp-content/uploads/2021/10/cropped-Logo_small-1-32x32.png"
+                                    alt="DHBW" style="max-height: 1.2em">
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div> <!-- Website -->
+
+            <div class="accordion-item"> <!-- 13TRIS -->
+                <h2 class="accordion-header" id="Question3">
+                    <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#Question3collapse" aria-expanded="false"
+                            aria-controls="Question3collapse">
+                        <span class="overflow-hidden" style="max-width: 24px; max-height: 20px;">
+                            <i class="bi bi-bookmark-dash-fill me-2 show" id="Question3collapse"></i>
+                            <i class="bi bi-bookmark-check-fill me-2 collapse text-success"
+                               id="Question3collapse"></i>
+                        </span>
+                        What is 13TRIS?
+                        <span id="Question3collapse" class="collapse ms-1">
+                            A Game !
+                        </span>
+                    </button>
+                </h2>
+                <div class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                        <strong>13TRIS is the world's <sup class="text-decoration-none">(maybe not)</sup> first block
+                            placing game with a special twist !</strong>
+                    </div>
+                </div>
+                <div id="Question3collapse" class="accordion-collapse collapse"
+                     aria-labelledby="Question3">
+                    <div class="accordion-body">
+                        13TRIS is the name of our spin-off from the classic game Tetris, but with some features and cool
+                        things added. One feature is that every 13th block is a special block with evil powers. the
+                        other feature is the multiplayer. Being able to play against other players is something the
+                        original Tetris didn't provide in this magnitude (we will ignore the existence of Tetris99 for
+                        the sake of this argument).
+                    </div>
+                </div>
+            </div> <!-- 13TRIS -->
+
+            <div class="accordion-item"> <!-- Solo -->
+                <h2 class="accordion-header" id="Question4">
+                    <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#Question4collapse" aria-expanded="false"
+                            aria-controls="Question4collapse">
+                        <span class="overflow-hidden" style="max-width: 24px; max-height: 20px;">
+                            <i class="bi bi-bookmark-dash-fill me-2 show" id="Question4collapse"></i>
+                            <i class="bi bi-bookmark-check-fill me-2 collapse text-success"
+                               id="Question4collapse"></i>
+                        </span>
+                        How do I play 13TRIS ?
+                        <span id="Question4collapse" class="collapse ms-1">
+                            With a keyboard ! <i class="bi bi-keyboard"></i>
+                        </span>
+                    </button>
+                </h2>
+                <div id="Question4collapse" class="accordion-collapse collapse"
+                     aria-labelledby="Question4">
                     <div class="accordion-body">
                         There is <strong>nothing</strong> important written here. You might as well skip this
                         <code>FAQ</code> point. Don't click <a href="https://youtu.be/jCLKOSvGXAw"
                                                                target="_blank">here</a>.
                     </div>
                 </div>
-            </div>
+            </div> <!-- Solo -->
+
+            <div class="accordion-item"> <!-- Template -->
+                <h2 class="accordion-header" id="QuestionTTT">
+                    <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#QuestionTTTcollapse" aria-expanded="false"
+                            aria-controls="QuestionTTTcollapse">
+                        <span class="overflow-hidden" style="max-width: 24px; max-height: 20px;">
+                            <i class="bi bi-bookmark-dash-fill me-2 show" id="QuestionTTTcollapse"></i>
+                            <i class="bi bi-bookmark-check-fill me-2 collapse text-success"
+                               id="QuestionTTTcollapse"></i>
+                        </span>
+                        Template ?
+                        <span id="QuestionTTTcollapse" class="collapse ms-1">
+                            Template !
+                        </span>
+                    </button>
+                </h2>
+                <div id="QuestionTTTcollapse" class="accordion-collapse collapse"
+                     aria-labelledby="QuestionTTT">
+                    <div class="accordion-body">
+                        There is <strong>nothing</strong> important written here. You might as well skip this
+                        <code>FAQ</code> point. Don't click <a href="https://youtu.be/jCLKOSvGXAw"
+                                                               target="_blank">here</a>.
+                    </div>
+                </div>
+            </div> <!-- Solo -->
         </div>
 
         {#    {% for i in '123456789' %}#}
