@@ -134,15 +134,11 @@
                         </span>
                     </button>
                 </h2>
-                <div class="accordion-collapse collapse show">
-                    <div class="accordion-body">
-                        <strong>13TRIS is the world's <sup class="text-decoration-none">(maybe not)</sup> first block
-                            placing game with a special twist !</strong>
-                    </div>
-                </div>
                 <div id="Question3collapse" class="accordion-collapse collapse"
                      aria-labelledby="Question3">
                     <div class="accordion-body">
+                        <strong>13TRIS is the world's <sup class="text-decoration-none">(maybe not)</sup> first block
+                            placing game with a special twist !</strong><br>
                         13TRIS is the name of our spin-off from the classic game Tetris, but with some features and cool
                         things added. One feature is that every 13th block is a special block with evil powers. the
                         other feature is the multiplayer. Being able to play against other players is something the
@@ -168,12 +164,108 @@
                         </span>
                     </button>
                 </h2>
+                <div class="accordion-collapse collapse show">
+                    <div class="accordion-body border-start border-end border-danger border-3 mt-3 mb-3 rounded">
+                        <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                        Playing without an Account will <strong>NOT save your scores</strong> or whatsoever anywhere.
+                        How could even do that? We're not fingerprinting your device to serve you advertisement based of
+                        your cursor movements or average score or anything... unless 😳👉👈 ? <span
+                            id="Question4collapse" class="accordion-collapse collapse bg-danger bg-opacity-10"
+                            aria-labelledby="Question4">
+                            Anyway, THIS WEBSITE IS BROUGHT TO YOU BY <strong>SHITTY VPN <i
+                            class="bi bi-arrow-repeat"></i></strong>, THE WORLDWIDE
+                        ONLINE SERVICE TO ROUTE ALL YOUR TRAFFIC INSIDE OUR SHADY CLOSE SOURCE SERVER TO
+                        <del>SELL TO OUR TOP BIDDING ADVERTISEMENT COMPANIES</del>
+                        PROTECT YOUR ONLIN ACTIVITIES !! (sorry, but not really)</span>
+                    </div>
+                </div>
                 <div id="Question4collapse" class="accordion-collapse collapse"
                      aria-labelledby="Question4">
                     <div class="accordion-body">
-                        There is <strong>nothing</strong> important written here. You might as well skip this
-                        <code>FAQ</code> point. Don't click <a href="https://youtu.be/jCLKOSvGXAw"
-                                                               target="_blank">here</a>.
+                        <span class="display-6">Minimum requirements:</span>
+                        <ul>
+                            <li><i class="bi bi-router-fill"></i> An internet connection</li>
+                            <li><i class="bi bi-keyboard"></i> A keyboard with at least the following keys working:</li>
+                            <ul>
+                                <li><kbd>left</kbd></li>
+                                <li><kbd>right</kbd></li>
+                                <li>
+                                    <del><kbd>down</kbd></del>
+                                    not strictly needed, but the gameplay is going to slow down significantly...
+                                </li>
+                                <li><kbd>enter</kbd></li>
+                            </ul>
+                        </ul>
+
+                        <span class="display-6">Recommended requirements:</span>
+                        <ul>
+                            <li><i class="bi bi-router-fill"></i> An internet connection with at least 100mB/s down and
+                                25kB/s up.
+                            </li>
+                            <li><i class="bi bi-keyboard"></i> A fully working keyboard.</li>
+                            <li><i class="bi bi-mouse"></i> A Mouse (needs to be plugged into the same computer you want
+                                to play on).
+                            </li>
+                            <li><i class="bi bi-person-badge-fill"></i> A registered account, one you didn't steal from
+                                someone. Why would you though? Crime is illegal.
+                            </li>
+                        </ul>
+
+                        <span class="display-6">How to play a solo game (an in-depth guide):</span>
+                        <ol>
+                            <li>
+                                Login with your own account <a href="{% url 'login' %}" target="_blank">here</a>. <br>
+                                <i>(Note: if you chose to play without an account, visit the solo game <a
+                                        href="{% url 'game-solo' %}" target="_blank">page</a>
+                                    and continue this tutorial.</i>
+                            </li>
+                            <li>
+                                Either press the <kbd>enter</kbd> key, or use the mouse cursor <i
+                                    class="bi bi-cursor"></i> and aim somewhere near
+                                (chrome users need to aim lower than usual, I really don't know why) the 'START' and
+                                press the primary button.
+                            </li>
+                            <li>
+                                Use the arrow keys on your functional keyboard to move the falling blocks to your will.
+                                <div class="d-inline-block">
+                                    <i class="bi bi-arrow-up-square-fill invisible"></i>
+                                    <i class="bi bi-arrow-up-square-fill"></i><br>
+                                    <i class="bi bi-arrow-left-square-fill"></i>
+                                    <i class="bi bi-arrow-down-square-fill"></i>
+                                    <i class="bi bi-arrow-right-square-fill"></i>
+                                </div>
+                                <ul>
+                                    <li>
+                                        <i class="bi bi-arrow-up-square-fill"></i> Up is used for nothing, but I
+                                        didn't feel like removing this key from the list, so it stays for no good
+                                        reason.
+                                    </li>
+                                    <li>
+                                        <i class="bi bi-arrow-left-square-fill"></i> Left is used to move the block one
+                                        tile to the right. The other right !
+                                    </li>
+                                    <li>
+                                        <i class="bi bi-arrow-down-square-fill"></i> Pressing down will move the current
+                                        block one tile down, without having to wait on the slooow timer to do it
+                                        automatically... Useless piece of silicon not even doing everything by itself.
+                                    </li>
+                                    <li>
+                                        <i class="bi bi-arrow-right-square-fill"></i> Right is used to move the block
+                                        one tile to the right as well ! If they moved left, it wouldn't be .. right. You
+                                        only can win !!1! No need to thank me.
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>While playing solo, you can always press <kbd>esc</kbd> to pause the game (and have some
+                                settings to play with, if you're bored with the game already).
+                            </li>
+                            <li>Repeat the above until the new block has no space to spawn (which is called spawn
+                                killing), and end the game with a total score of { % user.game.score % } !!
+                            </li>
+                            <li>After the game ended you need to manually go back to the home page, where you can see
+                                the disappointment you are compared to the all-time top scores.
+                            </li>
+                        </ol>
                     </div>
                 </div>
             </div> <!-- Solo -->
