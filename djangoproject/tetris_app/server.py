@@ -103,8 +103,8 @@ def leave_lobby(event, is_instant, kick):
                 users_in_lobby.add(user)
                 websockets_in_lobby.add(CONNECTED[user])
         websockets.broadcast(websockets_in_lobby, json.dumps(lobby_info(lobby, admin)))
-        if not is_instant:
-            del THREADS[event["user"]]
+    if not is_instant:
+        del THREADS[event["user"]]
 
     if admin == event["user"] and len(websockets_in_lobby) > 0:
         lobby_id = secrets.token_urlsafe(12)

@@ -43,7 +43,7 @@ class TestServer(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(server.LOBBIES[data3["lobby_id"]], ({"daniel"}, "daniel"))
         await self.invite()
         await self.join()
-        #await self.leave()
+        await self.leave()
 
     async def invite(self):
         # 'marc' sends an invitation to 'felix'
@@ -80,17 +80,19 @@ class TestServer(unittest.IsolatedAsyncioTestCase):
 
     async def leave(self):
         # users 'felix' and 'marc' leave the lobby
+        self.assertTrue(server.THREADS.__len__() == 0)
         await self.connection1.send(
-            json.dumps({"type": "leave", "lobby": self.data1["lobby_id"], "user": "felix", "instant": False,
+            json.dumps({"type": "leave", "lobby": self.data1["lobby_id"], "user": "marc", "instant": False,
                         "kick": False}))
-        #await self.connection2.send(
-        #    json.dumps({"type": "leave", ",lobby": self.data1["lobby_id"], "user": "marc", "instant": False,
-        #                "kick": False}))
-        await asyncio.sleep(10)
-        self.assertTrue(len(server.LOBBIES) == 2)
+        await asyncio.sleep(6)
+        await self.connection2.send(
+            json.dumps({"type": "leave", ",lobby": self.data1["lobby_id"], "user": "felix", "instant": False,
+                        "kick": False}))
+        await asyncio.sleep(6)
         # user 'felix' and 'marc' close their connections to the server
         await self.connection1.close()
         await self.connection2.close()
+        await asyncio.sleep(1)
         # after the connections were closed only connection 3 should still be connected
         self.assertTrue(len(server.CONNECTED) == 1)
         self.assertEqual(server.CONNECTED.keys(), {"daniel"})
