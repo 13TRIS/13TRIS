@@ -7,8 +7,9 @@ canvas.height = 1000;
 let isThemeDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 const status = {
-    start: 'Start',
+    ready: 'Start',
     playing: 'Playing',
+    pause: 'pause',
     over: 'Game over'
 }
 
@@ -57,7 +58,7 @@ let game = {
     score: 0,
     highScore: 0,
     name: user,
-    status: status.start,
+    status: status.ready,
     inverted: {
         total: 0,
         left: 0,
@@ -126,7 +127,6 @@ blocks_special = [
         special: "cookie"
     }
 ];
-
 
 let offset = {
     x: 3 * blockSize,
@@ -315,6 +315,20 @@ function renderBoard() {
         ctx.fillStyle = getColour(10);
         ctx.fillRect(6 / 5 * blockSize, 17 / 5 * blockSize, blockSize * 3 / 5, blockSize / 5);
 
+        // DRAW THE SETTINGS BUTTON
+        drawBlock(
+            blockSize - offset.x,
+            5 * blockSize - offset.y,
+            getColour(11)
+        );
+        ctx.fillStyle = getColour(10);
+        ctx.font = (blockSize) + 'px segoe ui';
+        ctx.fillText(
+            '?',
+            4.25 * blockSize - offset.x,
+            7.85 * blockSize - offset.y,
+        );
+
         // DRAW THE TEXT (SCORE AND NAME)
         ctx.fillStyle = getColour(11);
         ctx.font = (blockSize / 10 * 12) + 'px segoe ui';
@@ -330,13 +344,15 @@ function renderBoard() {
         );
 
         // DRAW game.board
-        for (let i = 0; i < game.board.length; i++) {
-            for (let j = 0; j < game.board[i].length; j++) {
-                drawBlock(
-                    j * blockSize,
-                    i * blockSize,
-                    getColour(game.board[i][j])
-                );
+        if (game.status !== status.pause) {
+            for (let i = 0; i < game.board.length; i++) {
+                for (let j = 0; j < game.board[i].length; j++) {
+                    drawBlock(
+                        j * blockSize,
+                        i * blockSize,
+                        getColour(game.board[i][j])
+                    );
+                }
             }
         }
 
@@ -475,20 +491,22 @@ function renderBoard() {
             }
 
             // DRAW game.nextBlock.pattern
-            for (let i = 0; i < game.nextBlock.pattern.length; i++) {
-                for (let j = 0; j < game.nextBlock.pattern[i].length; j++) {
-                    const tile = game.nextBlock.pattern[i][j];
-                    if (tile !== 0)
-                        drawBlock(
-                            (game.board[0].length + 3 + j) * blockSize,
-                            (blockSize * (i + 3)),
-                            getColour(tile)
-                        );
+            if (game.status === status.playing) {
+                for (let i = 0; i < game.nextBlock.pattern.length; i++) {
+                    for (let j = 0; j < game.nextBlock.pattern[i].length; j++) {
+                        const tile = game.nextBlock.pattern[i][j];
+                        if (tile !== 0)
+                            drawBlock(
+                                (game.board[0].length + 3 + j) * blockSize,
+                                (blockSize * (i + 3)),
+                                getColour(tile)
+                            );
+                    }
                 }
             }
         }
 
-        if (game.status === status.start) {
+        if (game.status === status.ready) {
             //cursor.x >= (6 * blockSize) && cursor.x < (10 * blockSize) && cursor.y >= (16 * blockSize) && cursor.y < (18 * blockSize)
             ctx.fillStyle = getColour(11);
             ctx.font = (blockSize / 10 * 12) + 'segoe ui';
@@ -497,6 +515,44 @@ function renderBoard() {
                 4 * blockSize + 0.25 * blockSize + offset.x,
                 16 * blockSize - 0.55 * blockSize + offset.y
             );
+        }
+
+        if (game.status === status.pause) {
+            console.log("draw this")
+            ctx.fillStyle = getColour(11);
+            const pauseBoard = [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 7, 8, 0, 0, 3, 0, 2, 0, 3, 3, 3],
+                [0, 7, 0, 4, 0, 3, 0, 2, 0, 6, 6, 0],
+                [0, 7, 4, 0, 0, 3, 2, 2, 0, 7, 0, 0],
+                [0, 7, 0, 5, 5, 0, 0, 0, 0, 7, 7, 7],
+                [0, 0, 0, 5, 0, 1, 0, 8, 8, 0, 0, 0],
+                [0, 0, 0, 6, 1, 1, 0, 8, 0, 0, 0, 0],
+                [0, 0, 0, 6, 0, 1, 0, 0, 5, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 5, 5, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            ]
+            for (let i = 0; i < pauseBoard.length - 1; i++) {
+                for (let j = 0; j < pauseBoard[i].length; j++) {
+                    drawBlock(
+                        j * blockSize,
+                        i * blockSize,
+                        adjust(getColour(pauseBoard[i][j]), -10)
+                    );
+                }
+            }
         }
     } else if (game.status === status.over) {
         let i = 0;
@@ -636,6 +692,39 @@ function drawPattern(block) {
     }
 }
 
+function endGame() {
+    last = Number.MAX_SAFE_INTEGER;
+    game.status = status.over;
+
+    let data = new FormData();
+    data.append('score', game.score);
+    data.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+    fetch(add_history, {
+        method: 'POST',
+        body: data,
+        credentials: 'same-origin',
+    }).then(res =>
+        res.json()).then(d => {
+        alert(d.score_added)
+    })
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 function moveDown(block) {
     // Move the block one down
     if (game.status === status.playing) {
@@ -645,8 +734,7 @@ function moveDown(block) {
             addToBoard(block);
             destroyLines();
             if (!generateBlock()) {
-                last = Number.MAX_SAFE_INTEGER;
-                game.status = status.over
+                endGame();
                 drawPattern(game.currentBlock);
                 renderBoard();
             }
@@ -827,6 +915,13 @@ function playSound(number) {
 
 }
 
+function pauseGame() {
+    if (game.status === status.pause)
+        game.status = (game.board[2][0] === 6) ? status.ready : status.playing;
+    else if (game.status !== status.over)
+        game.status = status.pause;
+}
+
 // CONTROLS
 window.addEventListener('keydown', (e) => {
     switch (e.code) {
@@ -843,14 +938,17 @@ window.addEventListener('keydown', (e) => {
             moveDown(game.currentBlock);
             break;
         case 'Enter':
-            if (game.status === status.start)
+            if (game.status === status.ready)
                 startGame();
             break;
         case 'Space':
-            if (game.status === status.start)
+            if (game.status === status.ready)
                 startGame();
             else if (game.status === status.playing)
                 slamDown(game.currentBlock);
+            break;
+        case 'Escape':
+            pauseGame();
             break;
 
         default:
@@ -873,14 +971,15 @@ canvas.addEventListener('mousedown', (e) => {
         y: e.clientY - pos.top
     }
 
-    if (clickInBlock(7, 16, 4, 2, cursor.x, cursor.y) && game.status === status.start) startGame();
+    if (clickInBlock(7, 16, 4, 2, cursor.x, cursor.y) && game.status === status.ready) startGame();
     if (clickInBlock(1, 2, 1, 1, cursor.x, cursor.y) && game.status !== status.over) scale(true);
     if (clickInBlock(1, 3, 1, 1, cursor.x, cursor.y) && game.status !== status.over) scale(false);
+    if (clickInBlock(1, 5, 1, 1, cursor.x, cursor.y) ) pauseGame();
 
 }, false);
 
 function checkStart() {
-    if (game.status === status.start) {
+    if (game.status === status.ready) {
         startGame();
     }
 }
