@@ -17,10 +17,12 @@ let game = {
     currentBlock: {
         x: 0,
         y: 4,
-        pattern: null
+        pattern: null,
+        special: null
     },
     nextBlock: {
-        pattern: null
+        pattern: null,
+        special: null
     },
     holoBlock: {
         x: 0,
@@ -51,59 +53,79 @@ let game = {
         [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
         [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
     ],
+    special: 11,
     level: 1,
     score: 0,
     highScore: 0,
     name: user,
-    status: status.ready
+    status: status.ready,
+    inverted: {
+        total: 0,
+        left: 0,
+    }
 }
 let blockSize = 40;
 
 let blocks;
 
-blocks = [
-    // l
-    [
-        [0, 1, 0],
-        [0, 1, 0],
-        [1, 1, 0]
-    ],
-    // j
-    [
-        [0, 2, 0],
-        [0, 2, 0],
-        [0, 2, 2]
-    ],
-    // t
-    [
-        [0, 0, 0],
-        [3, 3, 3],
-        [0, 3, 0]
-    ],
-    // s
-    [
-        [0, 4, 4],
-        [4, 4, 0],
-        [0, 0, 0]
-    ],
-    // z
-    [
-        [5, 5, 0],
-        [0, 5, 5],
-        [0, 0, 0]
-    ],
-    // o
-    [
-        [6, 6],
-        [6, 6]
-    ],
-    // i
-    [
-        [0, 0, 7, 0],
-        [0, 0, 7, 0],
-        [0, 0, 7, 0],
-        [0, 0, 7, 0]
-    ]
+blocks = [// l
+    {
+        pattern: [[0, 1, 0], [0, 1, 0], [1, 1, 0]], special: null
+    }, // j
+    {
+        pattern: [[0, 2, 0], [0, 2, 0], [0, 2, 2]], special: null
+    }, {
+        pattern: // t
+            [[0, 0, 0], [3, 3, 3], [0, 3, 0]], special: null
+    }, {
+        pattern: // s
+            [[0, 4, 4], [4, 4, 0], [0, 0, 0]], special: null
+    }, {
+        pattern: // z
+            [[5, 5, 0], [0, 5, 5], [0, 0, 0]], special: null
+    }, {
+        pattern: // o
+            [[6, 6], [6, 6]], special: null
+    }, {
+        pattern: // i
+            [[0, 0, 7, 0], [0, 0, 7, 0], [0, 0, 7, 0], [0, 0, 7, 0]], special: "twist"
+    }
+];
+
+blocks_special = [
+    {
+        pattern: // bomb
+            [[8, 6], [6, 8]],
+        special: "bomb"
+    },
+    {
+        pattern: // 13tris block
+            [
+                [0, 6, 1, 1, 0],
+                [6, 6, 0, 1, 0],
+                [0, 6, 6, 8, 0],
+                [0, 4, 0, 8, 0],
+                [0, 4, 8, 8, 0]
+            ],
+        special: null
+    },
+    {
+        pattern: // amogus
+            [
+                [0, 3, 3, 3],
+                [3, 3, 4, 4],
+                [3, 3, 3, 3],
+                [0, 3, 0, 3]
+            ],
+        special: "amogus"
+    },
+    {
+        pattern: // line bomb
+            [
+                [20],
+            ],
+        special: "cookie"
+    }
 ];
 
 let offset = {
@@ -174,6 +196,9 @@ function getColour(tile) {
         case 11:
             colour = isThemeDark ? '#f6f6f6' : '#042f3d';
             break; // font color
+        case 20:
+            colour = '#653600';
+            break; // font color
         case 99:
             colour = isThemeDark ? 'rgba(204,204,204,0.18)' : 'rgba(61,61,61,0.2)';
             break; // end screen blocks
@@ -193,8 +218,41 @@ function adjust(color, amount) {
     return '#' + color.replace(/^#/, '').replace(/../g, color => ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2));
 }
 
+function drawExtras(hexColor, strength, x, y) {
+    switch (hexColor) {
+        case '#653600':
+            ctx.fillStyle = adjust(getColour(5), strength);
+            ctx.fillRect(x + blockSize * 0.2, y + blockSize * 0.25, blockSize / 5, blockSize / 5);
+            ctx.fillStyle = adjust(getColour(6), strength);
+            ctx.fillRect(x + blockSize * 0.4, y + blockSize * 0.6, blockSize / 5, blockSize / 5);
+            ctx.fillStyle = adjust(getColour(7), strength);
+            ctx.fillRect(x + blockSize * 0.6, y + blockSize * 0.3, blockSize / 5, blockSize / 5);
+            break
+        default:
+            break;
+    }
+}
+
 // DRAWS A BLOCK
 function drawBlock(x, y, hexColor) {
+    x += offset.x;
+    y += offset.y;
+    const strength = 10;
+    ctx.fillStyle = adjust(hexColor, strength);
+    ctx.fillRect(x, y, blockSize, blockSize);
+    ctx.fillStyle = adjust(hexColor, -strength);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + blockSize, y + blockSize);
+    ctx.lineTo(x, y + blockSize);
+    ctx.fill();
+    ctx.fillStyle = hexColor;
+    ctx.fillRect(x + 3, y + 3, blockSize - 6, blockSize - 6);
+
+    drawExtras(hexColor, 0, x, y);
+}
+
+function drawHoloBlock(x, y, hexColor, hexColorIn = hexColor) {
     x += offset.x;
     y += offset.y;
     const strength = 10;
@@ -218,6 +276,8 @@ function drawBlock(x, y, hexColor) {
     ctx.lineTo(x + blockSize, y + blockSize);
     ctx.lineTo(x + blockSize, y);
     ctx.fill();
+
+    drawExtras(hexColorIn, -50, x, y);
 }
 
 // DRAW BOARD
@@ -296,6 +356,73 @@ function renderBoard() {
             }
         }
 
+        // DRAW THE INVERTED TIMER
+
+        if (game.inverted.left > 0) {
+            const percentage = Math.floor((game.inverted.left / game.inverted.total) * 52);
+            const fields = [
+                [0, 0],
+                [0, 1],
+                [0, 2],
+                [0, 3],
+                [0, 4],
+                [0, 5],
+                [0, 6],
+                [0, 7],
+                [0, 8],
+                [0, 9],
+                [0, 10],
+                [0, 11],
+                [0, 12],
+                [0, 13],
+                [0, 14],
+                [0, 15],
+                [0, 16],
+                [0, 17],
+                [0, 18],
+                [0, 19],
+                [0, 20],
+                [1, 20],
+                [2, 20],
+                [3, 20],
+                [4, 20],
+                [5, 20],
+                [6, 20],
+                [7, 20],
+                [8, 20],
+                [9, 20],
+                [10, 20],
+                [11, 20],
+                [11, 19],
+                [11, 18],
+                [11, 17],
+                [11, 16],
+                [11, 15],
+                [11, 14],
+                [11, 13],
+                [11, 12],
+                [11, 11],
+                [11, 10],
+                [11, 9],
+                [11, 8],
+                [11, 7],
+                [11, 6],
+                [11, 5],
+                [11, 4],
+                [11, 3],
+                [11, 2],
+                [11, 1],
+                [11, 0],
+            ]
+            for (let i = 0; i < percentage; i++) {
+                drawBlock(
+                    fields[i][0] * blockSize,
+                    fields[i][1] * blockSize,
+                    '#d23232'
+                );
+            }
+        }
+
         // DRAW game.currentBlock.pattern
         if (game.currentBlock.pattern) {
             for (let i = 0; i < game.currentBlock.pattern.length; i++) {
@@ -313,10 +440,11 @@ function renderBoard() {
                     if (game.holoBlock) {
                         const holoTile = game.holoBlock.pattern[i][j];
                         if (holoTile !== 0) {
-                            drawBlock(
+                            drawHoloBlock(
                                 ((game.holoBlock.y + j) * blockSize),
                                 ((game.holoBlock.x + i) * blockSize),
-                                getColour(tile) + '5F'
+                                adjust(getColour(tile) + '4D', -50),
+                                getColour(holoTile)
                             );
                         }
                     }
@@ -336,6 +464,32 @@ function renderBoard() {
                     );
                 }
             }
+
+            // DRAW SPECIAL NEXT BLOCK
+            if (game.nextBlock.special != null) {
+                const specialBlock = [
+                    6, 8, 7, 1, 4, 7, 5,
+                    4, 6, 5, 5, 5, 6, 4,
+                    2, 2, 1, 4, 7, 8, 1,
+                    1, 8, 6, 8, 4, 7, 5,
+                    2, 1, 4, 2, 3, 2, 2,
+                    3, 1, 2, 3, 4, 2, 8,
+                    1, 7, 4, 2, 5, 3, 6
+                ];
+
+                for (let i = 0; i < 7; i++) {
+                    for (let j = 0; j < 7; j++) {
+                        if (i === 0 || i === 6 || j === 0 || j === 6)
+                            drawBlock(
+                                (game.board[0].length + 1 + i) * blockSize,
+                                (blockSize * (1 + j)),
+                                adjust(getColour(specialBlock[(i * 7 + j) % specialBlock.length]), -10)
+                            );
+                    }
+                }
+
+            }
+
             // DRAW game.nextBlock.pattern
             if (game.status === status.playing) {
                 for (let i = 0; i < game.nextBlock.pattern.length; i++) {
@@ -405,7 +559,7 @@ function renderBoard() {
         const sss = setInterval(function () {
             // DRAW EACH END SCREEN LINE
             for (let j = 0; j < game.board[i].length; j++) {
-                drawBlock(
+                drawHoloBlock(
                     j * blockSize,
                     i * blockSize,
                     getColour(99)
@@ -446,6 +600,70 @@ function rotateBlock(block) {
     }
 }
 
+function detonateBomb(x, y) {
+    const tempArr = [
+        [x, y - 2],
+        [x, y - 1],
+        [x, y],
+        [x, y + 1],
+        [x, y + 2],
+        [x - 2, y],
+        [x - 1, y],
+        [x + 1, y],
+        [x + 2, y],
+        [x + 1, y + 1],
+        [x + 1, y - 1],
+        [x - 1, y + 1],
+        [x - 1, y - 1]
+    ]
+    tempArr.forEach(item => {
+        deleteBlock.apply(null, item);
+    });
+}
+
+function deleteBlock(x, y) {
+    if (x >= 0 && y >= 0 && game.board[x][y] != null && game.board[x][y] !== 0 && game.board[x][y] !== 9 && game.board[x][y] !== 10)
+        game.board[x][y] = 0;
+}
+
+function invertControls(units) {
+    game.inverted = {
+        total: units,
+        left: units
+    };
+}
+
+function cookieBomb(x, y) {
+    console.log(x)
+    console.log(y)
+
+    for (let j = 0; j < game.board.length - 2; j++) {
+        game.board[j][y % game.board[0].length] = 0;
+    }
+    for (let i = 0; i < game.board[0].length - 2; i++) {
+        game.board[x][i + 1] = 5;
+    }
+}
+
+function specialMove(block) {
+    switch (block.special) {
+        case "bomb":
+            detonateBomb(block.x + 1, block.y + 1)
+            break;
+        case "twist":
+            invertControls(100 - game.level);
+            break;
+        case "amogus":
+            generateNextBlock();
+            break;
+        case "cookie":
+            cookieBomb(block.x, block.y);
+            break;
+        default:
+    }
+
+}
+
 function addToBoard(block) {
     for (let i = 0; i < block.pattern.length; i++) {
         for (let j = 0; j < block.pattern[i].length; j++) {
@@ -453,6 +671,8 @@ function addToBoard(block) {
                 game.board[block.x + i][block.y + j] = block.pattern[i][j];
         }
     }
+    if (block.special != null)
+        specialMove(block);
 }
 
 function drawPattern(block) {
@@ -625,29 +845,44 @@ function checkLegality(pos, block) {
     for (let i = 0; i < newPattern.length; i++)
         for (let j = 0; j < newPattern[i].length; j++)
             if (
-                game.board[block.x + i + mov[0]][block.y + j + mov[1]] !== 0 &&
-                newPattern[i][j] !== 0)
+                game.board[block.x + i + mov[0]][block.y + j + mov[1]] !== 0 && newPattern[i][j] !== 0)
                 return false;
     return true;
 }
 
+function generateNextBlock() {
+    if (game.special === 12) {
+        game.nextBlock = randomElementFromArray(blocks_special);
+        game.special = 0;
+    } else {
+        game.nextBlock = randomElementFromArray(blocks);
+        game.special++;
+    }
+}
+
+function randomElementFromArray(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
+function copyNextBlockIntoCurrent() {
+    game.currentBlock = {
+        x: 0,
+        y: 4,
+        pattern: game.nextBlock.pattern.map((a) => a.slice()),
+        special: game.nextBlock.special
+    };
+    game.holoBlock = {
+        x: 0,
+        y: 4,
+        pattern: game.nextBlock.pattern.map((a) => a.slice()),
+        special: false
+    };
+}
+
 function generateBlock() {
     if (game.status === status.playing) {
-        game.currentBlock = {
-            x: 0,
-            y: 4,
-            pattern: game.nextBlock.pattern.map((a) => a.slice())
-        };
-        game.holoBlock = {
-            x: 0,
-            y: 4,
-            pattern: game.nextBlock.pattern.map((a) => a.slice())
-        };
-
-        game.nextBlock = {
-            pattern: blocks[Math.floor(Math.random() * blocks.length)]
-        }
-
+        copyNextBlockIntoCurrent();
+        generateNextBlock()
         moveHolo();
         return checkLegality(0, game.currentBlock);
     }
@@ -689,14 +924,12 @@ function pauseGame() {
 
 // CONTROLS
 window.addEventListener('keydown', (e) => {
-    console.log(e.code)
-
     switch (e.code) {
         case 'ArrowLeft':
-            moveSideways(3, game.currentBlock);
+            moveSideways(game.inverted.left > 0 ? 4 : 3, game.currentBlock);
             break;
         case 'ArrowRight':
-            moveSideways(4, game.currentBlock);
+            moveSideways(game.inverted.left > 0 ? 3 : 4, game.currentBlock);
             break;
         case 'ArrowUp':
             rotateBlock(game.currentBlock);
@@ -791,8 +1024,19 @@ function startGame() {
         [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
         [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
     ]
+
+    game.special = 11;
+    game.level = 1;
+    game.score = 0;
+    game.name = user;
+    game.inverted = {
+        total: 0,
+        left: 0,
+    };
+    const nextBlock = blocks[Math.floor(Math.random() * blocks.length)];
     game.nextBlock = {
-        pattern: blocks[Math.floor(Math.random() * blocks.length)]
+        pattern: nextBlock.pattern,
+        special: nextBlock.special
     }
     generateBlock();
 }
@@ -804,12 +1048,13 @@ function fun(now) {
         last = now;
         gameUpdate();
     }
-    if (game.status !== status.over)
+    if (game.status !== status.over) {
         renderBoard();
+        if (game.inverted.left > 0)
+            game.inverted.left--;
+    }
     requestAnimationFrame(fun);
 }
 
 generateBlock();
 requestAnimationFrame(fun);
-
-
