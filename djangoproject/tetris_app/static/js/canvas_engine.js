@@ -651,7 +651,7 @@ function specialMove(block) {
             detonateBomb(block.x + 1, block.y + 1)
             break;
         case "twist":
-            invertControls(100 - game.level);
+            invertControls(30);
             break;
         case "amogus":
             generateNextBlock();
