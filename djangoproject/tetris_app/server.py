@@ -91,8 +91,10 @@ def leave_lobby(event, is_instant, kick):
                     websockets.broadcast(user_iter, json.dumps(kick_event(event["lobby"], new)))
             else:
                 users_in_lobby.add(user)
-                websockets_in_lobby.add(CONNECTED[user])
-        websockets.broadcast(websockets_in_lobby, json.dumps(lobby_info(lobby, admin)))
+                if user in CONNECTED:
+                    websockets_in_lobby.add(CONNECTED[user])
+        if len(websockets_in_lobby) > 0:
+            websockets.broadcast(websockets_in_lobby, json.dumps(lobby_info(lobby, admin)))
         if not is_instant:
             del THREADS[event["user"]]
 
