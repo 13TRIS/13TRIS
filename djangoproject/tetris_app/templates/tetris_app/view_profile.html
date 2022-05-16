@@ -1,0 +1,75 @@
+{% extends 'tetris_app/base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+
+    <div class="container mt-5">
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <img src="{% static profile.profilePicture %}"
+                     alt="user icon"
+                     class="img-fluid rounded"
+                     width="75%"/>
+            </div>
+            <div class="col-md-8 position-relative">
+                <div class="position-absolute bottom-0 start-0">
+                    <h1>
+                        {{ profile }}'s Profile
+                    </h1>
+                    <h3>
+                        Status : {% include 'tetris_app/status.html' with status=profile.status %}
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <h1>Top scores:</h1>
+        <table class="table table-striped">
+            <!-- class="table table-striped table-hover", class="table-responsive" -->
+            <!-- Now we need actual data to fill these tables :) -->
+            <thead>
+            <tr>
+                <th>Player</th>
+                <th>Score</th>
+                <th>Date
+                </th>
+            </thead>
+            <tbody>
+            {% if history_top is not null %}
+                {% for place in history_top %}
+                    <tr>
+                        <td>{{ place.player.username }}</td>
+                        <td>{{ place.score }}</td>
+                        <td>{{ place.date_of_score }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+            </tbody>
+        </table>
+
+        <h1>Latest scores:</h1>
+        <table class="table table-striped">
+            <!-- class="table table-striped table-hover", class="table-responsive" -->
+            <!-- Now we need actual data to fill these tables :) -->
+            <thead>
+            <tr>
+                <th>Player</th>
+                <th>Score</th>
+                <th>Date
+                </th>
+            </thead>
+            <tbody>
+            {% if history_latest is not null %}
+                {% for place in history_latest %}
+                    <tr>
+                        <td>{{ place.player.username }}</td>
+                        <td>{{ place.score }}</td>
+                        <td>{{ place.date_of_score }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

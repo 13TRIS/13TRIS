@@ -4,8 +4,10 @@
 {% block content %}
     <canvas id="my_canvas" width='1000px' height='1000px' style="height: 1000px; width: 1000px;"></canvas>
 
-    <link rel="stylesheet" href="../../static/tetris_app/canvas_engine.css"/>
-    <script type="text/javascript" src="../../static/tetris_app/canvas_engine.js"></script>
+
+    <script type="text/javascript">const add_history = "{% url 'set_leaderboard' %}";</script>
+    <link rel="stylesheet" href="{% static "css/canvas_engine.css" %}"/>
+    <script type="text/javascript" src="{% static "js/canvas_engine.js" %}"></script>
 {% endblock %}
 
 
