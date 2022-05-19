@@ -41,11 +41,20 @@ async def handler(websocket):
                 CONNECTED[event["user"]] = websocket
             elif event["type"] == "request":
                 await send_lobby_info(websocket, event)
+            elif event["type"] == "game-info":
+                send_game_state(event)
+            elif event["type"] == "start":
+                lobby_websockets = get_websockets_in_lobby(event["lobby"])
+                websockets.broadcast(lobby_websockets, message)
+            print("lobbies: " + LOBBIES.__str__())
+            print("connections: " + CONNECTED.__str__())
+            print("threads: " + THREADS.__str__())
     except ConnectionClosedOK:
         pass
     finally:
         for key in list(CONNECTED.keys()):
             if CONNECTED[key] == websocket:
+                print(key + " lost connection")
                 del CONNECTED[key]
 
 
