@@ -33,15 +33,16 @@
                             <div class="row g-0">
                                 <div class="col-md-2">
                                     <a href="{% url 'user' request.user %}">
-                                    <img src="{% static request.user.Profile.profilePicture %}"
-                                         class="img-fluid rounded-start"
-                                         alt="user icon">
+                                        <img src="{% static request.user.Profile.profilePicture %}"
+                                             class="img-fluid rounded-start"
+                                             alt="user icon">
                                     </a>
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ request.user }}</h5>
-                                        <p class="card-text">Status: {% include 'tetris_app/status.html' with status=request.user.Profile.status %}</p>
+                                        <p class="card-text">
+                                            Status: {% include 'tetris_app/status.html' with status=request.user.Profile.status %}</p>
                                         <a class="btn btn-primary" href="{% url 'logout' %}"> Logout</a>
                                         <a class="btn btn-success" href="{% url 'edit' %}">Edit</a>
 
@@ -88,49 +89,54 @@
 
 
                         {% if friends is not null %}
-                        {% for friend in friends %}
+                            {% for friend in friends %}
 
-                        <div class="card mb-3">
-                            <div class="row g-0">
-                                <div class="col-md-2">
-                                    <a href="{% url 'user' friend.username%}">
-                                        <img src="{% static friend.Profile.profilePicture %}"
-                                             class="img-fluid rounded-start"
-                                             alt="user icon">
-                                    </a>
-                                    </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ friend.username }}</h5>
-                                        <p class="card-text">Status: {% include 'tetris_app/status.html' with status=friend.Profile.status %}</p>
+                                <div class="card mb-3">
+                                    <div class="row g-0">
+                                        <div class="col-md-2">
+                                            <a href="{% url 'user' friend.username %}">
+                                                <img src="{% static friend.Profile.profilePicture %}"
+                                                     class="img-fluid rounded-start"
+                                                     alt="user icon">
+                                            </a>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ friend.username }}</h5>
+                                                <p class="card-text">
+                                                    Status: {% include 'tetris_app/status.html' with status=friend.Profile.status %}</p>
 
 
-                                        {% block invite_button %}
-                                        {% endblock %}
-                                        <a href="{% url 'update_friend' operation='remove' username=friend.username %}">
-                                            <button type="button" class="btn btn-danger">Remove Friend</button>
-                                        </a>
+                                                {% block invite_button %}
+                                                {% endblock %}
+                                                <a href="{% url 'update_friend' operation='remove' username=friend.username %}">
+                                                    <button type="button" class="btn btn-danger">Remove Friend</button>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        {% endfor %}
+                            {% endfor %}
                         {% endif %}
 
-                        <ul class="list-group borderless" style="list-style: none">
-                            <li>
-                                <a href="http://13tris.dkoeck.de/" class="link-primary"> Blog </a> <br>
-                            </li>
-                            <li>
-                                <a href="{% url 'impressum' %}" class="link-primary"> Impressum </a> <br>
-                            </li>
-                            <li>
-                                <a href="{% url 'faq' %}" class="link-primary"> FAQ </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'datenschutz' %}" class="link-primary"> Datenschutz </a> <br>
-                            </li>
-                        </ul>
+                        <div class="list-group">
+                            <a href="http://13tris.dkoeck.de/"
+                               class="btn-outline-success text-start list-group-item border-top-0 border-bottom-0 border-3 border-success rounded-top">
+                                Blog
+                            </a>
+                            <a href="{% url 'impressum' %}"
+                               class="btn-outline-primary text-start list-group-item border-top-0 border-bottom-0 border-3 border-primary">
+                                Impressum
+                            </a>
+                            <a href="{% url 'faq' %}"
+                               class="btn-outline-warning text-start list-group-item border-top-0 border-bottom-0 border-3 border-warning">
+                                FAQ
+                            </a>
+                            <a href="{% url 'datenschutz' %}"
+                               class="btn-outline-danger text-start list-group-item border-top-0 border-bottom-0 border-3 border-danger rounded-bottom">
+                                Datenschutz
+                            </a>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -140,9 +146,11 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
         crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
 <script src="{% static 'js/AddFriend.js' %}"></script>
 {% block scripts %}
 {% endblock %}

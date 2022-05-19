@@ -31,11 +31,10 @@ async def handler(websocket):
                     if event["kick"] is True:
                         kick = True
                     leave_lobby(event, True, kick)
-                else:
-                    thread = StoppableThread(target=leave_lobby, args=(event, False, False))
-                    # does this override the old thread eventually? Maybe use a list/set?
-                    THREADS[event["user"]] = thread
-                    thread.start()
+                    return
+                thread = StoppableThread(target=leave_lobby, args=(event, False, False))
+                THREADS[event["user"]] = thread
+                thread.start()
             elif event["type"] == "update":
                 if event["user"] in THREADS:
                     THREADS[event["user"]].stop()
@@ -101,10 +100,12 @@ def leave_lobby(event, is_instant, kick):
                     websockets.broadcast(user_iter, json.dumps(kick_event(event["lobby"], new)))
             else:
                 users_in_lobby.add(user)
-                websockets_in_lobby.add(CONNECTED[user])
-        websockets.broadcast(websockets_in_lobby, json.dumps(lobby_info(lobby, admin)))
-    if not is_instant:
-        del THREADS[event["user"]]
+                if user in CONNECTED:
+                    websockets_in_lobby.add(CONNECTED[user])
+        if len(websockets_in_lobby) > 0:
+            websockets.broadcast(websockets_in_lobby, json.dumps(lobby_info(lobby, admin)))
+        if not is_instant:
+            del THREADS[event["user"]]
 
     if admin == event["user"] and len(websockets_in_lobby) > 0:
         lobby_id = secrets.token_urlsafe(12)

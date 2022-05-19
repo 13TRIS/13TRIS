@@ -43,7 +43,7 @@ class TestServer(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(server.LOBBIES[data3["lobby_id"]], ({"daniel"}, "daniel"))
         await self.invite()
         await self.join()
-        await self.leave()
+        # await self.leave()
 
     async def invite(self):
         # 'marc' sends an invitation to 'felix'
