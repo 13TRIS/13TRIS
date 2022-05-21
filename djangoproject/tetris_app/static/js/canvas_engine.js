@@ -3,6 +3,7 @@ const ctx = canvas.getContext('2d');
 canvas.width = 1000;
 canvas.height = 1000;
 
+<audio src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Tetris_theme.ogg"></audio>
 let isThemeDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 window.addEventListener("DOMContentLoaded", event => {
