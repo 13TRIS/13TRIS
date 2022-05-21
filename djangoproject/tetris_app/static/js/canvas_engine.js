@@ -2,15 +2,20 @@ const canvas = document.getElementById("my_canvas");
 const ctx = canvas.getContext('2d');
 canvas.width = 1000;
 canvas.height = 1000;
+const audio = document.querySelector("audio");
 
-<audio src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Tetris_theme.ogg"></audio>
 let isThemeDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 window.addEventListener("DOMContentLoaded", event => {
-  const audio = document.querySelector("audio");
   audio.volume = 0.2;
   audio.play();
 });
+
+window.addEventListener("keypress", event => {
+    if (event.key = 'm'){
+        audio.muted = !audio.muted;
+    }
+})
 
 const status = {
     ready: 'Start',
