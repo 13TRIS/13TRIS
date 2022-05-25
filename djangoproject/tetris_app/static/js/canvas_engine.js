@@ -466,7 +466,7 @@ function renderBoard() {
             }
 
             // DRAW SPECIAL NEXT BLOCK
-            if (game.nextBlock.special != null) {
+            if (gamemode_param === "13tris" && game.nextBlock.special != null) {
                 const specialBlock = [
                     6, 8, 7, 1, 4, 7, 5,
                     4, 6, 5, 5, 5, 6, 4,
@@ -646,6 +646,7 @@ function cookieBomb(x, y) {
 }
 
 function specialMove(block) {
+    if (gamemode_param !== "13tris") return;
     switch (block.special) {
         case "bomb":
             detonateBomb(block.x + 1, block.y + 1)
@@ -851,7 +852,7 @@ function checkLegality(pos, block) {
 }
 
 function generateNextBlock() {
-    if (game.special === 12) {
+    if (gamemode_param === "13tris" && game.special === 12) {
         game.nextBlock = randomElementFromArray(blocks_special);
         game.special = 0;
     } else {
