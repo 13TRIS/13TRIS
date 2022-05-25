@@ -3,17 +3,44 @@
 {% block content %}
  <!--d-flex flex-column justify-content-around-->
             <div class="row">
-                <div class="col">
+                <div class="col-sm-4">
                     <div class="card" style="height: auto; margin-top: 20px">
                         <img src="{% static 'img/black_rock.png' %}" class="card-img-top">
                         <div class="card-body">
                             <h5 class="card-title">Singleplayer</h5>
                             <p class="card-text"></p>
-                            <a href="{% url 'game-solo' %}" class="btn btn-primary">Play now!</a>
+                            <div class="container">
+                                <div class="row">
+                                    <form action="{% url 'game-solo' %}" style="display: contents">
+                                        <input type="submit" value="Play now!" class="btn btn-primary h-auto">
+                                        <div class="form-check form-switch my-auto mt-2" style="margin-left: 1em;">
+                                            <input type="checkbox" id="classic_toggle" name="mode"
+                                                   class="form-check-input"
+                                                   data-bs-target=".multi-collapse"
+                                                   data-bs-toggle="collapse"
+                                                   aria-expanded="false"
+                                                   aria-controls="mode1 mode2"
+                                                   role="switch"
+                                                   value="13tris">
+                                            <label for="classic_toggle">
+                                <span class="overflow-hidden d-block"
+                                      style="max-width: 6em; max-height: 1.5em;">
+                                        <span id="mode1" class="show multi-collapse ms-1">
+                                            Classic <i class="bi bi-dpad-fill me-2 text-success"></i>
+                                        </span>
+                                        <span id="mode2" class="collapse multi-collapse ms-1">
+                                            13TRIS! <i class="bi bi-joystick me-2 text-danger"></i>
+                                        </span>
+                                    </span>
+                                            </label>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-sm-4">
                     <div class="card" style="height: auto; margin-top: 20px">
                         <img src="{% static 'img/red_block.png' %}" class="card-img-top">
                         <div class="card-body">
@@ -23,7 +50,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-sm-4">
                     <div class="card" style="height: auto; margin-top: 20px">
                         <!-- later we have do add actual breakpoints to the height because it looks weir on smaller screens-->
                         <img src="{% static 'img/purple_block.png' %}" class="card-img-top">
