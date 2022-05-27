@@ -9,6 +9,7 @@ window.addEventListener("DOMContentLoaded", () => {
     acceptInvite(websocket, modal, lobby_id);
     receive(websocket, modal, lobby_id);
     beforeUnload(websocket, lobby_id);
+    sendStartEvent(websocket, lobby_id);
 });
 
 function beforeUnload(websocket, lobby_id) {
@@ -63,7 +64,6 @@ function sendInvite(websocket, lobby_id) {
 function receive(websocket, modal, lobby_id) {
     websocket.addEventListener("message", ({data}) => {
         const event = JSON.parse(data);
-        console.log(data);
         switch (event.type) {
             case "invite":
                 if (user === event.to) {
@@ -88,6 +88,14 @@ function receive(websocket, modal, lobby_id) {
                 let kickModal = new bootstrap.Modal(document.getElementById("kick-modal"));
                 kickModalEvent(websocket);
                 kickModal.show();
+                break;
+            case "start":
+                // render the boards for all players
+                createBoard(websocket, lobby_id);
+                break;
+            case "game-info":
+                updateScore(event.player, event.score);
+                updatePlayerState(event.player, event.status);
                 break;
             default:
                 break;
@@ -166,7 +174,7 @@ function createCard(playerName, backgroundColor, admin) {
     if (user === admin && playerName !== user)
         kickFromLobbyBtn = `<button type='button' class='btn btn-danger' data-kick
                             id='kick-${playerName}'>Kick from Lobby</button>`;
-    let innerHTML = ` <div class='card mb-3 ${backgroundColor}'>` +
+    let innerHTML = ` <div class='card mb-3 ${backgroundColor} player-card' id='player-card-${playerName}' style="width: 250px; height: 150px;">` +
         "                            <div class='row g-0'>" +
         "                                <div class='col-md-2'>" +
         "                                    <img src='user-logo.png'" +
@@ -175,7 +183,8 @@ function createCard(playerName, backgroundColor, admin) {
         "                                <div class='col-md-8'>" +
         "                                    <div class='card-body'>" +
         `                                       <h5 class='card-title'>${playerName}</h5>` +
-        "                                        <p class='card-text'>Status: In Lobby</p>" +
+        "                                        <p class='card-text'>Status: In Lobby" +
+        `<br><span id="score-${playerName}" class="score-label" hidden>Score: 0</span></p>` +
         `${kickFromLobbyBtn}` +
         "                                    </div>" +
         "                                </div>" +
@@ -194,4 +203,81 @@ function sleep(seconds) {
     do {
         currentDate = Date.now();
     } while (currentDate - date < seconds * 1000);
+}
+
+// send start event that gets broadcast to all websocket connections in the lobby
+function sendStartEvent(websocket, lobbyID) {
+    document.getElementById("start-btn").addEventListener("click", () => {
+        websocket.send(JSON.stringify({"type": "start", "user": user, "lobby": lobbyID}));
+    });
+}
+
+function createBoard(websocket, lobbyID) {
+    // 1. add canvas
+    let content = "<canvas id=\"my_canvas\" width=\"1000px\" height=\"1000px\" />"
+    document.getElementById("content").innerHTML += content;
+
+    // 2. load game engine script
+    let canvasEngineScript = document.createElement("script");
+    canvasEngineScript.setAttribute("src", "/static/js/canvas_engine.js");
+    canvasEngineScript.setAttribute("type", "text/javascript");
+    document.getElementsByTagName("head")[0].appendChild(canvasEngineScript);
+
+    // 3. invoke start game function
+    canvasEngineScript.onload = () => {
+        startGame();
+    }
+
+    // 4. other changes to the UI
+    document.getElementById("start-btn").setAttribute("hidden", "true");
+    toggleKickButtons();
+    toggleScoreLabels();
+    changeCardColors();
+
+    // 5. start sending state
+    const interval = setInterval(() => {
+        const gameInfo = {
+            "type": "game-info",
+            "player": user,
+            "lobby": lobbyID,
+            "status": game.status,
+            "score": game.score,
+        }
+        //websocket.send(JSON.stringify(gameInfo));
+        if (game.status === "Game over") {
+            clearInterval(interval);
+        }
+    }, Math.random() * 2000);
+}
+
+function toggleKickButtons() {
+    let kickButtons = document.querySelectorAll("[data-kick]");
+    for (let i = 0; i < kickButtons.length; i++) {
+        kickButtons[i].toggleAttribute("hidden", true);
+    }
+}
+
+function toggleScoreLabels() {
+    let labels = document.getElementsByClassName("score-label");
+    for (let i = 0; i < labels.length; i++) {
+        labels[i].toggleAttribute("hidden");
+    }
+}
+
+function updateScore(playerName, score) {
+    let label = document.getElementById(`score-${playerName}`);
+    label.textContent = `Score: ${score}`;
+}
+
+function changeCardColors() {
+    let playerCards = document.getElementsByClassName("player-card");
+    for (let i = 0; i < playerCards.length; i++) {
+        playerCards[i].setAttribute("class", "card mb-3 border-success player-card");
+    }
+}
+
+function updatePlayerState(playerName, status) {
+    if (status === "Game over") {
+        document.getElementById(`player-card-${playerName}`).setAttribute("class", "card mb-3 border-danger player-card");
+    }
 }

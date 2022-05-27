@@ -41,11 +41,20 @@ async def handler(websocket):
                 CONNECTED[event["user"]] = websocket
             elif event["type"] == "request":
                 await send_lobby_info(websocket, event)
+            elif event["type"] == "game-info":
+                send_game_state(event)
+            elif event["type"] == "start":
+                lobby_websockets = get_websockets_in_lobby(event["lobby"])
+                websockets.broadcast(lobby_websockets, message)
+            print("lobbies: " + LOBBIES.__str__())
+            print("connections: " + CONNECTED.__str__())
+            print("threads: " + THREADS.__str__())
     except ConnectionClosedOK:
         pass
     finally:
         for key in list(CONNECTED.keys()):
             if CONNECTED[key] == websocket:
+                print(key + " lost connection")
                 del CONNECTED[key]
 
 
@@ -91,8 +100,10 @@ def leave_lobby(event, is_instant, kick):
                     websockets.broadcast(user_iter, json.dumps(kick_event(event["lobby"], new)))
             else:
                 users_in_lobby.add(user)
-                websockets_in_lobby.add(CONNECTED[user])
-        websockets.broadcast(websockets_in_lobby, json.dumps(lobby_info(lobby, admin)))
+                if user in CONNECTED:
+                    websockets_in_lobby.add(CONNECTED[user])
+        if len(websockets_in_lobby) > 0:
+            websockets.broadcast(websockets_in_lobby, json.dumps(lobby_info(lobby, admin)))
         if not is_instant:
             del THREADS[event["user"]]
 
@@ -108,6 +119,11 @@ def leave_lobby(event, is_instant, kick):
 async def send_lobby_info(websocket, event):
     lobby, admin = LOBBIES[event["lobby"]]
     await websocket.send(json.dumps(lobby_info(lobby, admin)))
+
+
+def send_game_state(event):
+    lobby_websockets = get_websockets_in_lobby(event["lobby"])
+    websockets.broadcast(lobby_websockets, json.dumps(event))
 
 
 async def main():
@@ -129,6 +145,14 @@ def join_event(user):
 
 def kick_event(lobby_id, new):
     return {"type": "kick", "lobby": lobby_id, "new": new}
+
+
+def get_websockets_in_lobby(lobby_id):
+    lobby, _ = LOBBIES[lobby_id]
+    lobby_websockets = set()
+    for user in lobby:
+        lobby_websockets.add(CONNECTED[user])
+    return lobby_websockets
 
 
 if __name__ == "__main__":
