@@ -7,7 +7,7 @@
 
     <script type="text/javascript">
         const add_history = "{% url 'set_leaderboard' %}";
-        const gamemode_param = "{{request.GET.mode}}";
+        const gamemode_param = ("{{request.GET.mode}}" === "") ? "classic" : "{{request.GET.mode}}";
     </script>
     <link rel="stylesheet" href="{% static "css/canvas_engine.css" %}"/>
     <script type="text/javascript" src="{% static "js/canvas_engine.js" %}"></script>

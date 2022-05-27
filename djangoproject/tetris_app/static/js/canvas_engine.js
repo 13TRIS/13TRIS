@@ -699,6 +699,7 @@ function endGame() {
 
     let data = new FormData();
     data.append('score', game.score);
+    data.append('mode', gamemode_param);
     data.append('csrfmiddlewaretoken', getCookie('csrftoken'));
     fetch(add_history, {
         method: 'POST',
@@ -706,7 +707,7 @@ function endGame() {
         credentials: 'same-origin',
     }).then(res =>
         res.json()).then(d => {
-        alert(d.score_added)
+        alert(d.score_added + gamemode_param)
     })
 }
 

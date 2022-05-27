@@ -105,8 +105,10 @@ def user_profile(request, user):
         {
             "friends": get_friends_if_exists(request),
             "profile": profile,
-            'history_top': History.objects.filter(player=profile.user).order_by('-score')[:10],
-            'history_latest': History.objects.filter(player=profile.user).order_by('-date_of_score')[:10]
+            'history_top': History.objects.filter(player=profile.user).order_by('-score')#[:10],
+            # 'history_latest': History.objects.filter(player=profile.user).order_by('-date_of_score')[:10],
+            # 'history_classic': History.objects.filter(player=profile.user, mode='Classic')[:10],
+            # 'history_13tris': History.objects.filter(player=profile.user, mode='13tris')[:10]
         })
 
 
@@ -148,7 +150,12 @@ def homepage_view(request):
         'tetris_app/homepage-view.html',
         {
             'friends': get_friends_if_exists(request),
-            'history': History.objects.order_by('-score')[:10]
+            'history_top': History.objects.order_by('-score')[:10],
+            'history_latest': History.objects.order_by('-date_of_score')[:10],
+            'history_classic': History.objects.filter(mode='Classic')[:10],
+            'history_13tris': History.objects.filter(mode='13tris')[:10],
+            'history_classic_latest': History.objects.filter(mode='Classic').order_by('-date_of_score')[:10],
+            'history_13tris_latest': History.objects.filter(mode='13tris').order_by('-date_of_score')[:10]
         }
     )
 
