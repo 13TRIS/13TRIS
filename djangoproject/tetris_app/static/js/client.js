@@ -163,12 +163,15 @@ const Client = (function () {
      * Receive an event of type 'invite'.<br>
      * If the receiving user is the intended user a modal will be shown asking if he accepts the invitation.
      * @param {{type: string, lobby: string, to: string, from: string}} data
+     * @param {WebSocket} websocket
+     * @param {string} lobbyId
      */
-    const receiveInvite = function (data) {
+    const receiveInvite = function (data, websocket, lobbyId) {
         if (user === data["to"]) {
             let text = `Do you want to accept the invitation from ${data["from"]} and join the lobby ${data["lobby"]}?`
             UI.showInvitationModal(text);
             invitedTo = data["lobby"];
+            UI.registerAcceptInvitationButtonListener(websocket, lobbyId);
         }
     }
     /***
@@ -190,9 +193,13 @@ const Client = (function () {
         UI.createPlayerCards(data["lobby"], data["admin"]);
         registerKickBtnListeners(websocket, lobbyId);
     }
-    // Receive an event of type 'kick'.
-    const receiveKickEvent = function () {
-        // TODO
+    /***
+     * Receive an event of type 'kick'.
+     * @param {WebSocket} websocket
+     */
+    const receiveKickEvent = function (websocket) {
+        UI.registerKickModalListener(websocket);
+        UI.showKickModal();
     }
     // Receive an event of type 'start'.
     const receiveStart = function () {
@@ -234,6 +241,7 @@ const Client = (function () {
 // Represents the UI of the client and provides methods to update certain parts of the UI.
 const UI = (function () {
     const invitationModal = new bootstrap.Modal(document.querySelector("#invitation-modal"));
+    const kickModal = new bootstrap.Modal(document.getElementById("kick-modal"));
 
     /***
      * Shows the modal which is intended for invitations with the specified text.
@@ -242,6 +250,12 @@ const UI = (function () {
     const showInvitationModal = function (text) {
         document.querySelector("#modal-text-content").textContent = text;
         invitationModal.show();
+    }
+    /***
+     * Shows the kick modal.
+     */
+    const showKickModal = function () {
+        kickModal.show();
     }
     /***
      * Create cards for all players currently in the lobby.
@@ -258,6 +272,48 @@ const UI = (function () {
                 createCard(lobby[i], "border-danger", false, playerDisplay);
             }
         }
+    }
+    /***
+     * Registers listeners to all the invitation buttons.
+     * @param {WebSocket} websocket
+     * @param {string} lobbyId
+     */
+    const registerInvitationButtonListeners = function (websocket, lobbyId) {
+        document.querySelectorAll(".invite").forEach(function (item) {
+            item.addEventListener("click", function () {
+                ListenerRegistry.sendInvitationListener(websocket, lobbyId, item.id);
+            });
+        });
+    }
+    /***
+     * Registers a listener on the invitation accept button.
+     * @param {WebSocket} websocket
+     * @param {string} lobbyId
+     */
+    const registerAcceptInvitationButtonListener = function (websocket, lobbyId) {
+        document.getElementById("invitation-accept").addEventListener("click", function () {
+            ListenerRegistry.acceptInvitationListener(websocket, invitationModal, lobbyId);
+        });
+    }
+    /***
+     * Register the listener on the kick modal.
+     * @param {WebSocket} websocket
+     */
+    const registerKickModalListener = function (websocket) {
+        kickModal.addEventListener("shown.bs.modal", function () {
+           ListenerRegistry.kickModalShownListener(websocket);
+        });
+    }
+    /***
+     * Sleeps for the given time in seconds.
+     * @param {number} seconds
+     */
+    const sleep = function (seconds) {
+        const date = Date.now();
+        let currentDate = null;
+        do {
+            currentDate = Date.now();
+        } while (currentDate - date < seconds * 1000);
     }
 
     /***
@@ -284,7 +340,12 @@ const UI = (function () {
 
     return {
         showInvitationModal: showInvitationModal,
+        showKickModal: showKickModal,
         createPlayerCards: createPlayerCards,
+        registerInvitationButtonListeners: registerInvitationButtonListeners,
+        registerAcceptInvitationButtonListener: registerAcceptInvitationButtonListener,
+        registerKickModalListener: registerKickModalListener,
+        sleep: sleep,
     }
 })();
 
@@ -297,13 +358,13 @@ const ListenerRegistry = (function () {
      * @param {string} lobbyId
      */
     const messageListener = function (event, websocket, lobbyId) {
-        const data = JSON.parse(event);
+        const data = JSON.parse(event.data);
         switch (data["type"]) {
             case "init":
                 Client.receiveInit(data);
                 break;
             case "invite":
-                Client.receiveInvite(data);
+                Client.receiveInvite(data, websocket, lobbyId);
                 break;
             case "join":
                 Client.receiveJoin(websocket, lobbyId);
@@ -312,7 +373,7 @@ const ListenerRegistry = (function () {
                 Client.receiveLobbyInfo(data, websocket, lobbyId);
                 break;
             case "kick":
-                Client.receiveKickEvent();
+                Client.receiveKickEvent(websocket);
                 break;
             case "start":
                 Client.receiveStart();
@@ -353,12 +414,44 @@ const ListenerRegistry = (function () {
             Client.sendLeaveEvent(websocket, lobbyId, user, false, false);
         }
     }
+    /***
+     * Listens for the invitation button being clicked.
+     * @param {WebSocket} websocket
+     * @param {string} lobbyId
+     * @param {string} to
+     */
+    const sendInvitationListener = function (websocket, lobbyId, to) {
+        Client.sendInviteEvent(websocket, lobbyId, to, user);
+    }
+    /***
+     * Listens for the accept invitation button to be pressed.
+     * @param {WebSocket} websocket
+     * @param modal // TODO
+     * @param {string} lobbyId
+     */
+    const acceptInvitationListener = function (websocket, modal, lobbyId) {
+        modal.hide();
+        Client.sendJoinEvent(websocket, Client.invitedTo, user);
+        Client.sendLeaveEvent(websocket, lobbyId, user, true, false);
+        window.location.replace(window.location.href.split("?")[0] + "?lobby=" + Client.invitedTo);
+    }
+    /***
+     * Listener for showing the kick modal.
+     * @param {WebSocket} websocket
+     */
+    const kickModalShownListener = function (websocket) {
+        UI.sleep(5);
+        Client.sendInitEvent(websocket, user);
+    }
 
     return {
         messageListener: messageListener,
         kickFromLobbyBtnListener: kickFromLobbyBtnListener,
         openConnectionListener: openConnectionListener,
         beforeunloadListener: beforeunloadListener,
+        sendInvitationListener: sendInvitationListener,
+        acceptInvitationListener: acceptInvitationListener,
+        kickModalShownListener: kickModalShownListener,
     }
 })();
 
@@ -367,10 +460,11 @@ window.addEventListener("DOMContentLoaded", function () {
     const websocket = new WebSocket("ws://localhost:8001");
     const lobbyId = new URLSearchParams(window.location.search).get("lobby");
     window.addEventListener("beforeunload", function () {
-       ListenerRegistry.beforeunloadListener(websocket, lobbyId);
+        ListenerRegistry.beforeunloadListener(websocket, lobbyId);
     });
+    UI.registerInvitationButtonListeners(websocket, lobbyId);
     websocket.addEventListener("open", function () {
-       ListenerRegistry.openConnectionListener(websocket, lobbyId);
+        ListenerRegistry.openConnectionListener(websocket, lobbyId);
     });
     websocket.addEventListener("message", function (event) {
         ListenerRegistry.messageListener(event, websocket, lobbyId);
@@ -382,34 +476,6 @@ window.addEventListener("DOMContentLoaded", function () {
 //old
 //****************************
 
-
-function acceptInvite(websocket, modal, lobby_id) {
-    document.getElementById("invitation-accept").addEventListener("click", () => {
-        let joinEvent = {
-            "type": "join",
-            "user": user,
-            "lobby": INVITED_TO,
-        }
-        modal.hide();
-        websocket.send(JSON.stringify(joinEvent));
-        leaveLobby(websocket, lobby_id, true, null, false);
-        window.location.replace(window.location.href.split("?")[0] + "?lobby=" + INVITED_TO);
-    });
-}
-
-function sendInvite(websocket, lobby_id) {
-    document.querySelectorAll(".invite").forEach(item => {
-        item.addEventListener("click", () => {
-            let invite = {
-                "type": "invite",
-                "lobby": lobby_id,
-                "to": item.id,
-                "from": user,
-            }
-            websocket.send(JSON.stringify(invite));
-        });
-    });
-}
 
 function receive(websocket, modal, lobby_id) {
     websocket.addEventListener("message", ({data}) => {
@@ -451,21 +517,6 @@ function receive(websocket, modal, lobby_id) {
                 break;
         }
     });
-}
-
-function kickModalEvent(websocket) {
-    document.getElementById("kick-modal").addEventListener("shown.bs.modal", () => {
-        sleep(5);
-        websocket.send(JSON.stringify({"type": "init", "user": user}));
-    });
-}
-
-function sleep(seconds) {
-    const date = Date.now();
-    let currentDate = null;
-    do {
-        currentDate = Date.now();
-    } while (currentDate - date < seconds * 1000);
 }
 
 // send start event that gets broadcast to all websocket connections in the lobby
