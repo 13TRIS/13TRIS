@@ -11,6 +11,7 @@ const ClientEvents = (function () {
             "user": user,
         }
     }
+
     /***
      * Event that is sent to notify another user that he should join the lobby.
      * @param {string} lobbyId
@@ -26,6 +27,7 @@ const ClientEvents = (function () {
             "from": user,
         }
     }
+
     /***
      * Event that is sent from someone who was invited into a lobby and wants to join this lobby.
      * @param {string} invitedTo
@@ -39,6 +41,7 @@ const ClientEvents = (function () {
             "lobby": invitedTo,
         }
     }
+
     /***
      * Event that is sent to the server to remove the user from a lobby.<br>
      * If 'isInstant'=true he will immediately be removed.<br>
@@ -60,6 +63,7 @@ const ClientEvents = (function () {
             "kick": isKick,
         }
     }
+
     /***
      * Tells the server to update the connection for the given 'user'.
      * @param {string} user
@@ -71,6 +75,7 @@ const ClientEvents = (function () {
             "user": user,
         }
     }
+
     /***
      * Requests information about the lobby 'lobbyId' from the server.
      * @param {string} lobbyId
@@ -83,6 +88,36 @@ const ClientEvents = (function () {
         }
     }
 
+    /***
+     * Message that is used to notify the lobby that the admin started the game.
+     * @param {string} user
+     * @param {string} lobbyId
+     */
+    const startEvent = function (user, lobbyId) {
+        return {
+            "type": "start",
+            "user": user,
+            "lobby": lobbyId,
+        }
+    }
+
+    /***
+     * Message that is sent in intervals to the server to update the state for each player in the lobby during a game.
+     * @param {string} user
+     * @param {string} lobbyId
+     * @param {string} status
+     * @param {number} score
+     */
+    const gameInfoEvent = function (user, lobbyId, status, score) {
+        return {
+            "type": "game-info",
+            "player": user,
+            "lobby": lobbyId,
+            "status": status,
+            "score": score,
+        }
+    }
+
     return {
         initEvent: initEvent,
         inviteEvent: inviteEvent,
@@ -90,6 +125,8 @@ const ClientEvents = (function () {
         leaveEvent: leaveEvent,
         updateConnectionEvent: updateConnectionEvent,
         lobbyRequestEvent: lobbyRequestEvent,
+        startEvent: startEvent,
+        gameInfoEvent: gameInfoEvent,
     }
 })();
 
@@ -105,6 +142,7 @@ const Client = (function () {
     const sendInitEvent = function (websocket, user) {
         websocket.send(JSON.stringify(ClientEvents.initEvent(user)));
     }
+
     /***
      * Sends an 'ClientEvents.inviteEvent' to the server.
      * @param {WebSocket} websocket
@@ -115,6 +153,7 @@ const Client = (function () {
     const sendInviteEvent = function (websocket, lobbyId, to, user) {
         websocket.send(JSON.stringify(ClientEvents.inviteEvent(lobbyId, to, user)));
     }
+
     /***
      * Lets 'user' join the lobby 'invitedTo'.
      * @param {WebSocket} websocket
@@ -124,6 +163,7 @@ const Client = (function () {
     const sendJoinEvent = function (websocket, invitedTo, user) {
         websocket.send(JSON.stringify(ClientEvents.joinEvent(invitedTo, user)));
     }
+
     /***
      * Sends a 'ClientEvents.leaveEvent' to the server with the given arguments.
      * @param {WebSocket} websocket
@@ -135,6 +175,7 @@ const Client = (function () {
     const sendLeaveEvent = function (websocket, lobbyId, userName, isInstant, isKick) {
         websocket.send(JSON.stringify(ClientEvents.leaveEvent(lobbyId, userName, isInstant, isKick)));
     }
+
     /***
      * Updates the connection that the server stores for this client so they can still communicate.
      * @param {WebSocket} websocket
@@ -143,6 +184,7 @@ const Client = (function () {
     const sendUpdateConnectionEvent = function (websocket, user) {
         websocket.send(JSON.stringify(ClientEvents.updateConnectionEvent(user)));
     }
+
     /***
      * Requests the server to send back information about the given lobby.
      * @param {WebSocket} websocket
@@ -153,12 +195,46 @@ const Client = (function () {
     }
 
     /***
+     * Sends a start event to the server that should notify all players in a lobby that the game is starting.
+     * @param {WebSocket} websocket
+     * @param {string} lobbyId
+     */
+    const sendStartEvent = function (websocket, lobbyId) {
+        websocket.send(JSON.stringify(ClientEvents.startEvent(user, lobbyId)));
+    }
+
+    /***
+     * Sends information about the game state of the current user to the server.
+     * @param {WebSocket} websocket
+     * @param {string} lobbyId
+     */
+    const sendGameInfo = function (websocket, lobbyId) {
+        websocket.send(JSON.stringify(ClientEvents.gameInfoEvent(user, lobbyId, game.status, game.score)));
+    }
+
+    /***
+     * The client will start sending info about his game state to the server repeatedly. It will stop if
+     * game.status = "Game over".
+     * @param {WebSocket} websocket
+     * @param {string} lobbyId
+     */
+    const startSendingGameInfo = function (websocket, lobbyId) {
+        const interval = setInterval(function () {
+            sendGameInfo(websocket, lobbyId);
+            if (game.status === "Game over") {
+                clearInterval(interval);
+            }
+        }, Math.random() * 2000);
+    }
+
+    /***
      * Receive an event of type 'init'.
      * @param {{type: string, lobby_id: string}} data
      */
     const receiveInit = function (data) {
-        window.location.replace(window.location.href.split("?")[0] + "?lobby=" + data["lobby_id"]);
+        window.location.replace(window.location.href.split("?")[0] + "?lobby=" + data["lobby_id"] + "&playing=false");
     }
+
     /***
      * Receive an event of type 'invite'.<br>
      * If the receiving user is the intended user a modal will be shown asking if he accepts the invitation.
@@ -174,6 +250,7 @@ const Client = (function () {
             UI.registerAcceptInvitationButtonListener(websocket, lobbyId);
         }
     }
+
     /***
      * Receive an event of type 'join'.<br>
      * Information about the lobby is requested from the server in order to update the UI correctly.
@@ -183,6 +260,7 @@ const Client = (function () {
     const receiveJoin = function (websocket, lobbyId) {
         Client.sendLobbyRequestEvent(websocket, lobbyId);
     }
+
     /***
      * Receive an event of type 'lobby-info'.
      * @param {{type: string, lobby: string[], admin: string}} data
@@ -191,8 +269,10 @@ const Client = (function () {
      */
     const receiveLobbyInfo = function (data, websocket, lobbyId) {
         UI.createPlayerCards(data["lobby"], data["admin"]);
+        if (data["lobby"].length > 1 && user === data["admin"]) UI.showStartBtn();
         registerKickBtnListeners(websocket, lobbyId);
     }
+
     /***
      * Receive an event of type 'kick'.
      * @param {WebSocket} websocket
@@ -201,9 +281,23 @@ const Client = (function () {
         UI.registerKickModalListener(websocket);
         UI.showKickModal();
     }
-    // Receive an event of type 'start'.
-    const receiveStart = function () {
-        // TODO
+
+    /***
+     * Receive an event of type 'start'.
+     * @param {WebSocket} websocket
+     * @param {string} lobbyId
+     */
+    const receiveStart = function (websocket, lobbyId) {
+        UI.createGame(websocket, lobbyId);
+    }
+
+    /***
+     * Receive an event of type 'game-info' from the server.
+     * @param {{type: string, player: string, lobby: string, status: string, score: number}} data
+     */
+    const receiveGameInfo = function (data) {
+        UI.updateScore(data["player"], data["score"]);
+        UI.updatePlayerState(data["player"], data["status"]);
     }
 
     /***
@@ -228,12 +322,16 @@ const Client = (function () {
         sendLeaveEvent: sendLeaveEvent,
         sendUpdateConnectionEvent: sendUpdateConnectionEvent,
         sendLobbyRequestEvent: sendLobbyRequestEvent,
+        sendStartEvent: sendStartEvent,
+        sendGameInfo: sendGameInfo,
+        startSendingGameInfo: startSendingGameInfo,
         receiveInit: receiveInit,
         receiveInvite: receiveInvite,
         receiveJoin: receiveJoin,
         receiveLobbyInfo: receiveLobbyInfo,
         receiveKickEvent: receiveKickEvent,
         receiveStart: receiveStart,
+        receiveGameInfo: receiveGameInfo,
         /***
          * Setter/getter for 'invitedTo' depending on if an argument is given or not.
          * @param {null | string=} value
@@ -258,12 +356,14 @@ const UI = (function () {
         document.querySelector("#modal-text-content").textContent = text;
         invitationModal.show();
     }
+
     /***
      * Shows the kick modal.
      */
     const showKickModal = function () {
         kickModal.show();
     }
+
     /***
      * Create cards for all players currently in the lobby.
      * @param {string[]} lobby
@@ -280,6 +380,7 @@ const UI = (function () {
             }
         }
     }
+
     /***
      * Registers listeners to all the invitation buttons.
      * @param {WebSocket} websocket
@@ -292,6 +393,7 @@ const UI = (function () {
             });
         });
     }
+
     /***
      * Registers a listener on the invitation accept button.
      * @param {WebSocket} websocket
@@ -302,6 +404,7 @@ const UI = (function () {
             ListenerRegistry.acceptInvitationListener(websocket, invitationModal, lobbyId);
         });
     }
+
     /***
      * Register the listener on the kick modal.
      * @param {WebSocket} websocket
@@ -311,6 +414,62 @@ const UI = (function () {
             ListenerRegistry.kickModalShownListener(websocket);
         });
     }
+
+    /***
+     * Registers the listener on the start game button.
+     * @param {WebSocket} websocket
+     * @param {string} lobbyId
+     */
+    const registerStartBtnListener = function (websocket, lobbyId) {
+        document.getElementById("start-btn").addEventListener("click", function () {
+            ListenerRegistry.startBtnClickedListener(websocket, lobbyId);
+        });
+    }
+
+    /***
+     * Prepares and starts a game of 13TRIS.
+     * @param {WebSocket} websocket
+     * @param {string} lobbyId
+     */
+    const createGame = function (websocket, lobbyId) {
+        addCanvas();
+        loadGameEngineScript();
+        toggleKickButtons();
+        toggleScoreLabels();
+        changeCardColors("border-success");
+        hideStartBtn();
+        Client.startSendingGameInfo(websocket, lobbyId);
+    }
+
+    /***
+     * Updates the score on the card of a specific player.
+     * @param {string} playerName
+     * @param {number} score
+     */
+    const updateScore = function (playerName, score) {
+        let label = document.getElementById(`score-${playerName}`);
+        label.textContent = `Score: ${score}`;
+    }
+
+    /***
+     * Changes the border color of the card of the specified player to signal if he is still in the game or not.
+     * @param {string} playerName
+     * @param {string} status
+     */
+    const updatePlayerState = function (playerName, status) {
+        if (status === "Game over") {
+            let classAttr = "card mb-3 border-danger player-card";
+            document.getElementById(`player-card-${playerName}`).setAttribute("class", classAttr);
+        }
+    }
+
+    /***
+     * Toggles the hidden attribute of the start button.
+     */
+    const showStartBtn = function () {
+        document.getElementById("start-btn").removeAttribute("hidden");
+    }
+
     /***
      * Sleeps for the given time in seconds.
      * @param {number} seconds
@@ -345,6 +504,67 @@ const UI = (function () {
         playerDisplay.appendChild(col);
     }
 
+    /***
+     * Adds the canvas to the HTML where the game will be rendered.
+     */
+    function addCanvas() {
+        let content = "<canvas id='my_canvas' width='1000px' height='1000px'/>";
+        document.getElementById("content").innerHTML += content;
+    }
+
+    /***
+     * Adds the canvas engine as script tag to the end of the head tag and runs its startGame() function as soon as it
+     * is loaded.
+     */
+    function loadGameEngineScript() {
+        let canvasEngineScript = document.createElement("script");
+        canvasEngineScript.setAttribute("src", "/static/js/canvas_engine.js");
+        canvasEngineScript.setAttribute("type", "text/javascript");
+        document.getElementsByTagName("head")[0].appendChild(canvasEngineScript);
+        canvasEngineScript.onload = function () {
+            startGame();
+        }
+    }
+
+    /***
+     * Toggles all the kick buttons on the player cards.
+     */
+    function toggleKickButtons() {
+        let kickButtons = document.querySelectorAll("[data-kick]");
+        for (let i = 0; i < kickButtons.length; i++) {
+            kickButtons[i].toggleAttribute("hidden", true);
+        }
+    }
+
+    /***
+     * Toggles all the score labels on the player cards.
+     */
+    function toggleScoreLabels() {
+        let labels = document.getElementsByClassName("score-label");
+        for (let i = 0; i < labels.length; i++) {
+            labels[i].toggleAttribute("hidden", true);
+        }
+    }
+
+    /***
+     * Changes the border of all player cards to the specified color.
+     * @param {string} bootstrapBorderColor
+     */
+    function changeCardColors(bootstrapBorderColor) {
+        let playerCards = document.getElementsByClassName("player-card");
+        let classAttr = `card mb-3 ${bootstrapBorderColor} player-card`;
+        for (let i = 0; i < playerCards.length; i++) {
+            playerCards[i].setAttribute("class", classAttr);
+        }
+    }
+
+    /***
+     * Hides the start button for the player.
+     */
+    function hideStartBtn() {
+        document.getElementById("start-btn").setAttribute("hidden", "true");
+    }
+
     return {
         showInvitationModal: showInvitationModal,
         showKickModal: showKickModal,
@@ -352,6 +572,11 @@ const UI = (function () {
         registerInvitationButtonListeners: registerInvitationButtonListeners,
         registerAcceptInvitationButtonListener: registerAcceptInvitationButtonListener,
         registerKickModalListener: registerKickModalListener,
+        registerStartBtnListener: registerStartBtnListener,
+        createGame: createGame,
+        updateScore: updateScore,
+        updatePlayerState: updatePlayerState,
+        showStartBtn: showStartBtn,
         sleep: sleep,
     }
 })();
@@ -383,10 +608,14 @@ const ListenerRegistry = (function () {
                 Client.receiveKickEvent(websocket);
                 break;
             case "start":
-                Client.receiveStart();
+                Client.receiveStart(websocket, lobbyId);
+                break;
+            case "game-info":
+                Client.receiveGameInfo(data);
                 break;
         }
     }
+
     /***
      * Listens for a kick button being pressed on a player card.
      * @param {WebSocket} websocket
@@ -395,8 +624,9 @@ const ListenerRegistry = (function () {
      */
     const kickFromLobbyBtnListener = function (websocket, lobbyId, userName) {
         Client.sendLeaveEvent(websocket, lobbyId, userName, true, true);
-        window.location.replace(window.location.href.split("?")[0] + "?lobby=" + lobbyId);
+        window.location.replace(window.location.href.split("?")[0] + "?lobby=" + lobbyId + "&playing=false");
     }
+
     /***
      * Listens for a websocket connection to open.
      * @param {WebSocket} websocket
@@ -411,16 +641,22 @@ const ListenerRegistry = (function () {
             Client.sendLobbyRequestEvent(websocket, lobbyId);
         }
     }
+
     /**
      * Listens for the page to be reloaded.
      * @param {WebSocket} websocket
      * @param {string | null} lobbyId
+     * @param {string | null} playing
      */
-    const beforeunloadListener = function (websocket, lobbyId) {
+    const beforeunloadListener = function (websocket, lobbyId, playing) {
+        if (playing === "true") {
+            // prevent the user from leaving the page unintentionally
+        }
         if (Client.invitedTo() == null && lobbyId != null) {
             Client.sendLeaveEvent(websocket, lobbyId, user, false, false);
         }
     }
+
     /***
      * Listens for the invitation button being clicked.
      * @param {WebSocket} websocket
@@ -430,6 +666,7 @@ const ListenerRegistry = (function () {
     const sendInvitationListener = function (websocket, lobbyId, to) {
         Client.sendInviteEvent(websocket, lobbyId, to, user);
     }
+
     /***
      * Listens for the accept invitation button to be pressed.
      * @param {WebSocket} websocket
@@ -440,8 +677,9 @@ const ListenerRegistry = (function () {
         modal.hide();
         Client.sendJoinEvent(websocket, Client.invitedTo(), user);
         Client.sendLeaveEvent(websocket, lobbyId, user, true, false);
-        window.location.replace(window.location.href.split("?")[0] + "?lobby=" + Client.invitedTo());
+        window.location.replace(window.location.href.split("?")[0] + "?lobby=" + Client.invitedTo() + "&playing=false");
     }
+
     /***
      * Listener for showing the kick modal.
      * @param {WebSocket} websocket
@@ -449,6 +687,15 @@ const ListenerRegistry = (function () {
     const kickModalShownListener = function (websocket) {
         UI.sleep(5);
         Client.sendInitEvent(websocket, user);
+    }
+
+    /***
+     * Listener that sends a start event.
+     * @param {WebSocket} websocket
+     * @param {string} lobbyId
+     */
+    const startBtnClickedListener = function (websocket, lobbyId) {
+        Client.sendStartEvent(websocket, lobbyId);
     }
 
     return {
@@ -459,6 +706,7 @@ const ListenerRegistry = (function () {
         sendInvitationListener: sendInvitationListener,
         acceptInvitationListener: acceptInvitationListener,
         kickModalShownListener: kickModalShownListener,
+        startBtnClickedListener: startBtnClickedListener,
     }
 })();
 
@@ -466,10 +714,12 @@ const ListenerRegistry = (function () {
 window.addEventListener("DOMContentLoaded", function () {
     const websocket = new WebSocket("ws://localhost:8001");
     const lobbyId = new URLSearchParams(window.location.search).get("lobby");
+    const playing = new URLSearchParams(window.location.search).get("playing");
     window.addEventListener("beforeunload", function () {
-        ListenerRegistry.beforeunloadListener(websocket, lobbyId);
+        ListenerRegistry.beforeunloadListener(websocket, lobbyId, playing);
     });
     UI.registerInvitationButtonListeners(websocket, lobbyId);
+    UI.registerStartBtnListener(websocket, lobbyId);
     websocket.addEventListener("open", function () {
         ListenerRegistry.openConnectionListener(websocket, lobbyId);
     });
@@ -477,85 +727,4 @@ window.addEventListener("DOMContentLoaded", function () {
         ListenerRegistry.messageListener(event, websocket, lobbyId);
     });
 });
-
-
-//****************************
-//old
-//****************************
-
-// send start event that gets broadcast to all websocket connections in the lobby
-function sendStartEvent(websocket, lobbyID) {
-    document.getElementById("start-btn").addEventListener("click", () => {
-        websocket.send(JSON.stringify({"type": "start", "user": user, "lobby": lobbyID}));
-    });
-}
-
-function createBoard(websocket, lobbyID) {
-    // 1. add canvas
-    let content = "<canvas id=\"my_canvas\" width=\"1000px\" height=\"1000px\" />"
-    document.getElementById("content").innerHTML += content;
-
-    // 2. load game engine script
-    let canvasEngineScript = document.createElement("script");
-    canvasEngineScript.setAttribute("src", "/static/js/canvas_engine.js");
-    canvasEngineScript.setAttribute("type", "text/javascript");
-    document.getElementsByTagName("head")[0].appendChild(canvasEngineScript);
-
-    // 3. invoke start game function
-    canvasEngineScript.onload = () => {
-        startGame();
-    }
-
-    // 4. other changes to the UI
-    document.getElementById("start-btn").setAttribute("hidden", "true");
-    toggleKickButtons();
-    toggleScoreLabels();
-    changeCardColors();
-
-    // 5. start sending state
-    const interval = setInterval(() => {
-        const gameInfo = {
-            "type": "game-info",
-            "player": user,
-            "lobby": lobbyID,
-            "status": game.status,
-            "score": game.score,
-        }
-        //websocket.send(JSON.stringify(gameInfo));
-        if (game.status === "Game over") {
-            clearInterval(interval);
-        }
-    }, Math.random() * 2000);
-}
-
-function toggleKickButtons() {
-    let kickButtons = document.querySelectorAll("[data-kick]");
-    for (let i = 0; i < kickButtons.length; i++) {
-        kickButtons[i].toggleAttribute("hidden", true);
-    }
-}
-
-function toggleScoreLabels() {
-    let labels = document.getElementsByClassName("score-label");
-    for (let i = 0; i < labels.length; i++) {
-        labels[i].toggleAttribute("hidden");
-    }
-}
-
-function updateScore(playerName, score) {
-    let label = document.getElementById(`score-${playerName}`);
-    label.textContent = `Score: ${score}`;
-}
-
-function changeCardColors() {
-    let playerCards = document.getElementsByClassName("player-card");
-    for (let i = 0; i < playerCards.length; i++) {
-        playerCards[i].setAttribute("class", "card mb-3 border-success player-card");
-    }
-}
-
-function updatePlayerState(playerName, status) {
-    if (status === "Game over") {
-        document.getElementById(`player-card-${playerName}`).setAttribute("class", "card mb-3 border-danger player-card");
-    }
-}
+// END
