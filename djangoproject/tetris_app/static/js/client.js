@@ -234,7 +234,14 @@ const Client = (function () {
         receiveLobbyInfo: receiveLobbyInfo,
         receiveKickEvent: receiveKickEvent,
         receiveStart: receiveStart,
-        invitedTo: invitedTo,
+        /***
+         * Setter/getter for 'invitedTo' depending on if an argument is given or not.
+         * @param {null | string=} value
+         * @returns {string | null}
+         */
+        invitedTo: function (value) {
+            return arguments.length ? invitedTo = value : invitedTo;
+        },
     }
 })();
 
@@ -301,7 +308,7 @@ const UI = (function () {
      */
     const registerKickModalListener = function (websocket) {
         kickModal.addEventListener("shown.bs.modal", function () {
-           ListenerRegistry.kickModalShownListener(websocket);
+            ListenerRegistry.kickModalShownListener(websocket);
         });
     }
     /***
@@ -399,7 +406,7 @@ const ListenerRegistry = (function () {
         if (lobbyId == null) {
             Client.sendInitEvent(websocket, user);
         } else {
-            Client.invitedTo = null;
+            Client.invitedTo(null);
             Client.sendUpdateConnectionEvent(websocket, user);
             Client.sendLobbyRequestEvent(websocket, lobbyId);
         }
@@ -410,7 +417,7 @@ const ListenerRegistry = (function () {
      * @param {string | null} lobbyId
      */
     const beforeunloadListener = function (websocket, lobbyId) {
-        if (Client.invitedTo == null && lobbyId != null) {
+        if (Client.invitedTo() == null && lobbyId != null) {
             Client.sendLeaveEvent(websocket, lobbyId, user, false, false);
         }
     }
@@ -426,14 +433,14 @@ const ListenerRegistry = (function () {
     /***
      * Listens for the accept invitation button to be pressed.
      * @param {WebSocket} websocket
-     * @param modal // TODO
+     * @param {bootstrap.Modal} modal
      * @param {string} lobbyId
      */
     const acceptInvitationListener = function (websocket, modal, lobbyId) {
         modal.hide();
-        Client.sendJoinEvent(websocket, Client.invitedTo, user);
+        Client.sendJoinEvent(websocket, Client.invitedTo(), user);
         Client.sendLeaveEvent(websocket, lobbyId, user, true, false);
-        window.location.replace(window.location.href.split("?")[0] + "?lobby=" + Client.invitedTo);
+        window.location.replace(window.location.href.split("?")[0] + "?lobby=" + Client.invitedTo());
     }
     /***
      * Listener for showing the kick modal.
@@ -475,49 +482,6 @@ window.addEventListener("DOMContentLoaded", function () {
 //****************************
 //old
 //****************************
-
-
-function receive(websocket, modal, lobby_id) {
-    websocket.addEventListener("message", ({data}) => {
-        const event = JSON.parse(data);
-        switch (event.type) {
-            case "invite":
-                if (user === event.to) {
-                    let text = "Do you want to accept the invitation from " + event.from + " and join the lobby " +
-                        event.lobby + "?";
-                    document.querySelector("#modal-text-content").textContent = text;
-                    modal.show();
-                    INVITED_TO = event.lobby;
-                }
-                break;
-            case "join":
-                requestLobbyInfo(websocket, lobby_id);
-                break;
-            case "init":
-                window.location.replace(window.location.href.split("?")[0] + "?lobby=" + event.lobby_id);
-                break;
-            case "lobby-info":
-                updateUI(event.lobby, event.admin);
-                registerListeners(websocket, lobby_id);
-                break;
-            case "kick":
-                let kickModal = new bootstrap.Modal(document.getElementById("kick-modal"));
-                kickModalEvent(websocket);
-                kickModal.show();
-                break;
-            case "start":
-                // render the boards for all players
-                createBoard(websocket, lobby_id);
-                break;
-            case "game-info":
-                updateScore(event.player, event.score);
-                updatePlayerState(event.player, event.status);
-                break;
-            default:
-                break;
-        }
-    });
-}
 
 // send start event that gets broadcast to all websocket connections in the lobby
 function sendStartEvent(websocket, lobbyID) {
