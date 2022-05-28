@@ -520,7 +520,8 @@ const UI = (function () {
         let canvasEngineScript = document.createElement("script");
         canvasEngineScript.setAttribute("src", "/static/js/canvas_engine.js");
         canvasEngineScript.setAttribute("type", "text/javascript");
-        document.getElementsByTagName("head")[0].appendChild(canvasEngineScript);
+        let head = document.getElementsByTagName("head")[0];
+        head.appendChild(canvasEngineScript);
         canvasEngineScript.onload = function () {
             startGame();
         }
@@ -542,7 +543,7 @@ const UI = (function () {
     function toggleScoreLabels() {
         let labels = document.getElementsByClassName("score-label");
         for (let i = 0; i < labels.length; i++) {
-            labels[i].toggleAttribute("hidden", true);
+            labels[i].toggleAttribute("hidden");
         }
     }
 
