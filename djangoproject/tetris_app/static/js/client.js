@@ -133,6 +133,7 @@ const ClientEvents = (function () {
 // Represents a client who can communicate with a websocket server.
 const Client = (function () {
     let lastInvitedTo = null;
+    let playing = false;
 
     /***
      * Sends an 'ClientEvents.initEvent' to the server at the specified 'websocket' connection.
@@ -268,9 +269,16 @@ const Client = (function () {
      * @param {string} lobbyId
      */
     const receiveLobbyInfo = function (data, websocket, lobbyId) {
-        UI.createPlayerCards(data["lobby"], data["admin"]);
-        if (data["lobby"].length > 1 && user === data["admin"]) UI.showStartBtn();
-        registerKickBtnListeners(websocket, lobbyId);
+        if (playing === true) {
+            // TODO
+            // player reloaded the page during the game
+            // leave current lobby and create a new one
+            Client.sendInitEvent(websocket, user);
+        } else {
+            UI.createPlayerCards(data["lobby"], data["admin"]);
+            if (data["lobby"].length > 1 && user === data["admin"]) UI.showStartBtn();
+            registerKickBtnListeners(websocket, lobbyId);
+        }
     }
 
     /***
@@ -288,6 +296,8 @@ const Client = (function () {
      * @param {string} lobbyId
      */
     const receiveStart = function (websocket, lobbyId) {
+        let url = window.location.href.replace("playing=false", "playing=true");
+        window.history.pushState("", "13TRIS", url);
         UI.createGame(websocket, lobbyId);
     }
 
@@ -342,6 +352,14 @@ const Client = (function () {
                 lastInvitedTo = value;
             }
             return lastInvitedTo;
+        },
+        /***
+         * Setter/getter for 'playing' depending on if an argument is given or not.
+         * @param {null | boolean=} value
+         * @returns {boolean | null}
+         */
+        playing: function (value) {
+            return arguments.length ? playing = value : playing;
         },
     }
 })();
@@ -413,7 +431,7 @@ const UI = (function () {
      * @param {WebSocket} websocket
      */
     const registerKickModalListener = function (websocket) {
-        kickModal.addEventListener("shown.bs.modal", function () {
+        document.getElementById("kick-modal").addEventListener("shown.bs.modal", function () {
             ListenerRegistry.kickModalShownListener(websocket);
         });
     }
@@ -451,7 +469,7 @@ const UI = (function () {
      */
     const updateScore = function (playerName, score) {
         let label = document.getElementById(`score-${playerName}`);
-        label.textContent = `Score: ${score}`;
+        if (label) label.textContent = `Score: ${score}`;
     }
 
     /***
@@ -650,13 +668,14 @@ const ListenerRegistry = (function () {
      * Listens for the page to be reloaded.
      * @param {WebSocket} websocket
      * @param {string | null} lobbyId
-     * @param {string | null} playing
+     * @param {BeforeUnloadEvent} event
+     * @param {boolean} playing
      */
-    const beforeunloadListener = function (websocket, lobbyId, playing) {
-        if (playing === "true") {
-            // prevent the user from leaving the page unintentionally
-        }
-        if (Client.invitedTo() == null && lobbyId != null) {
+    const beforeunloadListener = function (websocket, lobbyId, event, playing) {
+        if (playing === true) {
+            event.preventDefault(); // TODO
+            return "Are you sure you want to leave the page?";
+        } else if (Client.invitedTo() == null && lobbyId != null) {
             Client.sendLeaveEvent(websocket, lobbyId, user, false, false);
         }
     }
@@ -674,7 +693,7 @@ const ListenerRegistry = (function () {
     /***
      * Listens for the accept invitation button to be pressed.
      * @param {WebSocket} websocket
-     * @param {bootstrap.Modal} modal
+     * @param {HTMLElement} modal
      * @param {string} lobbyId
      */
     const acceptInvitationListener = function (websocket, modal, lobbyId) {
@@ -719,8 +738,9 @@ window.addEventListener("DOMContentLoaded", function () {
     const websocket = new WebSocket("ws://localhost:8001");
     const lobbyId = new URLSearchParams(window.location.search).get("lobby");
     const playing = new URLSearchParams(window.location.search).get("playing");
-    window.addEventListener("beforeunload", function () {
-        ListenerRegistry.beforeunloadListener(websocket, lobbyId, playing);
+    Client.playing(playing === "true");
+    window.addEventListener("beforeunload", function (event) {
+        ListenerRegistry.beforeunloadListener(websocket, lobbyId, event, Client.playing());
     });
     UI.registerInvitationButtonListeners(websocket, lobbyId);
     UI.registerStartBtnListener(websocket, lobbyId);
