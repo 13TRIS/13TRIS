@@ -1,4 +1,3 @@
-
 let isThemeDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 let last = 0;
 let fps = 30;
@@ -18,54 +17,54 @@ const blocks = [// l
         pattern: [[0, 2, 0], [0, 2, 0], [0, 2, 2]], special: null
     }, {
         pattern: // t
-            [[0, 0, 0], [3, 3, 3], [0, 3, 0]], special: null
+                [[0, 0, 0], [3, 3, 3], [0, 3, 0]], special: null
     }, {
         pattern: // s
-            [[0, 4, 4], [4, 4, 0], [0, 0, 0]], special: null
+                [[0, 4, 4], [4, 4, 0], [0, 0, 0]], special: null
     }, {
         pattern: // z
-            [[5, 5, 0], [0, 5, 5], [0, 0, 0]], special: null
+                [[5, 5, 0], [0, 5, 5], [0, 0, 0]], special: null
     }, {
         pattern: // o
-            [[6, 6], [6, 6]], special: null
+                [[6, 6], [6, 6]], special: null
     }, {
         pattern: // i
-            [[0, 0, 7, 0], [0, 0, 7, 0], [0, 0, 7, 0], [0, 0, 7, 0]], special: "twist"
+                [[0, 0, 7, 0], [0, 0, 7, 0], [0, 0, 7, 0], [0, 0, 7, 0]], special: "twist"
     }
 ];
 
 const blocks_special = [
     {
         pattern: // bomb
-            [[8, 6], [6, 8]],
+                [[8, 6], [6, 8]],
         special: "bomb"
     },
     {
         pattern: // 13tris block
-            [
-                [0, 6, 1, 1, 0],
-                [6, 6, 0, 1, 0],
-                [0, 6, 6, 8, 0],
-                [0, 4, 0, 8, 0],
-                [0, 4, 8, 8, 0]
-            ],
+                [
+                    [0, 6, 1, 1, 0],
+                    [6, 6, 0, 1, 0],
+                    [0, 6, 6, 8, 0],
+                    [0, 4, 0, 8, 0],
+                    [0, 4, 8, 8, 0]
+                ],
         special: null
     },
     {
         pattern: // amogus
-            [
-                [0, 3, 3, 3],
-                [3, 3, 4, 4],
-                [3, 3, 3, 3],
-                [0, 3, 0, 3]
-            ],
+                [
+                    [0, 3, 3, 3],
+                    [3, 3, 4, 4],
+                    [3, 3, 3, 3],
+                    [0, 3, 0, 3]
+                ],
         special: "amogus"
     },
     {
         pattern: // line bomb
-            [
-                [20],
-            ],
+                [
+                    [20],
+                ],
         special: "cookie"
     }
 ];
@@ -109,18 +108,45 @@ let game = (() => {
         [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
         [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
     ];
+
+    const _pauseBoard = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 7, 8, 0, 0, 3, 0, 2, 0, 3, 3, 3],
+        [0, 7, 0, 4, 0, 3, 0, 2, 0, 6, 6, 0],
+        [0, 7, 4, 0, 0, 3, 2, 2, 0, 7, 0, 0],
+        [0, 7, 0, 5, 5, 0, 0, 0, 0, 7, 7, 7],
+        [0, 0, 0, 5, 0, 1, 0, 8, 8, 0, 0, 0],
+        [0, 0, 0, 6, 1, 1, 0, 8, 0, 0, 0, 0],
+        [0, 0, 0, 6, 0, 1, 0, 0, 5, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 5, 5, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+
     let _special,
-        _level,
-        _score,
-        _highScore,
-        _name,
-        _status = Status.ready,
-        _inverted,
-        _currentBlock,
-        _nextBlock,
-        _holoBlock;
-    
+            _level,
+            _score,
+            _highScore,
+            _name,
+            _status = Status.ready,
+            _inverted,
+            _currentBlock,
+            _nextBlock,
+            _holoBlock;
+
     const board = () => _board;
+    const pauseBoard = () => _pauseBoard;
     const level = () => _level;
     const status = () => _status;
     const currentBlock = () => _currentBlock;
@@ -134,6 +160,8 @@ let game = (() => {
 
 
     const moveDown = () => {
+        if (_status !== Status.playing) return false;
+
         if (checkLegality(1)) {
             _currentBlock.x++;
             return true;
@@ -151,8 +179,8 @@ let game = (() => {
     const moveSideways = (dir) => {
         // Move the block sideways, either left or
         // move RIGHT if 4, else move LEFT
-        if (_status === status.playing && checkLegality(dir)) {
-            const tmp = (dir === 4) ? 1 : -1;
+        if (_status === Status.playing && checkLegality(dir)) {
+            const tmp = (dir === 4 ^ game.inverted().left > 0) ? 1 : -1;
             _currentBlock.y += tmp;
             updateHolo()
         }
@@ -192,7 +220,7 @@ let game = (() => {
         for (let i = 0; i < newPattern.length; i++)
             for (let j = 0; j < newPattern[i].length; j++)
                 if (_board[block.x + i + mov[0]][block.y + j + mov[1]] !== 0
-                    && newPattern[i][j] !== 0)
+                        && newPattern[i][j] !== 0)
                     return false;
         return true;
     } // done
@@ -217,6 +245,8 @@ let game = (() => {
     const addScore = points => _score += Math.max(points, 0); // done
 
     const rotate = () => {
+        if( _status !== Status.playing) return;
+
         if (checkLegality(2)) {
             _currentBlock.pattern = rotateMatrix(_currentBlock.pattern);
             _holoBlock.pattern = rotateMatrix(_holoBlock.pattern);
@@ -246,6 +276,7 @@ let game = (() => {
 
     const specialMove = () => {
         if (gamemode_param !== "13tris") return;
+
         switch (_currentBlock.special) {
             case "bomb":
                 detonateBomb(_currentBlock.x + 1, _currentBlock.y + 1)
@@ -305,6 +336,12 @@ let game = (() => {
             total: units,
             left: units
         };
+        const timer = setInterval(() => {
+            if (_inverted.left <= 0) clearInterval(timer);
+            console.log("hello");
+            _inverted.left--;
+            render.main();
+        }, 50)
     } // done
 
     const cookieBomb = (x, y) => {
@@ -319,9 +356,13 @@ let game = (() => {
     const generateNextBlock = () => {
         if (gamemode_param === "13tris" && _special === 12) {
             _nextBlock = randomElementFromArray(blocks_special);
+            _nextBlock.x = 18;
+            _nextBlock.y = 3;
             _special = 0;
         } else {
             _nextBlock = randomElementFromArray(blocks);
+            _nextBlock.x = 18;
+            _nextBlock.y = 3;
             _special++;
         }
     } // done
@@ -372,7 +413,7 @@ let game = (() => {
         if (_status !== Status.ready) return;
 
         last = 0;
-        _status = status.playing;
+        _status = Status.playing;
         _board = [
             [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
             [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
@@ -415,17 +456,19 @@ let game = (() => {
     } // done
 
     const pauseGame = () => {
-        if (_status === status.pause)
-            _status = (_board[2][0] === 6) ? status.ready : status.playing;
-        else if (_status !== status.over)
-            _status = status.pause;
+        if (_status === Status.pause)
+            _status = (_board[2][0] === 6) ? Status.ready : Status.playing;
+        else if (_status !== Status.over)
+            _status = Status.pause;
 
         render.main();
     } // done
 
     const endGame = () => {
         last = Number.MAX_SAFE_INTEGER;
-        _status = status.over;
+        _status = Status.over;
+
+        render.drawEnd();
 
         let data = new FormData();
         data.append('score', _score);
@@ -437,17 +480,14 @@ let game = (() => {
             body: data,
             credentials: 'same-origin',
         }).then(res =>
-            res.json()).then(d => {
+                res.json()).then(d => {
             alert(d.score_added + ' = ' + gamemode_param)
         })
     } // done
 
     const update = () => {
-        if (_status !== status.playing)
+        if (_status !== Status.playing)
             return;
-
-        if (_inverted.left > 0)
-            _inverted.left--;
 
         moveDown(_currentBlock);
 
@@ -467,6 +507,7 @@ let game = (() => {
         level: level,
         status: status,
         board: board,
+        pauseBoard: pauseBoard,
         currentBlock: currentBlock,
         holoBlock: holoBlock,
         nextBlock: nextBlock,
@@ -498,44 +539,147 @@ const render = (() => {
             for (let j = 0; j < b[i].length; j++)
                 drawBlock(j + offset.x, i + offset.y, getColour(b[i][j]));
     }
-    
+
     const drawPattern = (b, holo = false) => {
-        if (!b.pattern) return;
+        if (!b) return;
 
         for (let i = 0; i < b.pattern.length; i++)
             for (let j = 0; j < b.pattern[i].length; j++)
                 if (b.pattern[i][j] !== 0)
                     drawBlock(
-                        (b.y + j + offset.x),
-                        (b.x + i + offset.y),
-                        getColour(b.pattern[i][j], holo ? (isThemeDark ? -80 : 80) : 0),
-                        holo
+                            (b.y + j + offset.x),
+                            (b.x + i + offset.y),
+                            getColour(b.pattern[i][j], holo ? (isThemeDark ? -80 : 80) : 0),
+                            holo
                     );
     }
 
-    const text = () => {
-        ctx.fillStyle = getColour(11);
-        ctx.font = (blockSize / 10 * 12) + 'px segoe ui';
+    const drawBlockPreview = (b = null) => {
+        if (!b) return;
 
-        if (game.status() === Status.ready) {
-            console.log("ok")
-            ctx.fillText(
-                'START',
-                (offset.x + game.board()[0].length + 1) * blockSize,
-                11 * blockSize
-            );
-        } else {
-            ctx.fillText(
-                'Score: ' + game.score(),
-                (offset.x + game.board()[0].length + 1) * blockSize,
-                9 * blockSize
-            );
-            ctx.fillText(
-                game.name(),
-                (offset.x + game.board()[0].length + 1) * blockSize,
-                11 * blockSize
+        for (let i = 0; i < 6; i++)
+            for (let j = 0; j < 6; j++)
+                drawBlock(17 + i, 2 + j, (i % 5 === 0 || j % 5 === 0) ? 9 : 0);
+
+        for (let i = 0; i < b.pattern.length; i++) {
+            for (let j = 0; j < b.pattern[i].length; j++) {
+                if (b.pattern[i][j] !== 0)
+                    drawBlock(18 + j, 3 + i, b.pattern[i][j]);
+            }
+        }
+
+    }
+
+    const drawTimer = () => {
+        if (game.inverted().left <= 0) return;
+
+        const percentage = Math.floor((game.inverted().left / game.inverted().total) * 52);
+        const fields = [
+            [0, 0],
+            [0, 1],
+            [0, 2],
+            [0, 3],
+            [0, 4],
+            [0, 5],
+            [0, 6],
+            [0, 7],
+            [0, 8],
+            [0, 9],
+            [0, 10],
+            [0, 11],
+            [0, 12],
+            [0, 13],
+            [0, 14],
+            [0, 15],
+            [0, 16],
+            [0, 17],
+            [0, 18],
+            [0, 19],
+            [0, 20],
+            [1, 20],
+            [2, 20],
+            [3, 20],
+            [4, 20],
+            [5, 20],
+            [6, 20],
+            [7, 20],
+            [8, 20],
+            [9, 20],
+            [10, 20],
+            [11, 20],
+            [11, 19],
+            [11, 18],
+            [11, 17],
+            [11, 16],
+            [11, 15],
+            [11, 14],
+            [11, 13],
+            [11, 12],
+            [11, 11],
+            [11, 10],
+            [11, 9],
+            [11, 8],
+            [11, 7],
+            [11, 6],
+            [11, 5],
+            [11, 4],
+            [11, 3],
+            [11, 2],
+            [11, 1],
+            [11, 0],
+        ]
+        for (let i = 0; i < percentage; i++) {
+            drawBlock(
+                    fields[i][0] + offset.x,
+                    fields[i][1] + offset.y,
+                    '#d23232'
             );
         }
+
+    }
+
+    const startText = () => {
+        ctx.fillStyle = getColour(11);
+        ctx.font = (blockSize) + 'px segoe ui';
+        ctx.fillText(
+                'START',
+                (offset.x + game.board()[0].length / 2 - 1.8) * blockSize,
+                17.5 * blockSize
+        );
+    }
+
+    const scoreText = () => {
+        ctx.fillStyle = getColour(11);
+        ctx.font = (blockSize) + 'px segoe ui';
+        ctx.fillText(
+                'Score: ' + game.score(),
+                (offset.x + game.board()[0].length + 2) * blockSize,
+                10 * blockSize
+        );
+        ctx.fillText(
+                game.name(),
+                (offset.x + game.board()[0].length + 2) * blockSize,
+                12 * blockSize
+        );
+
+    }
+
+    const zoomButtons = () => {
+        drawBlock(1, 3, getColour(11));
+        ctx.fillStyle = getColour(9);
+        ctx.fillRect(1.4 * blockSize, 3.2 * blockSize, blockSize / 5, blockSize * 3 / 5);
+        ctx.fillRect(1.2 * blockSize, 3.4 * blockSize, blockSize * 3 / 5, blockSize / 5);
+
+        drawBlock(1, 4, getColour(11));
+        ctx.fillStyle = getColour(9);
+        ctx.fillRect(1.2 * blockSize, 4.4 * blockSize, blockSize * 3 / 5, blockSize / 5);
+    }
+
+    const settingsButton = () => {
+        drawBlock(1, 6, getColour(11));
+        ctx.fillStyle = getColour(9);
+        ctx.font = (blockSize) + 'px segoe ui';
+        ctx.fillText('?', 1.2 * blockSize, 6.9 * blockSize);
     }
 
     const calculateBoard = () => {
@@ -563,7 +707,7 @@ const render = (() => {
                         result[18 + j][3 + i] = n.pattern[i][j];
         }
 
-        if(c) {
+        if (c) {
             for (let i = 0; i < c.pattern.length; i++)
                 for (let j = 0; j < c.pattern[i].length; j++)
                     if (c.pattern[i][j] !== 0)
@@ -685,21 +829,23 @@ const render = (() => {
             ctx.lineTo(x + blockSize, y + blockSize);
             ctx.lineTo(x, y + blockSize);
             ctx.fill();
-            ctx.fillStyle = hexColor;
+            ctx.fillStyle = getColour(hexColor);
             ctx.fillRect(x + 3, y + 3, blockSize - 6, blockSize - 6);
         }
 
         drawExtras(hexColor, 0, x, y);
     } // done
 
-    function drawExtras(hexColor, strength, x, y) {
+    const drawExtras = (hexColor, strength, x, y) => {
+        hexColor = getColour(hexColor);
+
         switch (hexColor) {
             case '#653600':
-                ctx.fillStyle = getColour(getColour(5), strength);
+                ctx.fillStyle = getColour(5, strength);
                 ctx.fillRect(x + blockSize * 0.2, y + blockSize * 0.25, blockSize / 5, blockSize / 5);
-                ctx.fillStyle = getColour(getColour(6), strength);
+                ctx.fillStyle = getColour(6, strength);
                 ctx.fillRect(x + blockSize * 0.4, y + blockSize * 0.6, blockSize / 5, blockSize / 5);
-                ctx.fillStyle = getColour(getColour(7), strength);
+                ctx.fillStyle = getColour(7, strength);
                 ctx.fillRect(x + blockSize * 0.6, y + blockSize * 0.3, blockSize / 5, blockSize / 5);
                 break
             default:
@@ -707,13 +853,38 @@ const render = (() => {
         }
     } // done
 
+    const drawEnd = () => {
+        let i = 0;
+        const endScreen = setInterval(() => {
+            for (let j = 0; j < game.board()[i].length; j++)
+                drawBlock(j + offset.x, i + offset.y, getColour(99), true);
+
+            i++;
+
+            if (i === game.board().length - 1)
+                clearInterval(endScreen);
+        }, 75);
+
+        let ii = 0;
+        const endScreenBlockpreview = setInterval(() => {
+            for (let j = 0; j < 6; j++)
+                drawBlock(17 + j, 2 + ii, getColour(99), true);
+
+            ii++;
+
+            if (ii === 6)
+                clearInterval(endScreenBlockpreview);
+        }, 75);
+    }
+
     const offset = {
         x: 3,
         y: 2
     }; // done
 
     const scale = (up) => {
-        if (blockSize <= 10 && !up) return;
+        if (blockSize <= 10 && !up || game.status() === Status.over) return;
+
         if (up) {
             blockSize += 5;
             canvas.height += 125;
@@ -739,10 +910,6 @@ const render = (() => {
             y: (e.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height
         };
 
-        console.log(Math.round(cursor.x / blockSize) + " -- " + Math.round(cursor.y / blockSize));
-        // console.log(cursor.x + " -- " + cursor.y);
-        console.log(clickInBlock(7, 16, 4, 2, cursor.x, cursor.y));
-
         if (clickInBlock(7, 16, 4, 2, cursor.x, cursor.y)) game.startGame();
         if (clickInBlock(1, 3, 1, 1, cursor.x, cursor.y)) scale(true);
         if (clickInBlock(1, 4, 1, 1, cursor.x, cursor.y)) scale(false);
@@ -753,14 +920,29 @@ const render = (() => {
 
     const main = () => {
         console.log("Now")
-        background();
-        drawBoard(game.board());
-        drawPattern(game.holoBlock(), true);
-        drawPattern(game.currentBlock());
-        text();
-        // TODO : zoom in
-        // TODO : zoom out
-        // TODO : zoom settings
+        if(game.status() !== Status.over) {
+            background();
+            zoomButtons();
+            settingsButton();
+        }
+
+        if (game.status() === Status.ready) {
+            drawBoard(game.board());
+            startText();
+        }
+        if (game.status() === Status.playing) {
+            drawBoard(game.board());
+            drawPattern(game.holoBlock(), true);
+            drawPattern(game.currentBlock());
+            drawBlockPreview(game.nextBlock());
+            drawTimer();
+            scoreText();
+        }
+
+        if (game.status() === Status.pause) {
+            drawBoard(game.pauseBoard());
+        }
+
         // TODO : zoom timer
         // TODO : zoom special block show off
     }
@@ -769,6 +951,8 @@ const render = (() => {
         main: main,
         scale: scale,
         drawBlock: drawBlock,
+        drawTimer: drawTimer,
+        drawEnd: drawEnd,
     }
 
 })();
@@ -837,7 +1021,6 @@ setInterval(() => {
     isThemeDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     game.update();
 }, 500); // done
-
 
 
 render.main();
