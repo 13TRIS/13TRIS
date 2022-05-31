@@ -272,3 +272,4 @@ thumb
 sketch
 .idea
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,react,django
+/djangoproject/tetris_app/migrations/
