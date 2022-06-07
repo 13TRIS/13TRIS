@@ -132,7 +132,7 @@ const ClientEvents = (function () {
 
 // Represents a client who can communicate with a websocket server.
 const Client = (function () {
-    let invitedTo = null;
+    let lastInvitedTo = null;
 
     /***
      * Sends an 'ClientEvents.initEvent' to the server at the specified 'websocket' connection.
@@ -246,7 +246,7 @@ const Client = (function () {
         if (user === data["to"]) {
             let text = `Do you want to accept the invitation from ${data["from"]} and join the lobby ${data["lobby"]}?`
             UI.showInvitationModal(text);
-            invitedTo = data["lobby"];
+            lastInvitedTo = data["lobby"];
             UI.registerAcceptInvitationButtonListener(websocket, lobbyId);
         }
     }
@@ -307,9 +307,9 @@ const Client = (function () {
      */
     function registerKickBtnListeners(websocket, lobbyId) {
         let kickButtons = document.querySelectorAll("button[data-kick]");
-        for (let i = 0; i < kickButtons.length; i++) {
-            kickButtons[i].addEventListener("click", function () {
-                let userName = kickButtons[i].getAttribute("id").split("-")[1];
+        for (const element of kickButtons) {
+            element.addEventListener("click", function () {
+                let userName = element.getAttribute("id").split("-")[1];
                 ListenerRegistry.kickFromLobbyBtnListener(websocket, lobbyId, userName);
             });
         }
@@ -338,7 +338,10 @@ const Client = (function () {
          * @returns {string | null}
          */
         invitedTo: function (value) {
-            return arguments.length ? invitedTo = value : invitedTo;
+            if (arguments.length) {
+                lastInvitedTo = value;
+            }
+            return lastInvitedTo;
         },
     }
 })();
@@ -372,11 +375,11 @@ const UI = (function () {
     const createPlayerCards = function (lobby, admin) {
         let playerDisplay = document.getElementById("invited-players");
         playerDisplay.innerHTML = "";
-        for (let i = 0; i < lobby.length; i++) {
-            if (admin !== lobby[i]) {
-                createCard(lobby[i], "border-dark", true, playerDisplay);
+        for (const element of lobby) {
+            if (admin !== element) {
+                createCard(element, "border-dark", true, playerDisplay);
             } else {
-                createCard(lobby[i], "border-danger", false, playerDisplay);
+                createCard(element, "border-danger", false, playerDisplay);
             }
         }
     }
@@ -532,8 +535,8 @@ const UI = (function () {
      */
     function toggleKickButtons() {
         let kickButtons = document.querySelectorAll("[data-kick]");
-        for (let i = 0; i < kickButtons.length; i++) {
-            kickButtons[i].toggleAttribute("hidden", true);
+        for (const element of kickButtons) {
+            element.toggleAttribute("hidden", true);
         }
     }
 
@@ -542,8 +545,8 @@ const UI = (function () {
      */
     function toggleScoreLabels() {
         let labels = document.getElementsByClassName("score-label");
-        for (let i = 0; i < labels.length; i++) {
-            labels[i].toggleAttribute("hidden");
+        for (const element of labels) {
+            element.toggleAttribute("hidden");
         }
     }
 
@@ -554,8 +557,8 @@ const UI = (function () {
     function changeCardColors(bootstrapBorderColor) {
         let playerCards = document.getElementsByClassName("player-card");
         let classAttr = `card mb-3 ${bootstrapBorderColor} player-card`;
-        for (let i = 0; i < playerCards.length; i++) {
-            playerCards[i].setAttribute("class", classAttr);
+        for (const element of playerCards) {
+            element.setAttribute("class", classAttr);
         }
     }
 
