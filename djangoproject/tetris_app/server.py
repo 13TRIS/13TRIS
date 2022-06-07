@@ -6,7 +6,6 @@ import time
 from StoppableThread import StoppableThread
 
 import websockets
-from websockets.exceptions import ConnectionClosedOK
 
 CONNECTED = {}
 LOBBIES = {}
@@ -25,7 +24,7 @@ async def handler(websocket):
             elif event["type"] == "join":
                 await receive_join(event)
             elif event["type"] == "leave":
-                thread = StoppableThread(target=leave_lobby, args=event)
+                thread = StoppableThread(target=leave_lobby, args=(event,))
                 THREADS[event["user"]] = thread
                 thread.start()
             elif event["type"] == "update":
@@ -99,16 +98,16 @@ def leave_lobby(event):
             new = secrets.token_urlsafe(12)
             user_iter = {CONNECTED[event["user"]]}
             websockets.broadcast(user_iter, json.dumps(kick_event(event["lobby"], new)))
-    if not event["instant"]:
-        del THREADS[event["user"]]
 
-    if admin == event["user"] and len(get_websockets_in_lobby(event["lobby"])) > 0:
+    if admin == event["user"] and event["lobby"] in LOBBIES:
         lobby_id = secrets.token_urlsafe(12)
         rnd_user = lobby.pop()
         lobby.add(rnd_user)
         LOBBIES[lobby_id] = lobby, rnd_user
         websockets.broadcast(get_websockets_in_lobby(event["lobby"]), json.dumps(init_event(lobby_id)))
         del LOBBIES[event["lobby"]]
+
+    del THREADS[event["user"]]
 
 
 async def send_lobby_info(websocket, event):
