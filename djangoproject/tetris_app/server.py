@@ -19,26 +19,17 @@ async def handler(websocket):
             print(message)
             event = json.loads(message)
             if event["type"] == "invite":
-                if event["to"] in CONNECTED:
-                    await CONNECTED[event["to"]].send(message)
+                await receive_invite(event, message)
             elif event["type"] == "init":
                 await receive_init(websocket, event)
             elif event["type"] == "join":
                 await receive_join(event)
             elif event["type"] == "leave":
-                if event["instant"] is True:
-                    kick = False
-                    if event["kick"] is True:
-                        kick = True
-                    leave_lobby(event, True, kick)
-                    return
-                thread = StoppableThread(target=leave_lobby, args=(event, False, False))
+                thread = StoppableThread(target=leave_lobby, args=event)
                 THREADS[event["user"]] = thread
                 thread.start()
             elif event["type"] == "update":
-                if event["user"] in THREADS:
-                    THREADS[event["user"]].stop()
-                CONNECTED[event["user"]] = websocket
+                receive_update(event, websocket)
             elif event["type"] == "request":
                 await send_lobby_info(websocket, event)
             elif event["type"] == "game-info":
@@ -49,13 +40,21 @@ async def handler(websocket):
             print("lobbies: " + LOBBIES.__str__())
             print("connections: " + CONNECTED.__str__())
             print("threads: " + THREADS.__str__())
-    except ConnectionClosedOK:
-        pass
     finally:
-        for key in list(CONNECTED.keys()):
-            if CONNECTED[key] == websocket:
-                print(key + " lost connection")
-                del CONNECTED[key]
+        delete_connection(websocket)
+
+
+def delete_connection(websocket):
+    for key in list(CONNECTED.keys()):
+        if CONNECTED[key] == websocket:
+            print(key + " lost connection")
+            del CONNECTED[key]
+
+
+def receive_update(event, websocket):
+    if event["user"] in THREADS:
+        THREADS[event["user"]].stop()
+    CONNECTED[event["user"]] = websocket
 
 
 async def receive_init(websocket, event):
@@ -63,6 +62,11 @@ async def receive_init(websocket, event):
     CONNECTED[event["user"]] = websocket
     LOBBIES[lobby_id] = {event["user"]}, event["user"]
     await websocket.send(json.dumps(init_event(lobby_id)))
+
+
+async def receive_invite(event, message):
+    if event["to"] in CONNECTED:
+        await CONNECTED[event["to"]].send(message)
 
 
 async def receive_join(event):
@@ -77,42 +81,33 @@ async def receive_join(event):
         lobby.add(event["user"])
 
 
-def leave_lobby(event, is_instant, kick):
+def leave_lobby(event):
     # wait 5 seconds because something might come in from the user if he did not leave the site
-    if not is_instant:
+    if not event["instant"]:
         time.sleep(5)
-    if not is_instant and THREADS[event["user"]].stopped():
-        del THREADS[event["user"]]
-        return
+        if THREADS[event["user"]].stopped():
+            del THREADS[event["user"]]
+            return
     # if we do not get an update request in those 5 second the player has left the page and we can delete
     lobby, admin = LOBBIES[event["lobby"]]
-    websockets_in_lobby = set()
-    users_in_lobby = set()
     if len(lobby) <= 1:
         del LOBBIES[event["lobby"]]
     else:
-        for user in lobby.copy():
-            if user == event["user"]:
-                lobby.discard(user)
-                if kick:
-                    new = secrets.token_urlsafe(12)
-                    user_iter = {CONNECTED[user]}
-                    websockets.broadcast(user_iter, json.dumps(kick_event(event["lobby"], new)))
-            else:
-                users_in_lobby.add(user)
-                if user in CONNECTED:
-                    websockets_in_lobby.add(CONNECTED[user])
-        if len(websockets_in_lobby) > 0:
-            websockets.broadcast(websockets_in_lobby, json.dumps(lobby_info(lobby, admin)))
-        if not is_instant:
-            del THREADS[event["user"]]
+        lobby.discard(event["user"])
+        websockets.broadcast(get_websockets_in_lobby(event["lobby"]), json.dumps(lobby_info(lobby, admin)))
+        if event["kick"]:
+            new = secrets.token_urlsafe(12)
+            user_iter = {CONNECTED[event["user"]]}
+            websockets.broadcast(user_iter, json.dumps(kick_event(event["lobby"], new)))
+    if not event["instant"]:
+        del THREADS[event["user"]]
 
-    if admin == event["user"] and len(websockets_in_lobby) > 0:
+    if admin == event["user"] and len(get_websockets_in_lobby(event["lobby"])) > 0:
         lobby_id = secrets.token_urlsafe(12)
-        rnd_user = users_in_lobby.pop()
-        users_in_lobby.add(rnd_user)
-        LOBBIES[lobby_id] = users_in_lobby, rnd_user
-        websockets.broadcast(websockets_in_lobby, json.dumps(init_event(lobby_id)))
+        rnd_user = lobby.pop()
+        lobby.add(rnd_user)
+        LOBBIES[lobby_id] = lobby, rnd_user
+        websockets.broadcast(get_websockets_in_lobby(event["lobby"]), json.dumps(init_event(lobby_id)))
         del LOBBIES[event["lobby"]]
 
 
