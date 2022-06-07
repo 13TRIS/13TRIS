@@ -73,8 +73,19 @@ class Match(models.Model):
 
 
 class History(models.Model):
+    MODE = (
+        ('Classic', 'Classic'),
+        ('13tris', '13tris')
+    )
+    OPPONENT = (
+        ('Solo', 'Solo'),
+        ('Multiplayer', 'Multiplayer'),
+        ('AI', 'AI')
+    )
     # matches = list
     score = models.IntegerField(default=-1)
+    mode = models.CharField(max_length=20, null=False, choices=MODE, default=MODE[0][0])
+    opponent = models.CharField(max_length=20, null=False, choices=OPPONENT, default=OPPONENT[0][0])
     player = models.ForeignKey(User, on_delete=models.CASCADE)
     date_of_score = models.DateTimeField(auto_now=True)
 
