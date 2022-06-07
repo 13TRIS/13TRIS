@@ -391,6 +391,7 @@ const UI = (function () {
      * @param {string} admin
      */
     const createPlayerCards = function (lobby, admin) {
+        let addKickBtn = user === admin;
         let playerDisplay = document.getElementById("invited-players");
         playerDisplay.innerHTML = "";
         for (const element of lobby) {
@@ -668,14 +669,9 @@ const ListenerRegistry = (function () {
      * Listens for the page to be reloaded.
      * @param {WebSocket} websocket
      * @param {string | null} lobbyId
-     * @param {BeforeUnloadEvent} event
-     * @param {boolean} playing
      */
-    const beforeunloadListener = function (websocket, lobbyId, event, playing) {
-        if (playing === true) {
-            event.preventDefault(); // TODO
-            return "Are you sure you want to leave the page?";
-        } else if (Client.invitedTo() == null && lobbyId != null) {
+    const beforeunloadListener = function (websocket, lobbyId) {
+        if (Client.invitedTo() == null && lobbyId != null) {
             Client.sendLeaveEvent(websocket, lobbyId, user, false, false);
         }
     }
@@ -739,8 +735,8 @@ window.addEventListener("DOMContentLoaded", function () {
     const lobbyId = new URLSearchParams(window.location.search).get("lobby");
     const playing = new URLSearchParams(window.location.search).get("playing");
     Client.playing(playing === "true");
-    window.addEventListener("beforeunload", function (event) {
-        ListenerRegistry.beforeunloadListener(websocket, lobbyId, event, Client.playing());
+    window.addEventListener("beforeunload", function () {
+        ListenerRegistry.beforeunloadListener(websocket, lobbyId);
     });
     UI.registerInvitationButtonListeners(websocket, lobbyId);
     UI.registerStartBtnListener(websocket, lobbyId);
