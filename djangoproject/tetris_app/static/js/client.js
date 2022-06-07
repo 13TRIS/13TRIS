@@ -269,12 +269,7 @@ const Client = (function () {
      * @param {string} lobbyId
      */
     const receiveLobbyInfo = function (data, websocket, lobbyId) {
-        if (playing === true) {
-            // TODO
-            // player reloaded the page during the game
-            // leave current lobby and create a new one
-            Client.sendInitEvent(websocket, user);
-        } else {
+        if (playing === false) {
             UI.createPlayerCards(data["lobby"], data["admin"]);
             if (data["lobby"].length > 1 && user === data["admin"]) UI.showStartBtn();
             registerKickBtnListeners(websocket, lobbyId);
@@ -348,7 +343,7 @@ const Client = (function () {
          * @returns {string | null}
          */
         invitedTo: function (value) {
-            if (arguments.length) {
+            if (arguments.length === 1) {
                 lastInvitedTo = value;
             }
             return lastInvitedTo;
@@ -359,7 +354,10 @@ const Client = (function () {
          * @returns {boolean | null}
          */
         playing: function (value) {
-            return arguments.length ? playing = value : playing;
+            if (arguments.length === 1) {
+                playing = value;
+            }
+            return playing;
         },
     }
 })();
@@ -396,7 +394,7 @@ const UI = (function () {
         playerDisplay.innerHTML = "";
         for (const element of lobby) {
             if (admin !== element) {
-                createCard(element, "border-dark", true, playerDisplay);
+                createCard(element, "border-dark", addKickBtn, playerDisplay);
             } else {
                 createCard(element, "border-danger", false, playerDisplay);
             }
@@ -672,7 +670,9 @@ const ListenerRegistry = (function () {
      */
     const beforeunloadListener = function (websocket, lobbyId) {
         if (Client.invitedTo() == null && lobbyId != null) {
-            Client.sendLeaveEvent(websocket, lobbyId, user, false, false);
+            // TODO: what happen when someone refreshes the page while playing?
+            console.log("lol" + Client.playing());
+            Client.sendLeaveEvent(websocket, lobbyId, user, Client.playing(), Client.playing());
         }
     }
 
@@ -715,6 +715,7 @@ const ListenerRegistry = (function () {
      */
     const startBtnClickedListener = function (websocket, lobbyId) {
         Client.sendStartEvent(websocket, lobbyId);
+        Client.playing(true);
     }
 
     return {

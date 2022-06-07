@@ -15,7 +15,6 @@ THREADS = {}
 async def handler(websocket):
     try:
         async for message in websocket:
-            print(message)
             event = json.loads(message)
             if event["type"] == "invite":
                 await receive_invite(event, message)
@@ -36,11 +35,14 @@ async def handler(websocket):
             elif event["type"] == "start":
                 lobby_websockets = get_websockets_in_lobby(event["lobby"])
                 websockets.broadcast(lobby_websockets, message)
-            print("lobbies: " + LOBBIES.__str__())
-            print("connections: " + CONNECTED.__str__())
-            print("threads: " + THREADS.__str__())
     finally:
         delete_connection(websocket)
+
+
+def print_info():
+    print("lobbies: " + LOBBIES.__str__())
+    print("connections: " + CONNECTED.__str__())
+    print("threads: " + THREADS.__str__())
 
 
 def delete_connection(websocket):
