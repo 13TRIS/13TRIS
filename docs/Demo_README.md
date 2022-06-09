@@ -18,7 +18,7 @@
 
 ## Prerequisites
 
-This guide is made for usage on docker and specifically on linux machines (or WSL). If you do not have a Unix environment on Windows, please make sure that you don't have one beforehand with the following command:
+This guide is made for usage on docker and specifically on linux machines running on WSL. If you do not have a Unix environment on Windows, please make sure that you don't have one beforehand with the following command:
 
 ```shell
 wsl -l
@@ -190,7 +190,7 @@ Attaching to 13tris-web-1
 
 # Stop the Container
 
-Select the terminal in which the container is running and pres the following key combination:
+Why would you ever stop this marvelous container? Oh to reboot your system ? Well if you want to destroy your `uptime` of 27 minutes, go ahead... Select the terminal in which the container is running and pres the following key combination:
 
 ```bash
 # Press this
