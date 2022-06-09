@@ -1,5 +1,7 @@
+| <img width="300px" src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Docker_%28container_engine%29_logo.svg" alt="Docker logo"/> | X   | <img width="300px" src="Logo/Logo_full.png" alt="13tris Logo"/> |
+|-----------------------------------------------------------------------------------------------------------------------------------------|-----|-----------------------------------------------------------------|
 
-# How to deploy 13TRIS locally
+# How to deploy 13TRIS locally with Docker
 
 ---
 
@@ -7,11 +9,14 @@
 
 0. [Prerequisites](#Prerequisites)
 1. [Install Docker](#Install-Docker)
-2. [Docker-compose](#Docker-compose)
+2. [Docker-Compose](#Docker-Compose)
+3. [Git](#Git)
+4. [Start the Container](#Start-the-Container)
+5. [Stop the Container](#Stop-the-Container)
 
 ---
 
-## 0. Prerequisites
+## Prerequisites
 
 This guide is made for usage on docker and specifically on linux machines (or WSL). If you do not have a Unix environment on Windows, please make sure that you don't have one beforehand with the following command:
 
@@ -19,14 +24,16 @@ This guide is made for usage on docker and specifically on linux machines (or WS
 wsl -l
 ```
 
-To install Ubuntu for WSL, run the foloowing command:
+To install Ubuntu for WSL, run the following command:
 
 ```shell
 wsl --install
 ```
 
+> If you do feel like reading official documentation : **https://docs.docker.com/engine/install/ubuntu**
+
 ## Install Docker
-#### Make sure you linux enviroment is up-to-date
+#### Make sure you linux environment is up-to-date
 
 ```bash
 sudo apt-get update
@@ -56,8 +63,8 @@ docker --version
 > Docker version 20.10.16, build aa7e414
 ```
 
-## Docker-compose
-### Install docker-compse as well:
+## Docker Compose
+### Install docker-compose as well:
 
 _Make sure that the version of docker-compse is the lastest. Make sure [here](https://github.com/docker/compose/releases/latest) that tag `v2.6.0` matches the one in the command below._
 
@@ -73,10 +80,33 @@ docker-compose --version
 > Docker Compose version v2.6.0
 ```
 
-_Alternatevly you can use pip:_
+_Alternatively you can use pip:_
 ```bash
 pip install docker-compose
 ```
+
+#### Check if Docker is running / start Docker
+
+Run this command to see if your system is using `systemd` or `sysvinit`:
+```bash
+ps -p 1 -o comm=
+> systemd OR init
+
+# If the output is systemd
+systemctl start docker
+
+# If the command returned init
+service docker start
+
+# If you get a permission denied error, run it again with root privileges
+sudo !!
+```
+
+> If anything is not working, try to understand the root of the problem and figure it out yourself... I'm just a markdown file, sorry. But here are some links that might help:
+> - https://stackoverflow.com/a/48957722  
+> - https://stackoverflow.com/a/61780566
+>
+> Good luck soldier ! o7
 
 # Git
 
@@ -90,7 +120,7 @@ sudo apt-get install git
 git --version
 > git version 2.25.1
 
-#Clone the 13TRIS reporistory:
+#Clone the 13TRIS repository:
 git clone https://github.com/13TRIS/13TRIS.git
 ```
 
@@ -112,7 +142,7 @@ Move into the folder:
 ```bash
 cd 13TRIS
 
-# Make sure that youre in the right folder
+# Make sure that you're in the right folder
 ls
 > brainstorming_board.jpg  djangoproject       docs           README.md         solo.png
 > django                   docker-compose.yml  helloworld.py  requirements.txt  sonar-project.properties
@@ -158,7 +188,7 @@ Attaching to 13tris-web-1
 
 > Now visit the page http://localhost:8000/ with your browser, or connect the container to a docker network of other containers and deploy it on your [**server**](https://13tris.mkrabs.duckdns.org/) ! 🎉🎉
 
-# Stop the container
+# Stop the Container
 
 Select the terminal in which the container is running and pres the following key combination:
 
