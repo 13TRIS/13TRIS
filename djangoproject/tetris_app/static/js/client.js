@@ -132,7 +132,8 @@ const ClientEvents = (function () {
 
 // Represents a client who can communicate with a websocket server.
 const Client = (function () {
-    let invitedTo = null;
+    let lastInvitedTo = null;
+    let playing = false;
 
     /***
      * Sends an 'ClientEvents.initEvent' to the server at the specified 'websocket' connection.
@@ -246,7 +247,7 @@ const Client = (function () {
         if (user === data["to"]) {
             let text = `Do you want to accept the invitation from ${data["from"]} and join the lobby ${data["lobby"]}?`
             UI.showInvitationModal(text);
-            invitedTo = data["lobby"];
+            lastInvitedTo = data["lobby"];
             UI.registerAcceptInvitationButtonListener(websocket, lobbyId);
         }
     }
@@ -268,9 +269,11 @@ const Client = (function () {
      * @param {string} lobbyId
      */
     const receiveLobbyInfo = function (data, websocket, lobbyId) {
-        UI.createPlayerCards(data["lobby"], data["admin"]);
-        if (data["lobby"].length > 1 && user === data["admin"]) UI.showStartBtn();
-        registerKickBtnListeners(websocket, lobbyId);
+        if (playing === false) {
+            UI.createPlayerCards(data["lobby"], data["admin"]);
+            if (data["lobby"].length > 1 && user === data["admin"]) UI.showStartBtn();
+            registerKickBtnListeners(websocket, lobbyId);
+        }
     }
 
     /***
@@ -288,6 +291,8 @@ const Client = (function () {
      * @param {string} lobbyId
      */
     const receiveStart = function (websocket, lobbyId) {
+        let url = window.location.href.replace("playing=false", "playing=true");
+        window.history.pushState("", "13TRIS", url);
         UI.createGame(websocket, lobbyId);
     }
 
@@ -307,9 +312,9 @@ const Client = (function () {
      */
     function registerKickBtnListeners(websocket, lobbyId) {
         let kickButtons = document.querySelectorAll("button[data-kick]");
-        for (let i = 0; i < kickButtons.length; i++) {
-            kickButtons[i].addEventListener("click", function () {
-                let userName = kickButtons[i].getAttribute("id").split("-")[1];
+        for (const element of kickButtons) {
+            element.addEventListener("click", function () {
+                let userName = element.getAttribute("id").split("-")[1];
                 ListenerRegistry.kickFromLobbyBtnListener(websocket, lobbyId, userName);
             });
         }
@@ -338,7 +343,21 @@ const Client = (function () {
          * @returns {string | null}
          */
         invitedTo: function (value) {
-            return arguments.length ? invitedTo = value : invitedTo;
+            if (arguments.length === 1) {
+                lastInvitedTo = value;
+            }
+            return lastInvitedTo;
+        },
+        /***
+         * Setter/getter for 'playing' depending on if an argument is given or not.
+         * @param {null | boolean=} value
+         * @returns {boolean | null}
+         */
+        playing: function (value) {
+            if (arguments.length === 1) {
+                playing = value;
+            }
+            return playing;
         },
     }
 })();
@@ -370,13 +389,14 @@ const UI = (function () {
      * @param {string} admin
      */
     const createPlayerCards = function (lobby, admin) {
+        let addKickBtn = user === admin;
         let playerDisplay = document.getElementById("invited-players");
         playerDisplay.innerHTML = "";
-        for (let i = 0; i < lobby.length; i++) {
-            if (admin !== lobby[i]) {
-                createCard(lobby[i], "border-dark", true, playerDisplay);
+        for (const element of lobby) {
+            if (admin !== element) {
+                createCard(element, "border-dark", addKickBtn, playerDisplay);
             } else {
-                createCard(lobby[i], "border-danger", false, playerDisplay);
+                createCard(element, "border-danger", false, playerDisplay);
             }
         }
     }
@@ -410,7 +430,7 @@ const UI = (function () {
      * @param {WebSocket} websocket
      */
     const registerKickModalListener = function (websocket) {
-        kickModal.addEventListener("shown.bs.modal", function () {
+        document.getElementById("kick-modal").addEventListener("shown.bs.modal", function () {
             ListenerRegistry.kickModalShownListener(websocket);
         });
     }
@@ -448,7 +468,7 @@ const UI = (function () {
      */
     const updateScore = function (playerName, score) {
         let label = document.getElementById(`score-${playerName}`);
-        label.textContent = `Score: ${score}`;
+        if (label) label.textContent = `Score: ${score}`;
     }
 
     /***
@@ -532,8 +552,8 @@ const UI = (function () {
      */
     function toggleKickButtons() {
         let kickButtons = document.querySelectorAll("[data-kick]");
-        for (let i = 0; i < kickButtons.length; i++) {
-            kickButtons[i].toggleAttribute("hidden", true);
+        for (const element of kickButtons) {
+            element.toggleAttribute("hidden", true);
         }
     }
 
@@ -542,8 +562,8 @@ const UI = (function () {
      */
     function toggleScoreLabels() {
         let labels = document.getElementsByClassName("score-label");
-        for (let i = 0; i < labels.length; i++) {
-            labels[i].toggleAttribute("hidden");
+        for (const element of labels) {
+            element.toggleAttribute("hidden");
         }
     }
 
@@ -554,8 +574,8 @@ const UI = (function () {
     function changeCardColors(bootstrapBorderColor) {
         let playerCards = document.getElementsByClassName("player-card");
         let classAttr = `card mb-3 ${bootstrapBorderColor} player-card`;
-        for (let i = 0; i < playerCards.length; i++) {
-            playerCards[i].setAttribute("class", classAttr);
+        for (const element of playerCards) {
+            element.setAttribute("class", classAttr);
         }
     }
 
@@ -647,14 +667,12 @@ const ListenerRegistry = (function () {
      * Listens for the page to be reloaded.
      * @param {WebSocket} websocket
      * @param {string | null} lobbyId
-     * @param {string | null} playing
      */
-    const beforeunloadListener = function (websocket, lobbyId, playing) {
-        if (playing === "true") {
-            // prevent the user from leaving the page unintentionally
-        }
+    const beforeunloadListener = function (websocket, lobbyId) {
         if (Client.invitedTo() == null && lobbyId != null) {
-            Client.sendLeaveEvent(websocket, lobbyId, user, false, false);
+            // TODO: what happen when someone refreshes the page while playing?
+            console.log("lol" + Client.playing());
+            Client.sendLeaveEvent(websocket, lobbyId, user, Client.playing(), Client.playing());
         }
     }
 
@@ -671,7 +689,7 @@ const ListenerRegistry = (function () {
     /***
      * Listens for the accept invitation button to be pressed.
      * @param {WebSocket} websocket
-     * @param {bootstrap.Modal} modal
+     * @param {HTMLElement} modal
      * @param {string} lobbyId
      */
     const acceptInvitationListener = function (websocket, modal, lobbyId) {
@@ -697,6 +715,7 @@ const ListenerRegistry = (function () {
      */
     const startBtnClickedListener = function (websocket, lobbyId) {
         Client.sendStartEvent(websocket, lobbyId);
+        Client.playing(true);
     }
 
     return {
@@ -716,8 +735,9 @@ window.addEventListener("DOMContentLoaded", function () {
     const websocket = new WebSocket("ws://localhost:8001");
     const lobbyId = new URLSearchParams(window.location.search).get("lobby");
     const playing = new URLSearchParams(window.location.search).get("playing");
+    Client.playing(playing === "true");
     window.addEventListener("beforeunload", function () {
-        ListenerRegistry.beforeunloadListener(websocket, lobbyId, playing);
+        ListenerRegistry.beforeunloadListener(websocket, lobbyId);
     });
     UI.registerInvitationButtonListeners(websocket, lobbyId);
     UI.registerStartBtnListener(websocket, lobbyId);
